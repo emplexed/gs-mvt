@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+ Copyright (C) 2014 - Open Source Geospatial Foundation. All rights reserved.
+ This code is licensed under the GPL 2.0 license, available at the root
+ application directory.
+ -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd"> 
+
+<beans>
+  <!-- MVT Output Format -->
+  <bean id="MVTOutputFormat" class="org.geoserver.wfs.response.MVTOutputFormat">
+  	<constructor-arg ref="geoServer"/>
+  </bean>
+
+    <bean id="MVTStreamingMapOutputFormat" class="org.geoserver.wms.mvt.MVTStreamingMapOutputFormat">
+    </bean>
+    <bean id="MVTStreamingMapResponse" class="org.geoserver.wms.mvt.MVTStreamingMapResponse">
+    </bean>
+  
+</beans>
