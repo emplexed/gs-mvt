@@ -27,7 +27,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class is not stateless
+ * Class is not stateless. Writer transforms the geometries into the local tile coordinate System. For each tile
+ * an own writer is needed.
  *
  * Created by shennebe on 16.03.2015.
  */

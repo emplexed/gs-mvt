@@ -1,21 +1,3 @@
-/*****************************************************************
- *  Licensed to the Apache Software Foundation (ASF) under one
- *  or more contributor license agreements.  See the NOTICE file
- *  distributed with this work for additional information
- *  regarding copyright ownership.  The ASF licenses this file
- *  to you under the Apache License, Version 2.0 (the
- *  "License"); you may not use this file except in compliance
- *  with the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
- ****************************************************************/
 package org.geoserver.wms.mvt;
 
 import com.vividsolutions.jts.geom.*;
@@ -28,7 +10,7 @@ import java.util.*;
 
 public class VectorTileEncoder {
 
-    private final Map<String, Layer> layers = new HashMap<String, Layer>();
+    private final Map<String, Layer> layers = new HashMap<>();
 
     private final int extent;
 
@@ -317,7 +299,7 @@ public class VectorTileEncoder {
             Coordinate c = cs[i];
 
             if (i == 0) {
-                r.add(commandAndLength(Command.MoveTo, 1));
+                r.add(commandAndLength(Command.MOVETO.getValue(), 1));
             }
 
             int _x = (int) Math.round(c.x * scale);
@@ -346,16 +328,16 @@ public class VectorTileEncoder {
                 // can length be too long?
                 lineToIndex = r.size();
                 lineToLength = cs.length - 1;
-                r.add(commandAndLength(Command.LineTo, lineToLength));
+                r.add(commandAndLength(Command.LINETO.getValue(), lineToLength));
             }
 
         }
 
         // update LineTo length
-        r.set(lineToIndex, commandAndLength(Command.LineTo, lineToLength));
+        r.set(lineToIndex, commandAndLength(Command.LINETO.getValue(), lineToLength));
 
         if (closePathAtEnd) {
-            r.add(commandAndLength(Command.ClosePath, 1));
+            r.add(commandAndLength(Command.CLOSEPATH.getValue(), 1));
         }
 
         return r;
@@ -380,7 +362,7 @@ public class VectorTileEncoder {
         public Integer key(String key) {
             Integer i = keys.get(key);
             if (i == null) {
-                i = Integer.valueOf(keys.size());
+                i = keys.size();
                 keys.put(key, i);
             }
             return i;
@@ -393,7 +375,7 @@ public class VectorTileEncoder {
         public Integer value(Object value) {
             Integer i = values.get(value);
             if (i == null) {
-                i = Integer.valueOf(values.size());
+                i = values.size();
                 values.put(value, i);
             }
             return i;

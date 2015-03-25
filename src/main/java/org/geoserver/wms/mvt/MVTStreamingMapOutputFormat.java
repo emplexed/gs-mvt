@@ -9,18 +9,16 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
+ * The Streaming map outputFormat class for WMS PBF files
+ *
  * Created by shennebe on 18.03.2015.
  */
 public class MVTStreamingMapOutputFormat implements GetMapOutputFormat {
 
     private static MapProducerCapabilities CAPABILITIES= new MapProducerCapabilities(false, false, false, false, null);
 
-    public MVTStreamingMapOutputFormat() {
-        //
-    }
-
     /**
-     * @return {@code ["image/svg+xml", "image/svg xml", "image/svg"]}
+     * @return {@code ["application/x-protobuf", "application/pbf", "application/mvt"]}
      * @see org.geoserver.wms.GetMapOutputFormat#getOutputFormatNames()
      */
     public Set<String> getOutputFormatNames() {
@@ -28,7 +26,7 @@ public class MVTStreamingMapOutputFormat implements GetMapOutputFormat {
     }
 
     /**
-     * @return {@code "image/svg+xml"}
+     * @return {@code "application/x-protobuf"}
      * @see org.geoserver.wms.GetMapOutputFormat#getMimeType()
      */
     public String getMimeType() {

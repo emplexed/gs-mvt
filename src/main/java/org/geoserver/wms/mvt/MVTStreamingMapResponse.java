@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * The Streaming Map Response
+ *
  * Created by shennebe on 18.03.2015.
  */
 public class MVTStreamingMapResponse extends AbstractMapResponse {

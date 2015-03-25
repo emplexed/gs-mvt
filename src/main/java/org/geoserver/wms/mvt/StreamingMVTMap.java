@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Adapted WebMap implementation. Gets the style and retrives filter rules. These rules are considered when loading
+ * Adapted WebMap implementation. Gets the style and retrieves filter rules. These rules are considered when loading
  * features from the datastore.
  *
  * Created by Stefan Henneberger on 18.03.2015.
