@@ -22,8 +22,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by shennebe on 13.03.2015.
+ * This class provides the possibility to get MVT PBF features. It is
+ *
+ *
  */
+@Deprecated
 public class MVTOutputFormat extends WFSGetFeatureOutputFormat {
 
     private static final Logger LOGGER = Logging.getLogger(MVTOutputFormat.class);
@@ -37,7 +40,7 @@ public class MVTOutputFormat extends WFSGetFeatureOutputFormat {
     }
 
     /**
-     * Mime type: application/dxf or application/zip
+     * Mime type: application/x-protobuf
      */
     @Override
     public String getMimeType(Object value, Operation operation) throws ServiceException {
