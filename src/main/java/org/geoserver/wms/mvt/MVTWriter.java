@@ -53,7 +53,7 @@ public class MVTWriter {
     }
 
     public static MVTWriter getInstance(Envelope sourceBBOX, CoordinateReferenceSystem sourceCRS, int tileSizeX, int tileSizeY, int buffer) throws FactoryException, TransformException {
-        Envelope targetBBOX = new ReferencedEnvelope(0 - buffer,tileSizeX + buffer,0 - buffer,tileSizeY + buffer,targetCRS);
+        Envelope targetBBOX = new ReferencedEnvelope(0,tileSizeX,0,tileSizeY,targetCRS);
         return new MVTWriter(sourceBBOX,targetBBOX,sourceCRS,targetCRS,buffer);
     }
 
@@ -84,19 +84,21 @@ public class MVTWriter {
         sourceBBOX = JTS.transform(sourceBBOX, transform);
         if (bufferSize > 0) {
             sourceBBOX = this.getBufferedSourceBBOX(bufferSize,sourceBBOX,targetBBOX, targetCRS);
+            targetBBOX = new ReferencedEnvelope(targetBBOX.getMinX() - bufferSize, targetBBOX.getMaxX() + bufferSize,
+                    targetBBOX.getMinY() - bufferSize, targetBBOX.getMaxY() + bufferSize,targetCRS);
         }
         this.sourceBBOX = sourceBBOX;
         this.targetBBOX = targetBBOX;
         this.xFactor = this.calculateXFactor();
         this.yFactor = this.calculateYFactor();
-        this.vectorTileEncoder = new VectorTileEncoder(4096, 8, 0.1d);
+        this.vectorTileEncoder = new VectorTileEncoder(4096, bufferSize, 0.1d);
     }
 
     private ReferencedEnvelope getBufferedSourceBBOX(int bufferSize,Envelope sourceBBOX, Envelope targetBBOX, CoordinateReferenceSystem targetCRS) throws TransformException {
         if (bufferSize > 0) {
             double xBuffer = sourceBBOX.getWidth() * bufferSize / targetBBOX.getWidth();
             double yBuffer = sourceBBOX.getHeight() * bufferSize / targetBBOX.getHeight();
-            return new ReferencedEnvelope(sourceBBOX.getMinX()-xBuffer,sourceBBOX.getMaxX()+xBuffer,sourceBBOX.getMinY()+yBuffer,sourceBBOX.getMaxY()+yBuffer,targetCRS);
+            return new ReferencedEnvelope(sourceBBOX.getMinX()-xBuffer,sourceBBOX.getMaxX()+xBuffer,sourceBBOX.getMinY()-yBuffer,sourceBBOX.getMaxY()+yBuffer,targetCRS);
         }
         return null;
     }
