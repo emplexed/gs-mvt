@@ -14,6 +14,35 @@ http://localhost/geoserver/test/wms?STYLES=&LAYERS=test:streetsegments&FORMAT=ap
 ```
 As result all features of the requested clip are returned. A [Douglas-Peucker algorithm](http://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm) simplifies these geometries. By default a maximum distance of ```0.1``` target system units are considered by the algorithm.
 
+## Slippy Map Tiles Request
+[Slippy Map Tiles](http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames) describes the tile format used by Google, Bing and OSM. Usually a tile cache delivers the result to the client. But the **GeoWebCache** used by the **Geoserver** does not allow to be extended with additional MimeTypes (e.g. ```application/x-protobuf```) without a change to core classes. Therefore a basic Slippy Map Tile Controller is provided with this extension, that translates the slippy map tile names into a WMS redirect. The Slippy Tile request has the following format:
+```
+http://localhost/geoserver/slippymap/{layers}/{z}/{x}/{y}.{format}
+```
+Path Variable | Description | Type
+------------- | ----------- | -------
+*layers* | layer or layer names | String or comma separated string list
+*z* | zoom level | integer
+*x* | tile column | integer
+*y* | tile row | integer
+*format* | output format | one of pbf,png,gif,jpg,tif,pdf,rss,kml,kmz
+
+To adjust the WMS paramteres the following Request Parameters (in query String) are additionally allowed:
+
+Request Parameter | Description | Type
+----------------- | ----------- | -----
+*buffer* | buffer size | integer default 10
+*tileSize* | size of result coordinate system (width and height) | integer default 256
+*styles* | used styles for the layer(s) | String or comma separated Strings if more than one layer
+*time* | translated to WMS time parameter | Date String
+*sld* | External Style Sheed Descriptor | URL (Location of SLD to be used)
+*sld_body* | Style Description | SLD XML
+
+### Example:
+```
+http://localhost/geoserver/slippymap/streets/13/4390/2854.pbf?buffer=5&styles=line
+```
+
 ##Styling
 Since the vector features are usualy styled on client side only the filter rules and not the symbolizers of a **Geoserver Style Sheet (SLD)** are considered. Using scale denominators the filter rules can be adjusted so that for example some features are not delivered at higher zoom levels. This prevents unnecessary delivery of features that are not rendered on the client anyway.
 
