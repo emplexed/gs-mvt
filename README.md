@@ -1,8 +1,8 @@
 # Geoserver MVT Extension
 
 ## Overview
-This extension for the **Geoserver** adds the possibility to deliver [Mapnik Vector Tiles](https://github.com/mapbox/mapnik-vector-tile/) in Protocol Buffers outputformat as result of an **WMS** request. It has been developed and tested with [Geoserver 2.6.2](http://geoserver.org) but might also work with preceding versions.
-The resulting Vector Tiles can e.g. be rendered by a WebGL JS client like [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/api/). For the final integration with Mapbox GL JS an additional component that converts the slippy map tile requests into WMS requests is needed.
+This extension for the **Geoserver** adds the possibility to deliver [Mapnik Vector Tiles](https://github.com/mapbox/mapnik-vector-tile/) in Protocol Buffers outputformat as result of an **WMS** or **Slippy Map Tile** request. It has been developed and tested with [Geoserver 2.6.2](http://geoserver.org) but might also work with preceding versions.
+The resulting Vector Tiles can e.g. be rendered by a WebGL JS client like [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/api/).
 
 ## Getting Started
 In order to get startet the build target ```gs-mvt-2.6.2.jar``` and depending ```protobuf-java-2.6.1.jar``` have to be copied to the geoserver's lib directiory ```geoserver/WEB-INF/lib```. After starting the Geoserver the format ```application/x-protobuf``` is shown in the WMS Format list of the Layer preview.
