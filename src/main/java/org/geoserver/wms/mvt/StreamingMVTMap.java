@@ -74,6 +74,7 @@ public class StreamingMVTMap extends WebMap {
                         finalQuery = new Query(DataUtilities.mixQueries(finalQuery,filterQuery,"mvtEncoder"));
                     }
                 }
+                finalQuery.setCoordinateSystemReproject(MVTWriter.TARGET_CRS);
                 finalQuery.setHints(definitionQuery.getHints());
                 finalQuery.setSortBy(definitionQuery.getSortBy());
                 finalQuery.setStartIndex(definitionQuery.getStartIndex());

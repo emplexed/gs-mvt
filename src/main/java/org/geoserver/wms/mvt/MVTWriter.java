@@ -32,10 +32,17 @@ import java.util.logging.Logger;
  */
 public class MVTWriter {
 
-    /**
-     * Standard transformation from source to target CRS
-     */
-    private MathTransform transform;
+    static CoordinateReferenceSystem TARGET_CRS;
+
+    private static final Logger LOGGER = Logging.getLogger(MVTWriter.class);
+
+    static {
+        try {
+            TARGET_CRS = CRS.decode("EPSG:3857");
+        } catch (FactoryException e) {
+            LOGGER.log(Level.WARNING,"CRS could not be created",e);
+        }
+    }
 
     /**
      * VectorTileEncoder for encoding {@link FeatureCollection} to MVT PBF
@@ -63,20 +70,6 @@ public class MVTWriter {
     private final double yScale;
 
     /**
-     * Target CRS System which is static
-     */
-    private static CoordinateReferenceSystem targetCRS;
-    private static final Logger LOGGER = Logging.getLogger(MVTWriter.class);
-
-    static {
-        try {
-            targetCRS = CRS.decode("EPSG:3857");
-        } catch (FactoryException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Retrieves an instance of the MVTWriter.
      *
      * @param sourceBBOX the bbox envelope requested in World coordinates
@@ -90,8 +83,8 @@ public class MVTWriter {
      * @throws TransformException in case of the transformation failed
      */
     public static MVTWriter getInstance(Envelope sourceBBOX, CoordinateReferenceSystem sourceCRS, int tileSizeX, int tileSizeY, int buffer) throws FactoryException, TransformException {
-        Envelope targetBBOX = new ReferencedEnvelope(0,tileSizeX,0,tileSizeY,targetCRS);
-        return new MVTWriter(sourceBBOX,targetBBOX,sourceCRS,targetCRS,buffer);
+        Envelope targetBBOX = new ReferencedEnvelope(0,tileSizeX,0,tileSizeY,TARGET_CRS);
+        return new MVTWriter(sourceBBOX,targetBBOX,sourceCRS,buffer);
     }
 
     /**
@@ -148,20 +141,19 @@ public class MVTWriter {
      * @throws FactoryException
      */
     public ReferencedEnvelope getSourceBBOXWithBuffer() throws TransformException, FactoryException {
-        return new ReferencedEnvelope(this.sourceBBOX,targetCRS);
+        return new ReferencedEnvelope(this.sourceBBOX,TARGET_CRS);
     }
 
     private MVTWriter(Envelope sourceBBOX,
                       Envelope targetBBOX,
                       CoordinateReferenceSystem sourceCRS,
-                      CoordinateReferenceSystem targetCRS,
                       int bufferSize) throws TransformException, FactoryException {
-        this.transform = CRS.findMathTransform(sourceCRS, targetCRS);
+        MathTransform transform = CRS.findMathTransform(sourceCRS, TARGET_CRS);
         sourceBBOX = JTS.transform(sourceBBOX, transform);
         if (bufferSize > 0) {
-            sourceBBOX = this.getBufferedSourceBBOX(bufferSize,sourceBBOX,targetBBOX, targetCRS);
+            sourceBBOX = this.getBufferedSourceBBOX(bufferSize,sourceBBOX,targetBBOX, TARGET_CRS);
             targetBBOX = new ReferencedEnvelope(targetBBOX.getMinX() - bufferSize, targetBBOX.getMaxX() + bufferSize,
-                    targetBBOX.getMinY() - bufferSize, targetBBOX.getMaxY() + bufferSize,targetCRS);
+                    targetBBOX.getMinY() - bufferSize, targetBBOX.getMaxY() + bufferSize,TARGET_CRS);
         }
         this.sourceBBOX = sourceBBOX;
         this.targetBBOX = targetBBOX;
@@ -264,22 +256,14 @@ public class MVTWriter {
     }
 
     /**
-     * Transforms the geometry to the tile local CRS. In a first step the coordinate is transformed to google
-     * sperical mercator projection which is the base CRS of the MVT format. In a second step some affine transformations
+     * Transforms the geometry to the tile local CRS. In a second step some affine transformations
      * are performed to match the coordinates to the target system.
      *
      * @param geometry the geometry to be transformed
      * @return the transformed geometry
      */
     private Geometry transFormGeometry(Geometry geometry) {
-        try {
-            if (geometry.getSRID() != 900913 && geometry.getSRID() != 3857) {
-                geometry = JTS.transform(geometry, transform);
-            }
-            geometry = doManualTransformation(geometry);
-        } catch (TransformException e) {
-            LOGGER.log(Level.WARNING,"Exception while transforming Geometry",e);
-        }
+        geometry = doManualTransformation(geometry);
         return geometry;
     }
 

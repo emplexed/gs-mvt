@@ -40,6 +40,7 @@ public class MVTStreamingMapOutputFormat implements GetMapOutputFormat {
             IOException {
         StreamingMVTMap mvt = new StreamingMVTMap(mapContent);
         mvt.setMimeType(getMimeType());
+        mvt.setContentDispositionHeader(mapContent,".pbf",false);
         return mvt;
     }
 
