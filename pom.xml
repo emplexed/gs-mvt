@@ -20,7 +20,7 @@
     <artifactId>gs-mvt</artifactId>
     <packaging>jar</packaging>
     <version>2.6.2</version>
-    <name>MVT WFS output format</name>
+    <name>MVT WMS output format</name>
 
     <dependencies>
         <dependency>

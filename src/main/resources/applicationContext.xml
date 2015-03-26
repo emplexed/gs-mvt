@@ -12,6 +12,32 @@
   	<constructor-arg ref="geoServer"/>
   </bean>-->
 
+    <bean id="slippyMapWrapper" class="org.geoserver.slippymap.SlippyTilesController">
+        <property name="supportedOutputFormats">
+            <map>
+                <entry key="pbf" value="application/x-protobuf"/>
+                <entry key="png" value="image/png"/>
+                <entry key="jpg" value="image/jpg"/>
+                <entry key="gif" value="image/gif"/>
+                <entry key="tif" value="image/tiff"/>
+                <entry key="svg" value="image/svg"/>
+                <entry key="pdf" value="application/pdf"/>
+                <entry key="rss" value="rss"/>
+                <entry key="kml" value="kml"/>
+                <entry key="kmz" value="kmz"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="slippyMapDispatcherHandling" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="alwaysUseFullPath" value="true"/>
+        <property name="mappings">
+            <props>
+                <prop key="/slippymap/**">slippyMapWrapper</prop>
+            </props>
+        </property>
+    </bean>
+
     <bean id="MVTStreamingMapOutputFormat" class="org.geoserver.wms.mvt.MVTStreamingMapOutputFormat">
     </bean>
     <bean id="MVTStreamingMapResponse" class="org.geoserver.wms.mvt.MVTStreamingMapResponse">
