@@ -9,9 +9,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * The Streaming Map Response
+ * The Streaming Map Response using the StreamingMVTMap for retrieving and encoding the features.
  *
- * Created by shennebe on 18.03.2015.
  */
 public class MVTStreamingMapResponse extends AbstractMapResponse {
 

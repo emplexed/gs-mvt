@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 
+/**
+ * VectorTileEncoder adapted from https://github.com/ElectronicChartCentre/java-vector-tile/blob/master/src/main/java/no/ecc/vectortile/VectorTileEncoder.java
+ *
+ */
 public class VectorTileEncoder {
 
     private final Map<String, Layer> layers = new HashMap<>();
@@ -76,9 +80,9 @@ public class VectorTileEncoder {
      * For optimization, geometries will be clipped, geometries will simplified
      * and features with geometries outside of the tile will be skipped.
      *
-     * @param layerName
-     * @param attributes
-     * @param geometry
+     * @param layerName name of the layer to be added
+     * @param attributes all attributes of the feature
+     * @param geometry the target geometry
      */
     public void addFeature(String layerName, Map<String, ?> attributes, Geometry geometry) {
 

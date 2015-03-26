@@ -22,8 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class provides the possibility to get MVT PBF features. It is
- *
+ * This class provides the possibility to get MVT PBF features using a WFS Service. It is deprecated since over WFS
+ * required parameters like tile Size (width, height) cannot be specified.
  *
  */
 @Deprecated

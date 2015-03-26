@@ -8,9 +8,9 @@
 
 <beans>
   <!-- MVT Output Format -->
-  <bean id="MVTOutputFormat" class="org.geoserver.wfs.response.MVTOutputFormat">
+  <!--<bean id="MVTOutputFormat" class="org.geoserver.wfs.response.MVTOutputFormat">
   	<constructor-arg ref="geoServer"/>
-  </bean>
+  </bean>-->
 
     <bean id="MVTStreamingMapOutputFormat" class="org.geoserver.wms.mvt.MVTStreamingMapOutputFormat">
     </bean>

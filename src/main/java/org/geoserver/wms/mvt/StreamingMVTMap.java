@@ -29,7 +29,6 @@ import java.util.List;
  * Adapted WebMap implementation. Gets the style and retrieves filter rules. These rules are considered when loading
  * features from the datastore.
  *
- * Created by Stefan Henneberger on 18.03.2015.
  */
 public class StreamingMVTMap extends WebMap {
 
@@ -40,6 +39,12 @@ public class StreamingMVTMap extends WebMap {
         super(context);
     }
 
+    /**
+     * Retrieves the feature from the underlying datasource and encodes them the MVT PBF format.
+     *
+     * @param out the outputstream to write to
+     * @throws IOException
+     */
     public void encode(final OutputStream out) throws IOException {
         ReferencedEnvelope renderingArea = this.mapContent.getRenderingArea();
         try {
@@ -48,10 +53,13 @@ public class StreamingMVTMap extends WebMap {
                             this.mapContent.getMapWidth(), this.mapContent.getMapHeight(), this.mapContent.getBuffer());
             List<FeatureCollection> featureCollectionList = new ArrayList<>();
             FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
+            //Iterate through all layers. Layers can be requested through WMS with comma separation
             for (Layer layer : this.mapContent.layers()) {
                 SimpleFeatureSource featureSource = (SimpleFeatureSource) layer.getFeatureSource();
                 SimpleFeatureType schema = featureSource.getSchema();
                 String defaultGeometry = schema.getGeometryDescriptor().getName().getLocalPart();
+                //Retrieve rendering area. In case of a buffer the extent is the buffered extent and not the requested
+                //extent.
                 renderingArea = mvtWriter.getSourceBBOXWithBuffer() != null ? mvtWriter.getSourceBBOXWithBuffer() : renderingArea;
                 BBOX bboxFilter = ff.bbox(ff.property(defaultGeometry), renderingArea);
                 Query bboxQuery = new Query(schema.getTypeName(), bboxFilter);
@@ -59,6 +67,7 @@ public class StreamingMVTMap extends WebMap {
                 Query finalQuery = new Query(DataUtilities.mixQueries(definitionQuery, bboxQuery,
                         "mvtEncoder"));
                 if (layer.getStyle() != null) {
+                    //Add Style Filters to the request
                     Filter styleFilter = getFeatureFilterFromStyle(layer.getStyle(),ff,this.mapContent.getScaleDenominator());
                     if (styleFilter != null) {
                         Query filterQuery = new Query(schema.getTypeName(),styleFilter);
@@ -68,14 +77,26 @@ public class StreamingMVTMap extends WebMap {
                 finalQuery.setHints(definitionQuery.getHints());
                 finalQuery.setSortBy(definitionQuery.getSortBy());
                 finalQuery.setStartIndex(definitionQuery.getStartIndex());
+                //Retrieve feature collection from the layer
                 featureCollectionList.add(featureSource.getFeatures(finalQuery));
             }
+            //Write all features to the output stream
             mvtWriter.writeFeatures(featureCollectionList,out);
         } catch (TransformException | FactoryException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Retrieve Filter information from the Layer Style.
+     * TODO maybe there is a better method to do that
+     *
+     * @param style the style of the layer
+     * @param ff the filter factory to create (concat) filters
+     * @param currentScaleDenominator the current scale denominator of the reuquested tiles
+     *
+     * @return The filter containing all relevant filters for the current solutions or null if no filter is difined.
+     */
     private Filter getFeatureFilterFromStyle(Style style, FilterFactory2 ff, double currentScaleDenominator) {
         List<Filter> filter = new ArrayList<>();
         for (FeatureTypeStyle featureTypeStyle : style.featureTypeStyles()) {

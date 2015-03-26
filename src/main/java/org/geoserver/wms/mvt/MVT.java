@@ -8,7 +8,6 @@ import java.util.Set;
 /**
  * MVT constants (mimetype and output formats)
  *
- * Created by shennebe on 18.03.2015.
  */
 interface MVT {
 

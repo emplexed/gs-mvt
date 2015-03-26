@@ -2,8 +2,6 @@ package org.geoserver.wms.mvt;
 
 /**
  * The Command enumaration needed by the VectorTile encoder
- *
- * Created by shennebe on 13.03.2015.
  */
 enum Command {
 

@@ -11,7 +11,6 @@ import java.util.Set;
 /**
  * The Streaming map outputFormat class for WMS PBF files
  *
- * Created by shennebe on 18.03.2015.
  */
 public class MVTStreamingMapOutputFormat implements GetMapOutputFormat {
 
