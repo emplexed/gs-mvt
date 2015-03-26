@@ -7,11 +7,8 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd"> 
 
 <beans>
-  <!-- MVT Output Format -->
-  <!--<bean id="MVTOutputFormat" class="org.geoserver.wfs.response.MVTOutputFormat">
-  	<constructor-arg ref="geoServer"/>
-  </bean>-->
 
+    <!-- controller for slippy map requests -->
     <bean id="slippyMapWrapper" class="org.geoserver.slippymap.SlippyTilesController">
         <property name="supportedOutputFormats">
             <map>
@@ -29,6 +26,7 @@
         </property>
     </bean>
 
+    <!-- dispatcher for slippy map tiles-->
     <bean id="slippyMapDispatcherHandling" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="alwaysUseFullPath" value="true"/>
         <property name="mappings">
@@ -38,8 +36,11 @@
         </property>
     </bean>
 
+    <!-- Streaming map output format -->
     <bean id="MVTStreamingMapOutputFormat" class="org.geoserver.wms.mvt.MVTStreamingMapOutputFormat">
     </bean>
+
+    <!-- straming map response -->
     <bean id="MVTStreamingMapResponse" class="org.geoserver.wms.mvt.MVTStreamingMapResponse">
     </bean>
   
