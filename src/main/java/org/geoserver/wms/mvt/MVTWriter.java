@@ -3,11 +3,14 @@ package org.geoserver.wms.mvt;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
+import javafx.scene.transform.Affine;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
+import org.geotools.referencing.operation.transform.AffineTransform2D;
+import org.geotools.renderer.lite.RendererUtilities;
 import org.geotools.util.logging.Logging;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
@@ -17,6 +20,8 @@ import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
+import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
@@ -278,6 +283,7 @@ public class MVTWriter {
      * @return the converted geometry
      */
     private Geometry doManualTransformation(Geometry geometry) {
+        // TODO maybe also {@link RendererUtilities#worldToScreenTransform(Envelope, Rectangle)} can be used for this operation
         for (Coordinate coordinate : geometry.getCoordinates()) {
             //First do Translation
             coordinate.x -= sourceBBOX.getMinX();

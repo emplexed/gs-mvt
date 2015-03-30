@@ -14,7 +14,9 @@ import java.io.*;
 import java.util.Collections;
 
 /**
- * Created by shennebe on 27.03.2015.
+ *
+ * Test for creating a MVT PBF using an WMS request with FilterStyle.
+ *
  */
 public class MVTTest extends WMSTestSupport {
 
@@ -33,7 +35,7 @@ public class MVTTest extends WMSTestSupport {
     }
 
     @Test
-    public void testBasicMvtGenerator() throws Exception {
+    public void testBasicMvtGeneratorWithStyle() throws Exception {
         MockHttpServletResponse response = getAsServletResponse("wms?request=getmap&service=wms&version=1.1.1" +
                 "&format=" + MVT.MIME_TYPE +
                 "&layers=" + TEST_LINES.getPrefix() + ":" + TEST_LINES.getLocalPart() + ","
@@ -41,7 +43,7 @@ public class MVTTest extends WMSTestSupport {
                 + TEST_POLYGONS.getPrefix() + ":" + TEST_POLYGONS.getLocalPart() +
                 "&styles=" + STYLE_NAME + "," + STYLE_NAME + "," + STYLE_NAME +
                 "&height=256&width=256&bbox=1448023.063834379,6066042.5647115875,1457807.0034548815,6075826.50433209&srs=EPSG:3857&buffer=10");
-        FileInputStream inputStream = new FileInputStream("src/test/resources/org/geoserver/wms/mvt/test_result.pbf");
+        InputStream inputStream = this.getClass().getResourceAsStream("test_result.pbf");
         byte[] inputBytes = IOUtils.toByteArray(inputStream);
         byte[] content = response.getOutputStreamContent().getBytes();
         Assert.assertEquals(inputBytes.length, content.length);

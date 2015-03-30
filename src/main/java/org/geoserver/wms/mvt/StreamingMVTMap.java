@@ -90,7 +90,7 @@ public class StreamingMVTMap extends WebMap {
 
     /**
      * Retrieve Filter information from the Layer Style.
-     * TODO maybe there is a better method to do that
+     * TODO maybe there is a better method to do that e.g. using a {@link org.geotools.styling.StyleVisitor}
      *
      * @param style the style of the layer
      * @param ff the filter factory to create (concat) filters
