@@ -2,11 +2,14 @@ package org.geoserver.wms.mvt;
 
 import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
+import org.geotools.util.logging.Logging;
 
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * VectorTileEncoder adapted from https://github.com/ElectronicChartCentre/java-vector-tile/blob/master/src/main/java/no/ecc/vectortile/VectorTileEncoder.java
@@ -24,21 +27,7 @@ public class VectorTileEncoder {
 
     private final double simplificationFactor;
 
-    /**
-     * Create a {@link VectorTileEncoder} with the default extent of 4096 and
-     * clip buffer of 8.
-     */
-    public VectorTileEncoder() {
-        this(4096, 8, 1.0d);
-    }
-
-    /**
-     * Create a {@link VectorTileEncoder} with the given extent and a polygon
-     * clip buffer of 8.
-     */
-    public VectorTileEncoder(int extent) {
-        this(extent, 8, 1.0d);
-    }
+    private static final Logger LOGGER = Logging.getLogger(VectorTileEncoder.class);
 
     /**
      * Create a {@link VectorTileEncoder} with the given extent value.
@@ -62,6 +51,11 @@ public class VectorTileEncoder {
         polygonClipGeometry = createTileEnvelope(polygonClipBuffer);
     }
 
+    /**
+     * Buffers the target envelope for clipping
+     * @param buffer the buffer parameter
+     * @return buffered result
+     */
     private static Geometry createTileEnvelope(int buffer) {
         Coordinate[] coords = new Coordinate[5];
         coords[0] = new Coordinate(0 - buffer, 256 + buffer);
@@ -158,11 +152,27 @@ public class VectorTileEncoder {
      * @return a byte array with the vector tile
      */
     public byte[] encode() {
-        return this.retrieveVectorTile().toByteArray();
+        byte[] result = new byte[]{};
+        try {
+            result = this.retrieveVectorTile().toByteArray();
+        } catch (NoClassDefFoundError cex) {
+            LOGGER.log(Level.SEVERE,"Google Protocol Buffers Library not found in Classpath");
+        }
+        return result;
     }
 
+    /**
+     * Writes the result to the {@link OutputStream} given as argument
+     *
+     * @param outputStream the stream to write the result to
+     * @throws IOException
+     */
     public void encode(OutputStream outputStream) throws IOException {
-        this.retrieveVectorTile().writeTo(outputStream);
+        try {
+            this.retrieveVectorTile().writeTo(outputStream);
+        } catch (NoClassDefFoundError cex) {
+            LOGGER.log(Level.SEVERE,"Google Protocol Buffers Library not found in Classpath");
+        }
     }
 
     private VectorTile.Tile retrieveVectorTile() {
@@ -183,13 +193,13 @@ public class VectorTileEncoder {
                 if (value instanceof String) {
                     valueBuilder.setStringValue((String) value);
                 } else if (value instanceof Integer) {
-                    valueBuilder.setSintValue(((Integer) value).intValue());
+                    valueBuilder.setSintValue((Integer) value);
                 } else if (value instanceof Long) {
-                    valueBuilder.setSintValue(((Long) value).longValue());
+                    valueBuilder.setSintValue((Long) value);
                 } else if (value instanceof Float) {
-                    valueBuilder.setFloatValue(((Float) value).floatValue());
+                    valueBuilder.setFloatValue((Float) value);
                 } else if (value instanceof Double) {
-                    valueBuilder.setDoubleValue(((Double) value).doubleValue());
+                    valueBuilder.setDoubleValue((Double) value);
                 } else {
                     valueBuilder.setStringValue(value.toString());
                 }
@@ -248,7 +258,7 @@ public class VectorTileEncoder {
         if (geometry instanceof Polygon) {
             Polygon polygon = (Polygon) geometry;
             if (polygon.getNumInteriorRing() > 0) {
-                List<Integer> commands = new ArrayList<Integer>();
+                List<Integer> commands = new ArrayList<>();
                 commands.addAll(commands(polygon.getExteriorRing().getCoordinates(), true));
                 for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
                     commands.addAll(commands(polygon.getInteriorRingN(i).getCoordinates(), true));
@@ -258,7 +268,7 @@ public class VectorTileEncoder {
         }
 
         if (geometry instanceof MultiLineString || geometry instanceof MultiPoint) {
-            List<Integer> commands = new ArrayList<Integer>();
+            List<Integer> commands = new ArrayList<>();
             GeometryCollection gc = (GeometryCollection) geometry;
             for (int i = 0; i < gc.getNumGeometries(); i++) {
                 commands.addAll(commands(gc.getGeometryN(i).getCoordinates(), false));
@@ -283,8 +293,8 @@ public class VectorTileEncoder {
      * Vertex parameters are // also encoded as deltas to the previous position.
      * The original // position is (0,0)
      *
-     * @param cs
-     * @return
+     * @param cs an array of coordinates
+     * @return list of integer commands
      */
     List<Integer> commands(Coordinate[] cs, boolean closePathAtEnd) {
 
@@ -292,7 +302,7 @@ public class VectorTileEncoder {
             throw new IllegalArgumentException("empty geometry");
         }
 
-        List<Integer> r = new ArrayList<Integer>();
+        List<Integer> r = new ArrayList<>();
 
         int lineToIndex = 0;
         int lineToLength = 0;
@@ -358,10 +368,10 @@ public class VectorTileEncoder {
 
     private static final class Layer {
 
-        final List<Feature> features = new ArrayList<Feature>();
+        final List<Feature> features = new ArrayList<>();
 
-        private final Map<String, Integer> keys = new LinkedHashMap<String, Integer>();
-        private final Map<Object, Integer> values = new LinkedHashMap<Object, Integer>();
+        private final Map<String, Integer> keys = new LinkedHashMap<>();
+        private final Map<Object, Integer> values = new LinkedHashMap<>();
 
         public Integer key(String key) {
             Integer i = keys.get(key);
@@ -373,7 +383,7 @@ public class VectorTileEncoder {
         }
 
         public List<String> keys() {
-            return Collections.unmodifiableList(new ArrayList<String>(keys.keySet()));
+            return Collections.unmodifiableList(new ArrayList<>(keys.keySet()));
         }
 
         public Integer value(Object value) {
@@ -386,14 +396,14 @@ public class VectorTileEncoder {
         }
 
         public List<Object> values() {
-            return Collections.unmodifiableList(new ArrayList<Object>(values.keySet()));
+            return Collections.unmodifiableList(new ArrayList<>(values.keySet()));
         }
     }
 
     private static final class Feature {
 
         Geometry geometry;
-        final List<Integer> tags = new ArrayList<Integer>();
+        final List<Integer> tags = new ArrayList<>();
 
     }
 }

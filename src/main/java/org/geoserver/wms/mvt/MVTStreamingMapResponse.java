@@ -3,7 +3,6 @@ package org.geoserver.wms.mvt;
 import org.geoserver.platform.Operation;
 import org.geoserver.platform.ServiceException;
 import org.geoserver.wms.map.AbstractMapResponse;
-import org.geoserver.wms.svg.StreamingSVGMap;
 
 import java.io.IOException;
 import java.io.OutputStream;

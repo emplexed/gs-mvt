@@ -1,9 +1,7 @@
 package org.geoserver.slippymap;
 
-import com.vividsolutions.jts.geom.Coordinate;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.referencing.datum.DefaultEllipsoid;
 import org.geotools.util.logging.Logging;
 import org.opengis.referencing.FactoryException;
@@ -44,7 +42,7 @@ public class SlippyMapTileCalculator {
      * @return a boundingbox containing the min and max lat / lon values in EPSG:4326
      */
     public static ReferencedEnvelope tile2boundingBox(final int x, final int y, final int zoom, int srid) {
-        ReferencedEnvelope referencedEnvelope = null;
+        ReferencedEnvelope referencedEnvelope;
         switch (srid) {
             case 4326:
                 referencedEnvelope = new ReferencedEnvelope(
