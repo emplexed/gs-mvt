@@ -45,7 +45,7 @@ public class SlippyTilesController {
 
         //Build relative WMS redirect URL from Path Variables and optional request params
         ReferencedEnvelope bbox = SlippyMapTileCalculator.tile2boundingBox(x, y, z,3857);
-        StringBuilder sb = new StringBuilder("/geoserver/service/wms?");
+        StringBuilder sb = new StringBuilder("/geoserver/wms?");
         sb.append("STYLES=").append(styles != null ? styles : defaultStyles);
         sb.append("&LAYERS=").append(layers);
         sb.append("&FORMAT=").append(format != null && supportedOutputFormats != null
