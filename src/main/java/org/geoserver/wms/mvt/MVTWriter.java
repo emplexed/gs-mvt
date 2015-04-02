@@ -159,7 +159,7 @@ public class MVTWriter {
         this.targetBBOX = targetBBOX;
         this.xScale = this.calculateXFactor();
         this.yScale = this.calculateYFactor();
-        this.vectorTileEncoder = new VectorTileEncoder(4096, bufferSize, 0.1d);
+        this.vectorTileEncoder = new VectorTileEncoder(targetBBOX);
     }
 
     /**
@@ -280,17 +280,8 @@ public class MVTWriter {
     private Geometry doManualTransformation(Geometry geometry) {
         // TODO maybe also {@link RendererUtilities#worldToScreenTransform(Envelope, Rectangle)} can be used for this operation
         for (Coordinate coordinate : geometry.getCoordinates()) {
-            //First do Translation
-            coordinate.x -= sourceBBOX.getMinX();
-            coordinate.y -= sourceBBOX.getMinY();
-            //Scale down to target bbox
-            coordinate.x *= xScale;
-            coordinate.y *= yScale;
-            //Mirror the Y Axis since the target 0,0 is Top Left and not Bottom Left (source)
-            coordinate.y = targetBBOX.getHeight() - coordinate.y;
-            //Clip to start coordinate
-            coordinate.x = targetBBOX.getMinX() + coordinate.x;
-            coordinate.y = targetBBOX.getMinY() + coordinate.y;
+            coordinate.x = targetBBOX.getMinX() + ((coordinate.x - sourceBBOX.getMinX()) * xScale);
+            coordinate.y = targetBBOX.getMinY() + (targetBBOX.getHeight() - ((coordinate.y - sourceBBOX.getMinY()) * yScale ));
         }
         return geometry;
     }

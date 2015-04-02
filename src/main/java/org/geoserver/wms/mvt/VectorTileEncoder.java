@@ -2,6 +2,7 @@ package org.geoserver.wms.mvt;
 
 import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
+import org.geotools.geometry.jts.JTS;
 import org.geotools.util.logging.Logging;
 
 
@@ -23,11 +24,39 @@ public class VectorTileEncoder {
 
     private final Geometry clipGeometry;
 
-    private final Geometry polygonClipGeometry;
-
     private final double simplificationFactor;
 
     private static final Logger LOGGER = Logging.getLogger(VectorTileEncoder.class);
+
+    /**
+     * Creates the VectorTileEncoder for the defined target Bbox. It uses default values for the extent (4096) and
+     * simplification factor (0.1d)
+     *
+     * @param targetBBox the target bbox
+     */
+    public VectorTileEncoder(Envelope targetBBox) {
+        this(4096,targetBBox,0.1d);
+    }
+
+    /**
+     * Create a {@link VectorTileEncoder} with the given extent value.
+     * <p>
+     * The extent value control how detailed the coordinates are encoded in the
+     * vector tile. 4096 is a good default, 256 can be used to reduce density.
+     * <p>
+     * The polygon clip buffer value control how large the clipping area is
+     * outside of the tile for polygons. 0 means that the clipping is done at
+     * the tile border. 8 is a good default.
+     *
+     * @param extent  a int with extent value. 4096 is a good value.
+     * @param targetBbox the bbox defined for the target tile
+     * @param simplificationFactor the factor for simplification
+     */
+    public VectorTileEncoder(int extent, Envelope targetBbox, double simplificationFactor) {
+        this.extent = extent;
+        this.clipGeometry = JTS.toGeometry(targetBbox);
+        this.simplificationFactor = simplificationFactor;
+    }
 
     /**
      * Create a {@link VectorTileEncoder} with the given extent value.
@@ -45,10 +74,7 @@ public class VectorTileEncoder {
      *            a int with clip buffer size for polygons and line strings. 8 is a good value.
      */
     public VectorTileEncoder(int extent, int polygonClipBuffer, double simplificationFactor) {
-        this.extent = extent;
-        this.simplificationFactor = simplificationFactor;
-        clipGeometry = createTileEnvelope(polygonClipBuffer);
-        polygonClipGeometry = createTileEnvelope(polygonClipBuffer);
+        this(extent,createTileEnvelope(polygonClipBuffer),simplificationFactor);
     }
 
     /**
@@ -56,14 +82,14 @@ public class VectorTileEncoder {
      * @param buffer the buffer parameter
      * @return buffered result
      */
-    private static Geometry createTileEnvelope(int buffer) {
+    private static Envelope createTileEnvelope(int buffer) {
         Coordinate[] coords = new Coordinate[5];
         coords[0] = new Coordinate(0 - buffer, 256 + buffer);
         coords[1] = new Coordinate(256 + buffer, 256 + buffer);
         coords[2] = new Coordinate(256 + buffer, 0);
         coords[3] = new Coordinate(0 - buffer, 0 - buffer);
         coords[4] = coords[0];
-        return new GeometryFactory().createPolygon(coords);
+        return new GeometryFactory().createPolygon(coords).getEnvelopeInternal();
     }
 
     /**
@@ -94,12 +120,10 @@ public class VectorTileEncoder {
             return;
         }
 
-        // clip geometry. polygons right outside. other geometries at tile
+        // clip geometry. polygons or linestrings right outside. other geometries at tile
         // border.
         try {
-            if (geometry instanceof Polygon) {
-                geometry = polygonClipGeometry.intersection(geometry);
-            } else {
+            if (geometry instanceof Polygon || geometry instanceof LineString) {
                 geometry = clipGeometry.intersection(geometry);
             }
         } catch (TopologyException e) {
@@ -228,7 +252,7 @@ public class VectorTileEncoder {
     }
 
     static VectorTile.Tile.GeomType toGeomType(Geometry geometry) {
-        if (geometry instanceof com.vividsolutions.jts.geom.Point) {
+        if (geometry instanceof Point) {
             return VectorTile.Tile.GeomType.POINT;
         }
         if (geometry instanceof MultiPoint) {
@@ -252,16 +276,15 @@ public class VectorTileEncoder {
 
     List<Integer> commands(Geometry geometry) {
 
-        x = 0;
-        y = 0;
+        Coordinate relativeCoordinate = new Coordinate();
 
         if (geometry instanceof Polygon) {
             Polygon polygon = (Polygon) geometry;
             if (polygon.getNumInteriorRing() > 0) {
                 List<Integer> commands = new ArrayList<>();
-                commands.addAll(commands(polygon.getExteriorRing().getCoordinates(), true));
+                commands.addAll(commands(polygon.getExteriorRing().getCoordinates(),relativeCoordinate,true));
                 for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
-                    commands.addAll(commands(polygon.getInteriorRingN(i).getCoordinates(), true));
+                    commands.addAll(commands(polygon.getInteriorRingN(i).getCoordinates(),relativeCoordinate,true));
                 }
                 return commands;
             }
@@ -271,16 +294,13 @@ public class VectorTileEncoder {
             List<Integer> commands = new ArrayList<>();
             GeometryCollection gc = (GeometryCollection) geometry;
             for (int i = 0; i < gc.getNumGeometries(); i++) {
-                commands.addAll(commands(gc.getGeometryN(i).getCoordinates(), false));
+                commands.addAll(commands(gc.getGeometryN(i).getCoordinates(),relativeCoordinate,false));
             }
             return commands;
         }
 
-        return commands(geometry.getCoordinates(), shouldClosePath(geometry));
+        return commands(geometry.getCoordinates(),relativeCoordinate,shouldClosePath(geometry));
     }
-
-    private int x = 0;
-    private int y = 0;
 
     /**
      * // // // Ex.: MoveTo(3, 6), LineTo(8, 12), LineTo(20, 34), ClosePath //
@@ -296,7 +316,7 @@ public class VectorTileEncoder {
      * @param cs an array of coordinates
      * @return list of integer commands
      */
-    List<Integer> commands(Coordinate[] cs, boolean closePathAtEnd) {
+    List<Integer> commands(Coordinate[] cs, Coordinate relativeCoordinate, boolean closePathAtEnd) {
 
         if (cs.length == 0) {
             throw new IllegalArgumentException("empty geometry");
@@ -320,7 +340,7 @@ public class VectorTileEncoder {
             int _y = (int) Math.round(c.y * scale);
 
             // prevent point equal to the previous
-            if (i > 0 && _x == x && _y == y) {
+            if (i > 0 && _x == relativeCoordinate.x && _y == relativeCoordinate.y) {
                 lineToLength--;
                 continue;
             }
@@ -332,11 +352,11 @@ public class VectorTileEncoder {
             }
 
             // delta, then zigzag
-            r.add(zigZagEncode(_x - x));
-            r.add(zigZagEncode(_y - y));
+            r.add(zigZagEncode(_x - (int) relativeCoordinate.x));
+            r.add(zigZagEncode(_y - (int) relativeCoordinate.y));
 
-            x = _x;
-            y = _y;
+            relativeCoordinate.x = _x;
+            relativeCoordinate.y = _y;
 
             if (i == 0) {
                 // can length be too long?
