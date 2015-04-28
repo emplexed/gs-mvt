@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
@@ -41,11 +44,12 @@ public class SlippyTilesController {
             @RequestParam(value = "time",required = false) String time,
             @RequestParam(value = "sld", required = false) String sld,
             @RequestParam(value = "sld_body", required = false) String sld_body,
-            final HttpServletResponse response) throws IOException {
+            final HttpServletRequest request,
+            final HttpServletResponse response) throws IOException, ServletException {
 
         //Build relative WMS redirect URL from Path Variables and optional request params
         ReferencedEnvelope bbox = SlippyMapTileCalculator.tile2boundingBox(x, y, z,3857);
-        StringBuilder sb = new StringBuilder("/geoserver/wms?");
+        StringBuilder sb = new StringBuilder("/wms?");
         sb.append("STYLES=").append(styles != null ? styles : defaultStyles);
         sb.append("&LAYERS=").append(layers);
         sb.append("&FORMAT=").append(format != null && supportedOutputFormats != null
@@ -69,7 +73,8 @@ public class SlippyTilesController {
             sb.append("&SLD_BODY=").append(sld_body);
         }
         String url = sb.toString();
-        response.sendRedirect(response.encodeRedirectURL(url));
+        RequestDispatcher dispatcher = request.getRequestDispatcher(response.encodeRedirectURL(url));
+        dispatcher.forward(request,response);
     }
 
     private String getCRSIdentifier(CoordinateReferenceSystem coordinateReferenceSystem) {
