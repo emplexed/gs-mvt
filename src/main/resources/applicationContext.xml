@@ -24,6 +24,20 @@
                 <entry key="kmz" value="kmz"/>
             </map>
         </property>
+        <property name="defaultTileSize">
+            <map>
+                <entry key="pbf" value="512"/>
+                <entry key="png" value="256"/>
+                <entry key="jpg" value="256"/>
+                <entry key="gif" value="256"/>
+                <entry key="tif" value="256"/>
+                <entry key="svg" value="256"/>
+                <entry key="pdf" value="256"/>
+                <entry key="rss" value="256"/>
+                <entry key="kml" value="256"/>
+                <entry key="kmz" value="256"/>
+            </map>
+        </property>
     </bean>
 
     <!-- dispatcher for slippy map tiles-->

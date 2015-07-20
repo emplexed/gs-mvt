@@ -25,11 +25,11 @@ import java.util.Map;
 public class SlippyTilesController {
 
     private int defaultBuffer = 10;
-    private int defaultTileSize = 256;
     private String defaultFormat = "application/x-protobuf";
     private String defaultStyles = "";
 
     private Map<String,String> supportedOutputFormats;
+    private Map<String,String> defaultTileSize;
 
     @RequestMapping(value="{layers}/{z}/{x}/{y}.{format}", method = RequestMethod.GET)
     public void doGetSlippyWmsMap(
@@ -60,8 +60,8 @@ public class SlippyTilesController {
         sb.append("&SRS=").append(getCRSIdentifier(bbox.getCoordinateReferenceSystem()));
         sb.append("&BBOX=").append(bbox.getMinX()).append(',').append(bbox.getMinY())
                 .append(',').append(bbox.getMaxX()).append(',').append(bbox.getMaxY());
-        sb.append("&WIDTH=").append(tileSize != null ? tileSize : defaultTileSize);
-        sb.append("&HEIGHT=").append(tileSize != null ? tileSize : defaultTileSize);
+        sb.append("&WIDTH=").append(tileSize != null ? tileSize : defaultTileSize.get(format));
+        sb.append("&HEIGHT=").append(tileSize != null ? tileSize : defaultTileSize.get(format));
         sb.append("&BUFFER=").append(buffer != null ? buffer : defaultBuffer);
         if (time != null) {
             sb.append("&TIME=").append(time);
@@ -94,10 +94,6 @@ public class SlippyTilesController {
         this.defaultBuffer = defaultBuffer;
     }
 
-    public void setDefaultTileSize(int defaultTileSize) {
-        this.defaultTileSize = defaultTileSize;
-    }
-
     public void setDefaultFormat(String defaultFormat) {
         this.defaultFormat = defaultFormat;
     }
@@ -118,5 +114,16 @@ public class SlippyTilesController {
      */
     public void setSupportedOutputFormats(Map<String, String> supportedOutputFormats) {
         this.supportedOutputFormats = supportedOutputFormats;
+    }
+
+    /**
+     * Mapping of file endings to the default tile size. While png slippy maps are requested by default in 256x256
+     * mapbox requests the vector tiles in 512x512. The tileSize is important to calculate the scale denominators
+     * and pixel offsets
+     *
+     * @param defaultTileSize a map of the default tile sizes
+     */
+    public void setDefaultTileSize(Map<String,String> defaultTileSize) {
+        this.defaultTileSize = defaultTileSize;
     }
 }
