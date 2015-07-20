@@ -3,26 +3,32 @@ package org.geoserver.wms.mvt;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
+import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.referencing.CRS;
+import org.geotools.styling.AbstractSymbolizer;
+import org.geotools.styling.Style;
 import org.geotools.util.logging.Logging;
+import org.opengis.feature.Feature;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.filter.Filter;
+import org.opengis.filter.expression.Expression;
 import org.opengis.filter.spatial.BBOX;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
+import org.opengis.style.FeatureTypeStyle;
+import org.opengis.style.Rule;
+import org.opengis.style.Symbolizer;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -208,23 +214,24 @@ public class MVTWriter {
      * Returns all features of the featurecollections in the MVT PBF format as
      * byte array.
      *
-     * @param featureCollectionList the list of features
+     * @param featureCollectionStyleMap a map of all features and its refering style
+     *
      * @return byte[] containing the information in the MVT format
      */
-    public byte[] adaptFeatures(List<FeatureCollection> featureCollectionList) {
-        this.addFeaturesToEncoder(featureCollectionList);
+    public byte[] adaptFeatures(Map<FeatureCollection,Style> featureCollectionStyleMap, double scaleDenominator) {
+        this.addFeaturesToEncoder(featureCollectionStyleMap, scaleDenominator);
         return this.vectorTileEncoder.encode();
     }
 
     /**
      * Writes the PBF result directly to the output stream which is given as argument.
      *
-     * @param featureCollectionList the feature collection list to encode
+     * @param featureCollectionStyleMap the feature collection map to encode and its refering style
      * @param outputStream the PBF output stream to write to
      * @throws IOException
      */
-    public void writeFeatures(List<FeatureCollection> featureCollectionList, OutputStream outputStream) throws IOException {
-        this.addFeaturesToEncoder(featureCollectionList);
+    public void writeFeatures(Map<FeatureCollection,Style> featureCollectionStyleMap,double scaleDenominator, OutputStream outputStream) throws IOException {
+        this.addFeaturesToEncoder(featureCollectionStyleMap, scaleDenominator);
         this.vectorTileEncoder.encode(outputStream);
     }
 
@@ -232,11 +239,12 @@ public class MVTWriter {
      * Adds all features to the encoder and prepares it before. So geometries are removed from the attribute map and
      * the geometry is transformed to the target tile local system
      *
-     * @param featureCollectionList the feature collection list to be encoded
+     * @param featureCollectionStyleMap the feature collection map to be encoded and its refering style
      */
-    private void addFeaturesToEncoder(List<FeatureCollection> featureCollectionList) {
-        for (FeatureCollection featureCollection : featureCollectionList) {
+    private void addFeaturesToEncoder(Map<FeatureCollection,Style> featureCollectionStyleMap, double scaleDenominator) {
+        for (FeatureCollection featureCollection : featureCollectionStyleMap.keySet()) {
             String layerName = featureCollection.getSchema().getName().getLocalPart();
+            Style featureStyle = featureCollectionStyleMap.get(featureCollection);
             try (FeatureIterator<SimpleFeature> it = featureCollection.features()) {
                 while (it.hasNext()) {
                     SimpleFeature feature = it.next();
@@ -247,12 +255,87 @@ public class MVTWriter {
                             attributeMap.put(property.getName().toString(), property.getValue());
                         }
                     }
-                    Geometry geometry = (Geometry) feature.getDefaultGeometry();
-                    geometry = transFormGeometry(geometry);
-                    this.vectorTileEncoder.addFeature(layerName, attributeMap, geometry);
+                    //Process GeometryTransformations in Symbolizers. It is possible to render the same geometry
+                    //with more than one symbolizer. Therefore a list is returned.
+                    List<Geometry> geometryList = processSymbolizers(featureStyle,feature,scaleDenominator);
+                    for (Geometry geometry : geometryList) {
+                        geometry = transFormGeometry(geometry);
+                        this.vectorTileEncoder.addFeature(layerName, attributeMap, geometry);
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * All geometries that are generated by this style with the symbolizers are returned by this method. If no
+     * symbolizer has been defined the original geometry is returned.
+     *
+     * @param style the style for the feature containing all rules
+     * @param feature the feature that should be rendered
+     * @return all geometries that can be generated by the symbolizers or the original geometry if no symbolizers are defined
+     */
+    private List<Geometry> processSymbolizers(Style style, SimpleFeature feature, double currentScaleDenominator) {
+        List<Geometry> geometryList = new ArrayList<>();
+        if (style != null && feature != null) {
+            for (FeatureTypeStyle featureTypeStyle : style.featureTypeStyles()) {
+                for (Rule rule : featureTypeStyle.rules()) {
+                    if (ruleInScale(rule, currentScaleDenominator)) {
+                        Filter filter = rule.getFilter();
+                        //If no filter is present or the feature evaluates positive against the filter
+                        if (filter == null || filter.evaluate(feature)) {
+                            Geometry geometry = null;
+                            //If no symbolizers are present, get the default geometry
+                            if (rule.symbolizers() == null || rule.symbolizers().isEmpty()) {
+                                geometry = (Geometry) feature.getDefaultGeometry();
+                                if (geometry != null) {
+                                    geometryList.add(geometry);
+                                }
+                                //If symbolizers are present get the geometry from the symbolizers (especially
+                                //if geometric expressions have to be executed
+                            } else {
+                                for (Symbolizer symbolizer : rule.symbolizers()) {
+                                    if (symbolizer instanceof AbstractSymbolizer) {
+                                        boolean duplicateGeometry = false;
+                                        geometry = findGeometry(feature, (AbstractSymbolizer) symbolizer);
+                                        //Check for duplicate geometries, e.g. if you use a ordinary wms style with
+                                        //foreground and background rendering then the geometries could be duplicate.
+                                        for (Geometry geometryInList : geometryList) {
+                                            if (geometry.equals(geometryInList)) {
+                                                duplicateGeometry = true;
+                                            }
+                                        }
+                                        if (!duplicateGeometry && geometry != null) {
+                                            geometryList.add(geometry);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return geometryList;
+    }
+
+    /**
+     * This method evaluates the rule against the current scale denominator.
+     *
+     * @param rule the current rule to be checked
+     * @param currentScaleDenominator the current scale denominator
+     * @return true if the current rule matches to the current scale denominator, otherwise false
+     */
+    private boolean ruleInScale(Rule rule, double currentScaleDenominator) {
+        //true if within range or no cale denominator set
+        boolean inScale = true;
+        if (rule.getMinScaleDenominator() > 0 && currentScaleDenominator < rule.getMinScaleDenominator()) {
+            inScale = false;
+        }
+        if (rule.getMaxScaleDenominator() < Double.POSITIVE_INFINITY && currentScaleDenominator > rule.getMaxScaleDenominator()) {
+            inScale = false;
+        }
+        return inScale;
     }
 
     /**
@@ -263,7 +346,7 @@ public class MVTWriter {
      * @return the transformed geometry
      */
     private Geometry transFormGeometry(Geometry geometry) {
-        geometry = doManualTransformation(geometry);
+        geometry = doManualTransformation((Geometry)geometry.clone());
         return geometry;
     }
 
@@ -284,5 +367,34 @@ public class MVTWriter {
             coordinate.y = targetBBOX.getMinY() + (targetBBOX.getHeight() - ((coordinate.y - sourceBBOX.getMinY()) * yScale ));
         }
         return geometry;
+    }
+
+    /** Finds the geometric attribute requested by the symbolizer.
+     * Method copied from {@link org.geotools.renderer.lite.StreamingRenderer#findGeometry(Object, org.geotools.styling.Symbolizer)}
+     *
+     * @param drawMe the feature
+     * @param s the symbolizer
+     *
+     * @return The geometry requested in the symbolizer, or the default geometry
+     *         if none is specified
+     */
+    private Geometry findGeometry(Object drawMe, AbstractSymbolizer s) {
+        Expression geomExpr = s.getGeometry();
+
+        // get the geometry
+        Geometry geom;
+        if(geomExpr == null) {
+            if(drawMe instanceof SimpleFeature) {
+                geom = (Geometry) ((SimpleFeature) drawMe).getDefaultGeometry();
+            } else if (drawMe instanceof Feature) {
+                geom = (Geometry) ((Feature) drawMe).getDefaultGeometryProperty().getValue();
+            } else {
+                geom = CommonFactoryFinder.getFilterFactory2().property("").evaluate(drawMe, Geometry.class);
+            }
+        } else {
+            geom = geomExpr.evaluate(drawMe, Geometry.class);
+        }
+
+        return geom;
     }
 }

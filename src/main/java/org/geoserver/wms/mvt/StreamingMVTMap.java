@@ -4,7 +4,6 @@ import org.geoserver.wms.WMSMapContent;
 import org.geoserver.wms.WebMap;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.Query;
-
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureCollection;
@@ -23,7 +22,9 @@ import org.opengis.referencing.operation.TransformException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Adapted WebMap implementation. Gets the style and retrieves filter rules. These rules are considered when loading
@@ -31,6 +32,11 @@ import java.util.List;
  *
  */
 public class StreamingMVTMap extends WebMap {
+
+    /**
+     * The Mapbox client requests 512x512 tiles but the target tile has 256 units in each direction.
+     */
+    private static int targetBinaryCRSTileSize = 256;
 
     /**
      * @param context the map context, can be {@code null} is there's _really_ no context around
@@ -50,8 +56,8 @@ public class StreamingMVTMap extends WebMap {
         try {
             MVTWriter mvtWriter =
                     MVTWriter.getInstance(renderingArea, this.mapContent.getCoordinateReferenceSystem(),
-                            this.mapContent.getMapWidth(), this.mapContent.getMapHeight(), this.mapContent.getBuffer());
-            List<FeatureCollection> featureCollectionList = new ArrayList<>();
+                            targetBinaryCRSTileSize, targetBinaryCRSTileSize, this.mapContent.getBuffer());
+            Map<FeatureCollection,Style> featureCollectionStyleMap = new HashMap<>();
             FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
             //Iterate through all layers. Layers can be requested through WMS with comma separation
             for (Layer layer : this.mapContent.layers()) {
@@ -79,10 +85,10 @@ public class StreamingMVTMap extends WebMap {
                 finalQuery.setSortBy(definitionQuery.getSortBy());
                 finalQuery.setStartIndex(definitionQuery.getStartIndex());
                 //Retrieve feature collection from the layer
-                featureCollectionList.add(featureSource.getFeatures(finalQuery));
+                featureCollectionStyleMap.put(featureSource.getFeatures(finalQuery), layer.getStyle());
             }
             //Write all features to the output stream
-            mvtWriter.writeFeatures(featureCollectionList,out);
+            mvtWriter.writeFeatures(featureCollectionStyleMap, this.mapContent.getScaleDenominator(), out);
         } catch (TransformException | FactoryException e) {
             e.printStackTrace();
         }
