@@ -6,7 +6,7 @@ The resulting Vector Tiles can e.g. be rendered by WebGL JS clients like [Mapbox
 
 ## Getting Started
 For building the plugin the geoserver source code is required. It is available at the [boundless maven repository](http://repo.boundlessgeo.com/main/) or on [GitHub](https://github.com/geoserver).
-In order to get started the result of the maven build ```gs-mvt-2.6.2.jar``` and the depending library ```protobuf-java-2.6.1.jar``` have to be copied to the geoserver's lib directory ```geoserver/WEB-INF/lib```. After starting the GeoServer the format ```application/x-protobuf``` is shown in the WMS Format list of the layer preview.
+In order to get started the result of the maven build ```gs-mvt-2.7.0.jar``` and the depending library ```protobuf-java-2.6.1.jar``` have to be copied to the geoserver's lib directory ```geoserver/WEB-INF/lib```. After starting the GeoServer the format ```application/x-protobuf``` is shown in the WMS Format list of the layer preview.
 
 ## WMS Query
 Mandatory for the WMS **getMap** request are the ```bbox```, ```witdh``` and ```height``` parameters. The ```bbox``` describes the requested source coordinate system. The ```width``` and ```height``` the target coordinate system (tile local). The MVT format uses a local coordinate system within each tile. By default this is 0 to 256 on x and y axis. An example WMS Request could be: 
