@@ -1,12 +1,12 @@
 # Geoserver MVT Extension
 
 ## Overview
-This extension for the **Geoserver** adds the possibility to deliver [Mapnik Vector Tiles](https://github.com/mapbox/mapnik-vector-tile/) in Protocol Buffers outputformat as result of an **WMS** or **Slippy Map Tile** request. It has been developed and tested with [Geoserver 2.6.2](http://geoserver.org) but might also work with preceding versions.
+This extension for the **Geoserver** adds the possibility to deliver [Mapnik Vector Tiles](https://github.com/mapbox/mapnik-vector-tile/) in Protocol Buffers outputformat as result of an **WMS** or **Slippy Map Tile** request. It has been developed and tested with [Geoserver 2.6.2 and 2.7.0](http://geoserver.org) but might also work with preceding versions.
 The resulting Vector Tiles can e.g. be rendered by WebGL JS clients like [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/api/) or [Tangram](https://github.com/tangrams/tangram).
 
 ## Getting Started
 For building the plugin the geoserver source code is required. It is available at the [boundless maven repository](http://repo.boundlessgeo.com/main/) or on [GitHub](https://github.com/geoserver).
-In order to get started the result of the maven build ```gs-mvt-2.7.0.jar``` and the depending library ```protobuf-java-2.6.1.jar``` have to be copied to the geoserver's lib directory ```geoserver/WEB-INF/lib```. After starting the GeoServer the format ```application/x-protobuf``` is shown in the WMS Format list of the layer preview.
+You can build ```gs-mvt-2.7.0.jar``` with maven or directly download it from [here](https://github.com/stefan0722/gs-mvt/tree/master/build/). In order to get started the ```gs-mvt-2.7.0.jar``` package and the depending library ```protobuf-java-2.6.1.jar``` have to be copied to the geoserver's lib directory ```geoserver/WEB-INF/lib```. After starting the GeoServer the format ```application/x-protobuf``` is shown in the WMS Format list of the layer preview.
 
 ## WMS Query
 Mandatory for the WMS **getMap** request are the ```bbox```, ```witdh``` and ```height``` parameters. The ```bbox``` describes the requested source coordinate system. The ```width``` and ```height``` the target coordinate system (tile local). The MVT format uses a local coordinate system within each tile. By default this is 0 to 256 on x and y axis. An example WMS Request could be: 
@@ -16,7 +16,7 @@ http://localhost/geoserver/test/wms?STYLES=&LAYERS=test:streetsegments&FORMAT=ap
 As result all features of the requested clip are returned. Additionally a [Douglas-Peucker algorithm](http://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm) simplifies these geometries. By default the algorithm accepts a maximum distance of ```0.1``` in target system units.
 
 ## Slippy Map Tiles Request
-[Slippy Map Tiles](http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames) describes the tile format used by Google, Bing and OSM. Usually a tile cache delivers the result to the client. But the **GeoWebCache** used by the **Geoserver** does not allow to be extended with additional MimeTypes (e.g. ```application/x-protobuf```) without a change to core classes. Therefore a basic Slippy Map Tile Controller has been provided with this extension, that translates the slippy map tile names into a WMS redirect. The Slippy Tile request has the following format:
+[Slippy Map Tiles](http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames) describes the tile format used by Google, Bing and OSM. Usually a tile cache delivers the result to the client. But the **GeoWebCache** used by the **Geoserver** does not allow to be extended with additional MimeTypes (e.g. ```application/x-protobuf```) without a change to core classes. **Update:** In GWC 1.8 the class will be extended and the protobuf MimeType will be supported. Therefore a basic Slippy Map Tile Controller has been provided with this extension, that translates the slippy map tile names into a WMS redirect. The Slippy Tile request has the following format:
 ```
 http://localhost/geoserver/slippymap/{layers}/{z}/{x}/{y}.{format}
 ```

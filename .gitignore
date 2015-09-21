@@ -36,6 +36,9 @@
 # IntelliJ
 out/
 
+# Maven
+target/
+
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 
@@ -55,7 +58,6 @@ crashlytics-build.properties
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
