@@ -1,12 +1,12 @@
 # Geoserver MVT Extension
 
 ## Overview
-This extension for the **Geoserver** adds the possibility to deliver [Mapnik Vector Tiles](https://github.com/mapbox/mapnik-vector-tile/) in Protocol Buffers outputformat as result of an **WMS** or **Slippy Map Tile** request. It has been developed and tested with [Geoserver 2.6.2 and 2.7.0](http://geoserver.org) but might also work with preceding versions.
+This extension for the **Geoserver** adds the possibility to deliver [Mapnik Vector Tiles](https://github.com/mapbox/mapnik-vector-tile/) in Protocol Buffers outputformat as result of an **WMS** or **Slippy Map Tile** request. It has been developed and tested with [Geoserver 2.6.2 to 2.7.2](http://geoserver.org) but might also work with preceding versions.
 The resulting Vector Tiles can e.g. be rendered by WebGL JS clients like [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/api/) or [Tangram](https://github.com/tangrams/tangram).
 
 ## Getting Started
 For building the plugin the geoserver source code is required. It is available at the [boundless maven repository](http://repo.boundlessgeo.com/main/) or on [GitHub](https://github.com/geoserver).
-You can build ```gs-mvt-2.7.0.jar``` with maven or directly download it from [here](https://github.com/stefan0722/gs-mvt/tree/master/build/). In order to get started the ```gs-mvt-2.7.0.jar``` package and the depending library ```protobuf-java-2.6.1.jar``` have to be copied to the geoserver's lib directory ```geoserver/WEB-INF/lib```. After starting the GeoServer the format ```application/x-protobuf``` is shown in the WMS Format list of the layer preview.
+You can build ```gs-mvt-2.7.2.jar``` with maven or directly download it from [here](https://github.com/stefan0722/gs-mvt/tree/master/build/). In order to get started the ```gs-mvt-2.7.2.jar``` package and the depending library ```protobuf-java-2.6.1.jar``` have to be copied to the geoserver's lib directory ```geoserver/WEB-INF/lib```. After starting the GeoServer the format ```application/x-protobuf``` is shown in the WMS Format list of the layer preview.
 
 ## WMS Query
 Mandatory for the WMS **getMap** request are the ```bbox```, ```witdh``` and ```height``` parameters. The ```bbox``` describes the requested source coordinate system. The ```width``` and ```height``` the target coordinate system (tile local). The MVT format uses a local coordinate system within each tile. By default this is 0 to 256 on x and y axis. An example WMS Request could be: 
