@@ -137,7 +137,7 @@ public class VectorTileEncoder {
         }
 
         // no need to add empty geometry
-        if (geometry.isEmpty()) {
+        if (geometry.isEmpty() || geometry.getCoordinates() == null || geometry.getCoordinates().length == 0) {
             return;
         }
 
