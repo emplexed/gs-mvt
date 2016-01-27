@@ -1,11 +1,14 @@
 package org.geoserver.wms.mvt;
 
 import com.vividsolutions.jts.geom.*;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.util.logging.Logging;
 
 
+import javax.sound.sampled.Line;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
@@ -122,12 +125,25 @@ public class VectorTileEncoder {
 
         // clip geometry. polygons or linestrings right outside. other geometries at tile
         // border.
+        // clip geometry. polygons right outside. other geometries at tile
+        // border.
         try {
-            if (geometry instanceof Polygon || geometry instanceof LineString) {
+            if (geometry instanceof Polygon) {
+                Geometry original = geometry;
+                geometry = clipGeometry.intersection(original);
+
+                // some times a intersection is returned as an empty geometry.
+                // going via wkt fixes the problem.
+                if (geometry.isEmpty() && original.intersects(clipGeometry)) {
+                    Geometry originalViaWkt = new WKTReader().read(original.toText());
+                    geometry = clipGeometry.intersection(originalViaWkt);
+                }
+
+            } else if (geometry instanceof LineString) {
                 geometry = clipGeometry.intersection(geometry);
             }
-        } catch (TopologyException e) {
-            // ignore topology exceptions. sorry.
+        } catch (TopologyException | ParseException e) {
+            // could not intersect. original geometry will be used instead.
         }
 
         // if clipping result in MultiPolygon, then split once more
