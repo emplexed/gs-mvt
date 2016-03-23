@@ -4,6 +4,7 @@ import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
+import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.util.logging.Logging;
 
@@ -157,8 +158,8 @@ public class VectorTileEncoder {
             return;
         }
 
-        //generalize geometry (less memory)
-        geometry = DouglasPeuckerSimplifier.simplify(geometry,this.simplificationFactor);
+        //generalize geometry (less memory) use TopolyPreservingSimplifier to prevent null geometries
+        geometry = TopologyPreservingSimplifier.simplify(geometry, this.simplificationFactor);
 
         Layer layer = layers.get(layerName);
         if (layer == null) {
