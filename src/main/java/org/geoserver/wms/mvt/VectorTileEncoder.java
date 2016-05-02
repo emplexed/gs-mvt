@@ -1,20 +1,35 @@
 package org.geoserver.wms.mvt;
 
-import com.vividsolutions.jts.geom.*;
-import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKTReader;
-import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
-import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.geotools.geometry.jts.JTS;
 import org.geotools.util.logging.Logging;
 
-
-import javax.sound.sampled.Line;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.MultiPoint;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.TopologyException;
+import com.vividsolutions.jts.io.ParseException;
+import com.vividsolutions.jts.io.WKTReader;
+import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
 /**
  * VectorTileEncoder adapted from https://github.com/ElectronicChartCentre/java-vector-tile/blob/master/src/main/java/no/ecc/vectortile/VectorTileEncoder.java
@@ -29,7 +44,10 @@ public class VectorTileEncoder {
     private final Geometry clipGeometry;
 
     private final double simplificationFactor;
-
+    private final double smallGeometryThreshold = 0.05;
+    
+    private boolean skipSmallGeoms = true;
+    
     private static final Logger LOGGER = Logging.getLogger(VectorTileEncoder.class);
 
     /**
@@ -39,7 +57,7 @@ public class VectorTileEncoder {
      * @param targetBBox the target bbox
      */
     public VectorTileEncoder(Envelope targetBBox) {
-        this(4096,targetBBox,0.1d);
+        this(4096,targetBBox,0.1d, true);
     }
 
     /**
@@ -55,11 +73,13 @@ public class VectorTileEncoder {
      * @param extent  a int with extent value. 4096 is a good value.
      * @param targetBbox the bbox defined for the target tile
      * @param simplificationFactor the factor for simplification
+     * @param skipSmallGeoms defines if small geometries (short linestrings or polys with small area) should be skipped in output
      */
-    public VectorTileEncoder(int extent, Envelope targetBbox, double simplificationFactor) {
+    public VectorTileEncoder(int extent, Envelope targetBbox, double simplificationFactor, boolean skipSmallGeoms) {
         this.extent = extent;
         this.clipGeometry = JTS.toGeometry(targetBbox);
         this.simplificationFactor = simplificationFactor;
+        this.skipSmallGeoms = skipSmallGeoms;
     }
 
     /**
@@ -76,9 +96,10 @@ public class VectorTileEncoder {
      *            a int with extent value. 4096 is a good value.
      * @param polygonClipBuffer
      *            a int with clip buffer size for polygons and line strings. 8 is a good value.
+     * @param skipSmallGeoms defines if small geometries (short linestrings or polys with small area) should be skipped in output
      */
-    public VectorTileEncoder(int extent, int polygonClipBuffer, double simplificationFactor) {
-        this(extent,createTileEnvelope(polygonClipBuffer),simplificationFactor);
+    public VectorTileEncoder(int extent, int polygonClipBuffer, double simplificationFactor, boolean skipSmallGeoms) {
+        this(extent,createTileEnvelope(polygonClipBuffer),simplificationFactor, skipSmallGeoms);
     }
 
     /**
@@ -117,11 +138,17 @@ public class VectorTileEncoder {
         }
 
         // skip small Polygon/LineString.
-        if (geometry instanceof Polygon && geometry.getArea() < this.simplificationFactor) {
-            return;
-        }
-        if (geometry instanceof LineString && geometry.getLength() < this.simplificationFactor) {
-            return;
+        if(this.skipSmallGeoms) {
+        //	if (geometry instanceof Polygon && geometry.getArea() < this.simplificationFactor) {
+        	if (geometry instanceof Polygon && geometry.getArea() < this.smallGeometryThreshold) {
+        	
+        	
+        		return;
+        	}
+        	if (geometry instanceof LineString && geometry.getLength() < this.smallGeometryThreshold) {
+       // 	if (geometry instanceof LineString && geometry.getLength() < this.simplificationFactor) {
+        		return;
+        	}
         }
 
         // clip geometry. polygons or linestrings right outside. other geometries at tile
@@ -159,7 +186,9 @@ public class VectorTileEncoder {
         }
 
         //generalize geometry (less memory) use TopolyPreservingSimplifier to prevent null geometries
-        geometry = TopologyPreservingSimplifier.simplify(geometry, this.simplificationFactor);
+        if(this.simplificationFactor > 0) {
+        	geometry = TopologyPreservingSimplifier.simplify(geometry, this.simplificationFactor);
+        }
 
         Layer layer = layers.get(layerName);
         if (layer == null) {

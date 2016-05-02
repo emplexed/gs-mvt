@@ -1,38 +1,20 @@
 package org.geoserver.wms.mvt;
 
-import com.mockrunner.mock.web.MockHttpServletResponse;
+import java.io.InputStream;
+
 import org.apache.commons.io.IOUtils;
-import org.geoserver.data.test.MockData;
-import org.geoserver.data.test.SystemTestData;
-import org.geoserver.wms.WMSTestSupport;
+import org.geoserver.AbstractMVTTest;
 import org.junit.Assert;
 import org.junit.Test;
 
-
-import javax.xml.namespace.QName;
-import java.io.*;
-import java.util.Collections;
+import com.mockrunner.mock.web.MockHttpServletResponse;
 
 /**
  *
  * Test for creating a MVT PBF using an WMS request with FilterStyle.
  *
  */
-public class MVTTest extends WMSTestSupport {
-
-    public static QName TEST_LINES = new QName(MockData.CITE_URI, "test_lines", MockData.CITE_PREFIX);
-    public static QName TEST_POINTS = new QName(MockData.CITE_URI, "test_points", MockData.CITE_PREFIX);
-    public static QName TEST_POLYGONS = new QName(MockData.CITE_URI, "test_polygons", MockData.CITE_PREFIX);
-    public static String STYLE_NAME = "test_pbf_filter";
-
-    @Override
-    protected void onSetUp(SystemTestData testData) throws Exception {
-        super.onSetUp(testData);
-        testData.addStyle(STYLE_NAME, "./test_pbf_filter.sld", getClass(), getCatalog());
-        testData.addVectorLayer(TEST_LINES, Collections.EMPTY_MAP, "test_lines.properties", MVTTest.class, getCatalog());
-        testData.addVectorLayer(TEST_POINTS, Collections.EMPTY_MAP, "test_points.properties",MVTTest.class, getCatalog());
-        testData.addVectorLayer(TEST_POLYGONS, Collections.EMPTY_MAP, "test_polygons.properties",MVTTest.class, getCatalog());
-    }
+public class MVTTest extends AbstractMVTTest {
 
     @Test
     public void testBasicMvtGeneratorWithStyle() throws Exception {
@@ -50,4 +32,63 @@ public class MVTTest extends WMSTestSupport {
         Assert.assertArrayEquals(inputBytes,content);
         IOUtils.closeQuietly(inputStream);
     }
+    
+    @Test
+    public void testBasicMvtGeneratorWithCustomGeneralisation() throws Exception {
+    	String request = "wms?request=getmap&service=wms&version=1.1.1" +
+                "&format=" + MVT.MIME_TYPE +
+                "&layers=" + TEST_LINES.getPrefix() + ":" + TEST_LINES.getLocalPart() + ","
+                + TEST_POINTS.getPrefix() + ":" + TEST_POINTS.getLocalPart() + ","
+                + TEST_POLYGONS.getPrefix() + ":" + TEST_POLYGONS.getLocalPart() +
+                "&styles=" + STYLE_NAME + "," + STYLE_NAME + "," + STYLE_NAME +
+                "&height=256&width=256" +
+                "&bbox=1448023.063834379,6066042.5647115875,1457807.0034548815,6075826.50433209&srs=EPSG:3857&buffer=10";
+
+        MockHttpServletResponse responseDefault = getAsServletResponse(request);
+        
+    	String request05 = request + "&env=gen_factor:0.5";
+    	MockHttpServletResponse response05 = getAsServletResponse(request05);
+    
+    	String request20 = request + "&env=gen_factor:2.0";
+    	MockHttpServletResponse response20 = getAsServletResponse(request20);
+    	
+        byte[] contentDefault = responseDefault.getOutputStreamContent().getBytes();
+        byte[] content05 = response05.getOutputStreamContent().getBytes();
+        byte[] content20 = response20.getOutputStreamContent().getBytes();
+        
+        
+        Assert.assertTrue(contentDefault.length > content05.length);
+        Assert.assertTrue(content05.length > content20.length);
+    }
+    
+    
+    @Test
+    public void testBasicMvtGeneratorWithGeneralisationLevels() throws Exception {
+    	String request = "wms?request=getmap&service=wms&version=1.1.1" +
+                "&format=" + MVT.MIME_TYPE +
+                "&layers=" + TEST_LINES.getPrefix() + ":" + TEST_LINES.getLocalPart() + ","
+                + TEST_POINTS.getPrefix() + ":" + TEST_POINTS.getLocalPart() + ","
+                + TEST_POLYGONS.getPrefix() + ":" + TEST_POLYGONS.getLocalPart() +
+                "&styles=" + STYLE_NAME + "," + STYLE_NAME + "," + STYLE_NAME +
+                "&height=256&width=256" +
+                "&bbox=1448023.063834379,6066042.5647115875,1457807.0034548815,6075826.50433209&srs=EPSG:3857&buffer=10";
+
+        MockHttpServletResponse responseDefault = getAsServletResponse(request);
+        
+    	String requestLowGen = request + "&env=gen_level:low";
+    	MockHttpServletResponse responseLowGen = getAsServletResponse(requestLowGen);
+    
+    	String requestHigh = request + "&env=gen_level:high";
+    	MockHttpServletResponse responseHigh = getAsServletResponse(requestHigh);
+    	
+        byte[] contentDefault = responseDefault.getOutputStreamContent().getBytes();
+        byte[] contentLow = responseLowGen.getOutputStreamContent().getBytes();
+        byte[] contentHigh = responseHigh.getOutputStreamContent().getBytes();
+        
+        // size of default (mid) generalisation is larger then with high generalisation
+        Assert.assertTrue(contentDefault.length > contentHigh.length);
+        // size of log  generalisation is larger then with high generalisation
+        Assert.assertTrue(contentLow.length > contentHigh.length);
+    }
+    
 }
