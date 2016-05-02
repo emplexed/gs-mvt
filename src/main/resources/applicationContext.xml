@@ -49,13 +49,93 @@
             </props>
         </property>
     </bean>
-
+    
     <!-- Streaming map output format -->
     <bean id="MVTStreamingMapOutputFormat" class="org.geoserver.wms.mvt.MVTStreamingMapOutputFormat">
     </bean>
 
     <!-- straming map response -->
     <bean id="MVTStreamingMapResponse" class="org.geoserver.wms.mvt.MVTStreamingMapResponse">
+    	<property name="defaultGenLevel" value="MID" />
+    	<property name="generalisationTables">
+    		<map>
+    			<entry key="LOW">
+    				<map>
+    					<entry key="0" value="0.7" />
+    					<entry key="1" value="0.7" />
+    					<entry key="2" value="0.6" />
+    					<entry key="3" value="0.6" />
+    					<entry key="4" value="0.6" />
+    					<entry key="5" value="0.6" />
+    					<entry key="6" value="0.6" />
+    					<entry key="7" value="0.6" />
+    					<entry key="8" value="0.6" />
+    					<entry key="9" value="0.5" />
+    					<entry key="10" value="0.4" />
+    					<entry key="11" value="0.35" />
+    					<entry key="12" value="0.3" />
+    					<entry key="13" value="0.25" />
+    					<entry key="14" value="0.2" />
+    					<entry key="15" value="0.15" />
+    					<entry key="16" value="0.1" />
+    					<entry key="17" value="0.05" />
+    					<entry key="18" value="0.01" />
+    					<entry key="19" value="0.005" />
+    					<entry key="20" value="0.001" />
+    				</map>
+    			</entry>	
+    			<entry key="MID">
+    				<map>
+    					<entry key="0" value="0.8" />
+    					<entry key="1" value="0.8" />
+    					<entry key="2" value="0.8" />
+    					<entry key="3" value="0.7" />
+    					<entry key="4" value="0.7" />
+    					<entry key="5" value="0.7" />
+    					<entry key="6" value="0.7" />
+    					<entry key="7" value="0.7" />
+    					<entry key="8" value="0.7" />
+    					<entry key="9" value="0.6" />
+    					<entry key="10" value="0.5" />
+    					<entry key="11" value="0.45" />
+    					<entry key="12" value="0.4" />
+    					<entry key="13" value="0.35" />
+    					<entry key="14" value="0.3" />
+    					<entry key="15" value="0.25" />
+    					<entry key="16" value="0.2" />
+    					<entry key="17" value="0.1" />
+    					<entry key="18" value="0.05" />
+    					<entry key="19" value="0.025" />
+    					<entry key="20" value="0.01" />
+    				</map>
+    			</entry>	
+    			<entry key="HIGH">
+    				<map>
+    					<entry key="0" value="1.0" />
+    					<entry key="1" value="1.0" />
+    					<entry key="2" value="1.0" />
+    					<entry key="3" value="1.0" />
+    					<entry key="4" value="1.0" />
+    					<entry key="5" value="1.0" />
+    					<entry key="6" value="1.0" />
+    					<entry key="7" value="0.9" />
+    					<entry key="8" value="0.9" />
+    					<entry key="9" value="0.8" />
+    					<entry key="10" value="0.7" />
+    					<entry key="11" value="0.7" />
+    					<entry key="12" value="0.7" />
+    					<entry key="13" value="0.6" />
+    					<entry key="14" value="0.5" />
+    					<entry key="15" value="0.4" />
+    					<entry key="16" value="0.3" />
+    					<entry key="17" value="0.2" />
+    					<entry key="18" value="0.1" />
+    					<entry key="19" value="0.05" />
+    					<entry key="20" value="0.01" />
+    				</map>
+    			</entry>	
+    		</map>
+    	</property>
     </bean>
   
 </beans>
