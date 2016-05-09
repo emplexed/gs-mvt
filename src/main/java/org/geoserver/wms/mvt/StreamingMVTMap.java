@@ -55,12 +55,12 @@ public class StreamingMVTMap extends WebMap {
      * Retrieves the feature from the underlying datasource and encodes them the MVT PBF format.
      *
      * @param out the outputstream to write to
-     * @param boolean skipSmallGeoms
-     * @param double genFactors
-     * @param double fallBackGen
+     * @param smallGeometryThreshold defines the threshold in length / area when geometries should be skipped in output. 0 or negative means all geoms are included
+     * @param double genFactors map of generalization factors per zoom level
+     * @param double fallBackGen fallback value if no suiting value can be found in genFactors map
      * @throws IOException
      */
-    public void encode(final OutputStream out, boolean skipSmallGeoms, 
+    public void encode(final OutputStream out, double smallGeometryThreshold, 
     		Map<Integer, Double> genFactors, double fallBackGen) throws IOException {   
         int zoomLevel = getZoomLevel(this.mapContent.getScaleDenominator());
         double genFactor;
@@ -72,7 +72,7 @@ public class StreamingMVTMap extends WebMap {
         	LOGGER.warning("computed zoom level (" + zoomLevel + ") is out of range, using default generalisation (" + fallBackGen + ")");
         
         }
-        this.encode(out, skipSmallGeoms, genFactor);
+        this.encode(out, smallGeometryThreshold, genFactor);
     }
     
     /**
@@ -83,13 +83,13 @@ public class StreamingMVTMap extends WebMap {
      * @param double genFactor
      * @throws IOException
      */
-    public void encode(final OutputStream out, boolean skipSmallGeoms, double genFactor) throws IOException {
+    public void encode(final OutputStream out, double smallGeometryThreshold, double genFactor) throws IOException {
         ReferencedEnvelope renderingArea = this.mapContent.getRenderingArea();
         try {
             MVTWriter mvtWriter =
             		  MVTWriter.getInstance(renderingArea, this.mapContent.getCoordinateReferenceSystem(),
                               targetBinaryCRSTileSize, targetBinaryCRSTileSize, 
-                              this.mapContent.getBuffer(), genFactor, skipSmallGeoms);
+                              this.mapContent.getBuffer(), genFactor, smallGeometryThreshold);
             Map<FeatureCollection,Style> featureCollectionStyleMap = new HashMap<>();
             FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
             //Iterate through all layers. Layers can be requested through WMS with comma separation

@@ -1,7 +1,6 @@
 package org.geoserver.slippymap;
 
 import org.geoserver.wms.GeneralisationLevel;
-import org.geoserver.wms.mvt.MVTStreamingMapResponse;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.referencing.ReferenceIdentifier;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
@@ -20,6 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Map;
+
+import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_GENERALISATION_FACTOR;
+import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_SMALL_GEOM_THRESHOLD;
+import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_GENERALISATION_LEVEL;
 
 /**
  * Slippy Map Tiles controller that converts the requests into WMS requests. Answers with an redirect to the WMS service
@@ -55,9 +58,9 @@ public class SlippyTilesController {
             @RequestParam(value = "time",required = false) String time,
             @RequestParam(value = "sld", required = false) String sld,
             @RequestParam(value = "sld_body", required = false) String sld_body,
-            @RequestParam(value = "gen_factor", required = false) Double gen_factor,
-            @RequestParam(value = "gen_level", required = false) GeneralisationLevel gen_level,
-            @RequestParam(value = "skip_small_geoms", required = false) Boolean skip_small,
+            @RequestParam(value = PARAM_GENERALISATION_FACTOR, required = false) Double gen_factor,
+            @RequestParam(value = PARAM_GENERALISATION_LEVEL, required = false) GeneralisationLevel gen_level,
+            @RequestParam(value = PARAM_SMALL_GEOM_THRESHOLD, required = false) Double small_geom_threshold,
             final HttpServletRequest request,
             final HttpServletResponse response) throws IOException, ServletException {
 
@@ -88,7 +91,7 @@ public class SlippyTilesController {
         }
         boolean envAppended = false;
         if(gen_factor != null) {
-        	sb.append("&ENV=").append(MVTStreamingMapResponse.PARAM_GENERALISATION_FACTOR).append(":").append(gen_factor);
+        	sb.append("&ENV=").append(PARAM_GENERALISATION_FACTOR).append(":").append(gen_factor);
         	envAppended = true;
         }
         if(gen_level != null) {
@@ -99,16 +102,16 @@ public class SlippyTilesController {
         	else {
         		sb.append(";");
         	}
-        	sb.append(MVTStreamingMapResponse.PARAM_GENERALISATION_LEVEL).append(":").append(gen_level.getValue());        	
+        	sb.append(PARAM_GENERALISATION_LEVEL).append(":").append(gen_level.getValue());        	
         }
-        if(skip_small != null) {
+        if(small_geom_threshold != null) {
         	if(!envAppended) {
         		sb.append("&ENV=");
         	}
         	else {
         		sb.append(";");
         	}
-        	sb.append(MVTStreamingMapResponse.PARAM_SKIP_SMALL_GEOMS).append(":").append(skip_small);        	
+        	sb.append(PARAM_SMALL_GEOM_THRESHOLD).append(":").append(small_geom_threshold);        	
         }
         
         String url = sb.toString();

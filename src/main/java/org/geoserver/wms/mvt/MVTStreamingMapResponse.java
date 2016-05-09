@@ -23,9 +23,10 @@ public class MVTStreamingMapResponse extends AbstractMapResponse {
     private static final Logger LOGGER = Logging.getLogger(MVTStreamingMapResponse.class);
     
     public static final double DEFAULT_GENERALISATION_FACTOR = 0.1;
+    public static final double DEFAULT_SMALL_GEOMETRY_THRESHOLD = 0.05;
 	public static final String PARAM_GENERALISATION_FACTOR = "gen_factor";
 	public static final String PARAM_GENERALISATION_LEVEL = "gen_level";
-	public static final String PARAM_SKIP_SMALL_GEOMS = "skip_small_geoms";
+	public static final String PARAM_SMALL_GEOM_THRESHOLD = "small_geom_threshold";
 	
 	private GeneralisationLevel defaultGenLevel;
 	private Map<GeneralisationLevel, Map<Integer, Double>> generalisationTables;
@@ -41,7 +42,7 @@ public class MVTStreamingMapResponse extends AbstractMapResponse {
     	// use as fallback
     	//double genFactor = getGenFactorForGenLevel(defaultGenLevel);
     	Double genFactor = null;
-    	boolean skipSmallGeoms = true;
+    	Double smallGeometryThreshold = DEFAULT_SMALL_GEOMETRY_THRESHOLD;
     	Map<Integer, Double> genFactorTable = getGenFactorForGenLevel(defaultGenLevel); 
     	if(operation.getParameters()[0] instanceof GetMapRequest) {
     		// check configuration based on parameters
@@ -58,18 +59,18 @@ public class MVTStreamingMapResponse extends AbstractMapResponse {
     		else if(reqGenLevel != null) {
     			genFactorTable = getGenFactorForRequestedLevel(reqGenLevel);
     		}    		
-    		Object reqSkipSmallGeoms = request.getEnv().get(PARAM_SKIP_SMALL_GEOMS);
+    		Object reqSkipSmallGeoms = request.getEnv().get(PARAM_SMALL_GEOM_THRESHOLD);
     		if(reqSkipSmallGeoms != null) {
-    			skipSmallGeoms = BooleanUtils.toBoolean(reqSkipSmallGeoms.toString());
+    			smallGeometryThreshold = NumberUtils.toDouble((String)reqSkipSmallGeoms, DEFAULT_SMALL_GEOMETRY_THRESHOLD);
     		}
     	}
         try {
         	// passed in generlalisation factor is overriding default configuration (table for zooms)
         	if(genFactor != null) {
-        		map.encode(output, skipSmallGeoms, genFactor);
+        		map.encode(output, smallGeometryThreshold, genFactor);
         	}
         	else {
-        		map.encode(output, skipSmallGeoms, genFactorTable, DEFAULT_GENERALISATION_FACTOR);
+        		map.encode(output, smallGeometryThreshold, genFactorTable, DEFAULT_GENERALISATION_FACTOR);
         	}
         } finally {
             map.dispose();

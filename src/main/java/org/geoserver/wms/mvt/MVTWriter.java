@@ -84,16 +84,16 @@ public class MVTWriter {
      * @param tileSizeY the tile size of the resulting vector tile in y direction (without buffer)
      * @param buffer the buffer of the vector tiles
      * @param genFactor generalisation factor, value used as parameter in simplification algorithm
-     * @param skipSmallGeoms defines if small geometries (short linestrings or polys with small area) should be skipped in output
+     * @param smallGeometryThreshold defines the threshold in length / area when geometries should be skipped in output. 0 or negative means all geoms are included
      * @return an MVTWriter instance for further processing
      *
      * @throws FactoryException in case of the SRS is unknown
      * @throws TransformException in case of the transformation failed
      */
     public static MVTWriter getInstance(Envelope sourceBBOX, CoordinateReferenceSystem sourceCRS, 
-    		int tileSizeX, int tileSizeY, int buffer, double genFactor, boolean skipSmallGeoms) throws FactoryException, TransformException {
+    		int tileSizeX, int tileSizeY, int buffer, double genFactor, double smallGeometryThreshold) throws FactoryException, TransformException {
         Envelope targetBBOX = new ReferencedEnvelope(0,tileSizeX,0,tileSizeY,TARGET_CRS);
-        return new MVTWriter(sourceBBOX,targetBBOX,sourceCRS,buffer,genFactor, skipSmallGeoms);
+        return new MVTWriter(sourceBBOX,targetBBOX,sourceCRS,buffer,genFactor, smallGeometryThreshold);
     }
     
     /**
@@ -174,9 +174,9 @@ public class MVTWriter {
     private MVTWriter(Envelope sourceBBOX,
             Envelope targetBBOX,
             CoordinateReferenceSystem sourceCRS,
-            int bufferSize, double genFactor, boolean skipSmallGeoms) throws TransformException, FactoryException {
+            int bufferSize, double genFactor, double smallGeometryThreshold) throws TransformException, FactoryException {
 		this(sourceBBOX, targetBBOX, sourceCRS, bufferSize);
-		this.vectorTileEncoder = new VectorTileEncoder(4096, targetBBOX, genFactor, skipSmallGeoms);
+		this.vectorTileEncoder = new VectorTileEncoder(4096, targetBBOX, genFactor, smallGeometryThreshold);
 	}
 
     

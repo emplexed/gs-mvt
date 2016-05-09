@@ -31,6 +31,8 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.simplify.TopologyPreservingSimplifier;
 
+import static org.geoserver.wms.mvt.MVTStreamingMapResponse.DEFAULT_SMALL_GEOMETRY_THRESHOLD;
+
 /**
  * VectorTileEncoder adapted from https://github.com/ElectronicChartCentre/java-vector-tile/blob/master/src/main/java/no/ecc/vectortile/VectorTileEncoder.java
  *
@@ -39,14 +41,14 @@ public class VectorTileEncoder {
 
     private final Map<String, Layer> layers = new HashMap<>();
 
+
+    
     private final int extent;
 
     private final Geometry clipGeometry;
 
     private final double simplificationFactor;
-    private final double smallGeometryThreshold = 0.05;
-    
-    private boolean skipSmallGeoms = true;
+    private final double smallGeometryThreshold;
     
     private static final Logger LOGGER = Logging.getLogger(VectorTileEncoder.class);
 
@@ -57,7 +59,7 @@ public class VectorTileEncoder {
      * @param targetBBox the target bbox
      */
     public VectorTileEncoder(Envelope targetBBox) {
-        this(4096,targetBBox,0.1d, true);
+        this(4096,targetBBox,0.1d, DEFAULT_SMALL_GEOMETRY_THRESHOLD);
     }
 
     /**
@@ -73,13 +75,13 @@ public class VectorTileEncoder {
      * @param extent  a int with extent value. 4096 is a good value.
      * @param targetBbox the bbox defined for the target tile
      * @param simplificationFactor the factor for simplification
-     * @param skipSmallGeoms defines if small geometries (short linestrings or polys with small area) should be skipped in output
+     * @param smallGeometryThreshold defines the threshold in length / area when geometries should be skipped in output. 0 or negative means all geoms are included
      */
-    public VectorTileEncoder(int extent, Envelope targetBbox, double simplificationFactor, boolean skipSmallGeoms) {
+    public VectorTileEncoder(int extent, Envelope targetBbox, double simplificationFactor, double smallGeometryThreshold) {
         this.extent = extent;
         this.clipGeometry = JTS.toGeometry(targetBbox);
         this.simplificationFactor = simplificationFactor;
-        this.skipSmallGeoms = skipSmallGeoms;
+        this.smallGeometryThreshold = smallGeometryThreshold;
     }
 
     /**
@@ -96,10 +98,10 @@ public class VectorTileEncoder {
      *            a int with extent value. 4096 is a good value.
      * @param polygonClipBuffer
      *            a int with clip buffer size for polygons and line strings. 8 is a good value.
-     * @param skipSmallGeoms defines if small geometries (short linestrings or polys with small area) should be skipped in output
+     * @param smallGeometryThreshold defines the threshold in length / area when geometries should be skipped in output. 0 or negative means all geoms are included
      */
-    public VectorTileEncoder(int extent, int polygonClipBuffer, double simplificationFactor, boolean skipSmallGeoms) {
-        this(extent,createTileEnvelope(polygonClipBuffer),simplificationFactor, skipSmallGeoms);
+    public VectorTileEncoder(int extent, int polygonClipBuffer, double simplificationFactor, double smallGeometryThreshold) {
+        this(extent,createTileEnvelope(polygonClipBuffer),simplificationFactor, smallGeometryThreshold);
     }
 
     /**
@@ -138,15 +140,11 @@ public class VectorTileEncoder {
         }
 
         // skip small Polygon/LineString.
-        if(this.skipSmallGeoms) {
-        //	if (geometry instanceof Polygon && geometry.getArea() < this.simplificationFactor) {
-        	if (geometry instanceof Polygon && geometry.getArea() < this.smallGeometryThreshold) {
-        	
-        	
+        if(this.smallGeometryThreshold > 0) {
+        	if (geometry instanceof Polygon && geometry.getArea() < this.smallGeometryThreshold) {        	
         		return;
         	}
         	if (geometry instanceof LineString && geometry.getLength() < this.smallGeometryThreshold) {
-       // 	if (geometry instanceof LineString && geometry.getLength() < this.simplificationFactor) {
         		return;
         	}
         }
