@@ -69,8 +69,11 @@ An example WMS request could be:
 http://localhost/geoserver/test/wms?STYLES=&LAYERS=test:streetsegments&FORMAT=application/x-protobuf&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&SRS=EPSG:4326&bbox=9.499057554653266,46.410057509506515,17.1504898071289,49.0165481567383&WIDTH=256&HEIGHT=256&ENV=gen_level:0.07
 ```
 
-## Skipping Small Geometries
-Per default the Plug-In will skip small geometries (short lines or polygons with small areas). The treshold is currently fixed with 0.05. This behaviour can be turned off by setting the WMS ENV Parameter skip_small_geoms to false (or apply the parameter to the Slippy Map Tiles Request)
+## Configure Small Geometries Output
+Per default the Plug-In will skip small geometries (short lines or polygons with small areas). The treshold is currently fixed with 0.05. This behaviour can be turned changed by setting the WMS ENV Parameter small_geom_threshold to a double value (or apply the parameter to the Slippy Map Tiles Request).
+
+A positive double value means that lines shorter or polygons with a smaller area are skipped in output. If the parameter is zero or negative no geometries will be skipped in output.
+
 
 ## Slippy Map Tiles Request
 [Slippy Map Tiles](http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames) describes the tile format used by Google, Bing and OSM. Usually a tile cache delivers the result to the client. But the **GeoWebCache** used by the **Geoserver** does not allow to be extended with additional MimeTypes (e.g. ```application/x-protobuf```) without a change to core classes. **Update:** In GWC 1.8 the class will be extended and the protobuf MimeType will be supported. Therefore a basic Slippy Map Tile Controller has been provided with this extension, that translates the slippy map tile names into a WMS redirect. The Slippy Tile request has the following format:
@@ -97,7 +100,7 @@ Request Parameter | Description | Type
 *sld_body* | Style Description | SLD XML
 *gen_level* | generalisation level | String (ENUM) Values LOW/MID/HIGH default MID
 *gen_factor* | generalisation factor | Double default null
-*skip_small_geoms* | skip small geoms enabled/disabled | boolean default true
+*small_geom_threshold* | threshold for short lines / small areas, smaller ones then defined will be skipped in output| Double default 0.05
 
 ### Example:
 ```
