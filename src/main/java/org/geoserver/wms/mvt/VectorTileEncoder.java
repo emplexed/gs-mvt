@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,7 @@ import static org.geoserver.wms.mvt.MVTStreamingMapResponse.DEFAULT_SMALL_GEOMET
  */
 public class VectorTileEncoder {
 
-    private final Map<String, Layer> layers = new HashMap<>();
+    private final Map<String, Layer> layers = new LinkedHashMap<>();
 
 
     
@@ -334,7 +333,7 @@ public class VectorTileEncoder {
             }
         }
 
-        if (geometry instanceof MultiLineString || geometry instanceof MultiPoint) {
+        if (geometry instanceof MultiLineString) {
             List<Integer> commands = new ArrayList<>();
             GeometryCollection gc = (GeometryCollection) geometry;
             for (int i = 0; i < gc.getNumGeometries(); i++) {
@@ -343,7 +342,7 @@ public class VectorTileEncoder {
             return commands;
         }
 
-        return commands(geometry.getCoordinates(),relativeCoordinate,shouldClosePath(geometry));
+        return commands(geometry.getCoordinates(),relativeCoordinate,shouldClosePath(geometry), geometry instanceof MultiPoint);
     }
 
     /**
@@ -361,6 +360,10 @@ public class VectorTileEncoder {
      * @return list of integer commands
      */
     List<Integer> commands(Coordinate[] cs, Coordinate relativeCoordinate, boolean closePathAtEnd) {
+        return commands(cs, relativeCoordinate, closePathAtEnd, false);
+    }
+
+    List<Integer> commands(Coordinate[] cs, Coordinate relativeCoordinate, boolean closePathAtEnd, boolean multiPoint) {
 
         if (cs.length == 0) {
             throw new IllegalArgumentException("empty geometry");
@@ -377,7 +380,7 @@ public class VectorTileEncoder {
             Coordinate c = cs[i];
 
             if (i == 0) {
-                r.add(commandAndLength(Command.MOVETO.getValue(), 1));
+                r.add(commandAndLength(Command.MOVETO.getValue(), multiPoint ? cs.length : 1));
             }
 
             int _x = (int) Math.round(c.x * scale);
@@ -402,7 +405,7 @@ public class VectorTileEncoder {
             relativeCoordinate.x = _x;
             relativeCoordinate.y = _y;
 
-            if (i == 0) {
+            if (i == 0 && cs.length > 1 && !multiPoint) {
                 // can length be too long?
                 lineToIndex = r.size();
                 lineToLength = cs.length - 1;
@@ -412,7 +415,15 @@ public class VectorTileEncoder {
         }
 
         // update LineTo length
-        r.set(lineToIndex, commandAndLength(Command.LINETO.getValue(), lineToLength));
+        if (lineToIndex > 0) {
+            if (lineToLength == 0) {
+                //remove empty LineTo
+                r.remove(lineToIndex);
+            } else {
+                //update LineTo with new length
+                r.set(lineToIndex, commandAndLength(Command.LINETO.getValue(), lineToLength));
+            }
+        }
 
         if (closePathAtEnd) {
             r.add(commandAndLength(Command.CLOSEPATH.getValue(), 1));
