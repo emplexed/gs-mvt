@@ -12,6 +12,7 @@ import org.geotools.map.Layer;
 import org.geotools.styling.FeatureTypeStyle;
 import org.geotools.styling.Rule;
 import org.geotools.styling.Style;
+import org.geotools.util.logging.Logging;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
@@ -19,12 +20,16 @@ import org.opengis.filter.spatial.BBOX;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 
+import com.google.common.math.LongMath;
+
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Adapted WebMap implementation. Gets the style and retrieves filter rules. These rules are considered when loading
@@ -33,6 +38,7 @@ import java.util.Map;
  */
 public class StreamingMVTMap extends WebMap {
 
+    private static final Logger LOGGER = Logging.getLogger(StreamingMVTMap.class);
     /**
      * The Mapbox client requests 512x512 tiles but the target tile has 256 units in each direction.
      */
@@ -49,14 +55,41 @@ public class StreamingMVTMap extends WebMap {
      * Retrieves the feature from the underlying datasource and encodes them the MVT PBF format.
      *
      * @param out the outputstream to write to
+     * @param smallGeometryThreshold defines the threshold in length / area when geometries should be skipped in output. 0 or negative means all geoms are included
+     * @param double genFactors map of generalization factors per zoom level
+     * @param double fallBackGen fallback value if no suiting value can be found in genFactors map
      * @throws IOException
      */
-    public void encode(final OutputStream out) throws IOException {
+    public void encode(final OutputStream out, double smallGeometryThreshold, 
+    		Map<Integer, Double> genFactors, double fallBackGen) throws IOException {   
+        int zoomLevel = getZoomLevel(this.mapContent.getScaleDenominator());
+        double genFactor;
+        if(zoomLevel >= 1  && zoomLevel <= 20) {
+        	genFactor = genFactors.get(zoomLevel);
+        }
+        else {
+        	genFactor = fallBackGen;
+        	LOGGER.warning("computed zoom level (" + zoomLevel + ") is out of range, using default generalisation (" + fallBackGen + ")");
+        
+        }
+        this.encode(out, smallGeometryThreshold, genFactor);
+    }
+    
+    /**
+     * Retrieves the feature from the underlying datasource and encodes them the MVT PBF format.
+     *
+     * @param out the outputstream to write to
+     * @param boolean skipSmallGeoms
+     * @param double genFactor
+     * @throws IOException
+     */
+    public void encode(final OutputStream out, double smallGeometryThreshold, double genFactor) throws IOException {
         ReferencedEnvelope renderingArea = this.mapContent.getRenderingArea();
         try {
             MVTWriter mvtWriter =
-                    MVTWriter.getInstance(renderingArea, this.mapContent.getCoordinateReferenceSystem(),
-                            targetBinaryCRSTileSize, targetBinaryCRSTileSize, this.mapContent.getBuffer());
+            		  MVTWriter.getInstance(renderingArea, this.mapContent.getCoordinateReferenceSystem(),
+                              targetBinaryCRSTileSize, targetBinaryCRSTileSize, 
+                              this.mapContent.getBuffer(), genFactor, smallGeometryThreshold);
             Map<FeatureCollection,Style> featureCollectionStyleMap = new HashMap<>();
             FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
             //Iterate through all layers. Layers can be requested through WMS with comma separation
@@ -94,7 +127,14 @@ public class StreamingMVTMap extends WebMap {
         }
     }
 
-    /**
+    private int getZoomLevel(double scale) {
+    	double maxRes = 156543.03;
+		double rs = scale / (96 * 39.37);		
+		int zoom = LongMath.log2((long) (maxRes/rs), RoundingMode.HALF_UP);
+		return zoom;
+	}
+
+	/**
      * Retrieve Filter information from the Layer Style.
      * TODO maybe there is a better method to do that e.g. using a {@link org.geotools.styling.StyleVisitor}
      *

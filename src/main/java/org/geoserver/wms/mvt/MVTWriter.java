@@ -83,6 +83,27 @@ public class MVTWriter {
      * @param tileSizeX the tile size of the resulting vector tile in x direction (without buffer)
      * @param tileSizeY the tile size of the resulting vector tile in y direction (without buffer)
      * @param buffer the buffer of the vector tiles
+     * @param genFactor generalisation factor, value used as parameter in simplification algorithm
+     * @param smallGeometryThreshold defines the threshold in length / area when geometries should be skipped in output. 0 or negative means all geoms are included
+     * @return an MVTWriter instance for further processing
+     *
+     * @throws FactoryException in case of the SRS is unknown
+     * @throws TransformException in case of the transformation failed
+     */
+    public static MVTWriter getInstance(Envelope sourceBBOX, CoordinateReferenceSystem sourceCRS, 
+    		int tileSizeX, int tileSizeY, int buffer, double genFactor, double smallGeometryThreshold) throws FactoryException, TransformException {
+        Envelope targetBBOX = new ReferencedEnvelope(0,tileSizeX,0,tileSizeY,TARGET_CRS);
+        return new MVTWriter(sourceBBOX,targetBBOX,sourceCRS,buffer,genFactor, smallGeometryThreshold);
+    }
+    
+    /**
+     * Retrieves an instance of the MVTWriter.
+     *
+     * @param sourceBBOX the bbox envelope requested in World coordinates
+     * @param sourceCRS the rereference system of the source bbox
+     * @param tileSizeX the tile size of the resulting vector tile in x direction (without buffer)
+     * @param tileSizeY the tile size of the resulting vector tile in y direction (without buffer)
+     * @param buffer the buffer of the vector tiles
      * @return an MVTWriter instance for further processing
      *
      * @throws FactoryException in case of the SRS is unknown
@@ -150,6 +171,15 @@ public class MVTWriter {
         return new ReferencedEnvelope(this.sourceBBOX,TARGET_CRS);
     }
 
+    private MVTWriter(Envelope sourceBBOX,
+            Envelope targetBBOX,
+            CoordinateReferenceSystem sourceCRS,
+            int bufferSize, double genFactor, double smallGeometryThreshold) throws TransformException, FactoryException {
+		this(sourceBBOX, targetBBOX, sourceCRS, bufferSize);
+		this.vectorTileEncoder = new VectorTileEncoder(4096, targetBBOX, genFactor, smallGeometryThreshold);
+	}
+
+    
     private MVTWriter(Envelope sourceBBOX,
                       Envelope targetBBOX,
                       CoordinateReferenceSystem sourceCRS,

@@ -1,9 +1,12 @@
 package org.geoserver.slippymap;
 
+import org.geoserver.wms.GeneralisationLevel;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.referencing.ReferenceIdentifier;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,8 +16,13 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.Map;
+
+import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_GENERALISATION_FACTOR;
+import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_SMALL_GEOM_THRESHOLD;
+import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_GENERALISATION_LEVEL;
 
 /**
  * Slippy Map Tiles controller that converts the requests into WMS requests. Answers with an redirect to the WMS service
@@ -31,6 +39,12 @@ public class SlippyTilesController {
     private Map<String,String> supportedOutputFormats;
     private Map<String,String> defaultTileSize;
 
+    
+    @InitBinder
+	public void initBinder(WebDataBinder dataBinder) {
+    	dataBinder.registerCustomEditor(GeneralisationLevel.class, new GeneralisationLevelEnumConverter());
+	}
+    
     @RequestMapping(value="{layers}/{z}/{x}/{y}.{format}", method = RequestMethod.GET)
     public void doGetSlippyWmsMap(
             @PathVariable String layers,
@@ -44,6 +58,9 @@ public class SlippyTilesController {
             @RequestParam(value = "time",required = false) String time,
             @RequestParam(value = "sld", required = false) String sld,
             @RequestParam(value = "sld_body", required = false) String sld_body,
+            @RequestParam(value = PARAM_GENERALISATION_FACTOR, required = false) Double gen_factor,
+            @RequestParam(value = PARAM_GENERALISATION_LEVEL, required = false) GeneralisationLevel gen_level,
+            @RequestParam(value = PARAM_SMALL_GEOM_THRESHOLD, required = false) Double small_geom_threshold,
             final HttpServletRequest request,
             final HttpServletResponse response) throws IOException, ServletException {
 
@@ -72,6 +89,31 @@ public class SlippyTilesController {
         if (sld_body != null) {
             sb.append("&SLD_BODY=").append(sld_body);
         }
+        boolean envAppended = false;
+        if(gen_factor != null) {
+        	sb.append("&ENV=").append(PARAM_GENERALISATION_FACTOR).append(":").append(gen_factor);
+        	envAppended = true;
+        }
+        if(gen_level != null) {
+        	if(!envAppended) {
+        		sb.append("&ENV=");
+        		envAppended = true;
+        	}
+        	else {
+        		sb.append(";");
+        	}
+        	sb.append(PARAM_GENERALISATION_LEVEL).append(":").append(gen_level.getValue());        	
+        }
+        if(small_geom_threshold != null) {
+        	if(!envAppended) {
+        		sb.append("&ENV=");
+        	}
+        	else {
+        		sb.append(";");
+        	}
+        	sb.append(PARAM_SMALL_GEOM_THRESHOLD).append(":").append(small_geom_threshold);        	
+        }
+        
         String url = sb.toString();
         RequestDispatcher dispatcher = request.getRequestDispatcher(response.encodeRedirectURL(url));
         dispatcher.forward(request,response);
