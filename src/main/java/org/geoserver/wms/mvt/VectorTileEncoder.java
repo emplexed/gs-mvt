@@ -184,7 +184,27 @@ public class VectorTileEncoder {
 
         //generalize geometry (less memory) use TopolyPreservingSimplifier to prevent null geometries
         if(this.simplificationFactor > 0) {
-        	geometry = TopologyPreservingSimplifier.simplify(geometry, this.simplificationFactor);
+            try {
+                geometry = TopologyPreservingSimplifier.simplify(geometry, this.simplificationFactor);
+            } catch (Exception e) {
+                LOGGER.warning("Geometry cannot be simplified!! " + geometry.toString());
+                if (geometry instanceof LineString) {
+                    List<Coordinate> coordinates = new ArrayList<>();
+                    for (Coordinate coordinate : geometry.getCoordinates()) {
+                        if (coordinate.x > 0 && coordinate.y > 0) {
+                            coordinates.add(coordinate);
+                        }
+                    }
+                    GeometryFactory gm = new GeometryFactory();
+                    geometry = gm.createLineString(coordinates.toArray(new Coordinate[coordinates.size()]));
+                }
+            }
+        }
+
+        for (Coordinate coordinate : geometry.getCoordinates()) {
+            if (coordinate.x == 0 && coordinate.y == 0) {
+                LOGGER.warning("0 Value detected in Geometry " + geometry.toString());
+            }
         }
 
         Layer layer = layers.get(layerName);
