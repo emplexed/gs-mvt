@@ -148,31 +148,17 @@ public class VectorTileEncoder {
         	}
         }
 
-        // clip geometry. polygons or linestrings right outside. other geometries at tile
-        // border.
-        // clip geometry. polygons right outside. other geometries at tile
-        // border.
-        try {
-            if (geometry instanceof Polygon) {
-                Geometry original = geometry;
-                geometry = clipGeometry.intersection(original);
-
-                // some times a intersection is returned as an empty geometry.
-                // going via wkt fixes the problem.
-                if (geometry.isEmpty() && original.intersects(clipGeometry)) {
-                    Geometry originalViaWkt = new WKTReader().read(original.toText());
-                    geometry = clipGeometry.intersection(originalViaWkt);
-                }
-
-            } else if (geometry instanceof LineString) {
-                geometry = clipGeometry.intersection(geometry);
+        // clip geometry
+        if (geometry instanceof Point) {
+            if (!clipCovers(geometry)) {
+                return;
             }
-        } catch (TopologyException | ParseException e) {
-            // could not intersect. original geometry will be used instead.
+        } else {
+            geometry = clipGeometry(geometry);
         }
 
         // if clipping result in MultiPolygon, then split once more
-        if (geometry instanceof MultiPolygon) {
+        if (geometry instanceof MultiPolygon || geometry.getClass().equals(GeometryCollection.class)) {
             splitAndAddFeatures(layerName, attributes, (GeometryCollection) geometry);
             return;
         }
@@ -226,6 +212,52 @@ public class VectorTileEncoder {
         }
 
         layer.features.add(feature);
+    }
+
+    /**
+     * A short circuit clip to the tile extent (tile boundary + buffer) for
+     * points to improve performance. This method can be overridden to change
+     * clipping behavior. See also {@link #clipGeometry(Geometry)}.
+     *
+     * {@see https://github.com/ElectronicChartCentre/java-vector-tile/issues/13}
+     */
+    protected boolean clipCovers(Geometry geom) {
+        if (geom instanceof Point) {
+            Point p = (Point) geom;
+            return geom.getEnvelopeInternal().covers(p.getCoordinate());
+        }
+        return clipGeometry.covers(geom);
+    }
+
+    /**
+     * Clip geometry according to buffer given at construct time. This method
+     * can be overridden to change clipping behavior. See also
+     * {@link #clipCovers(Geometry)}.
+     *
+     * @param geometry
+     * @return
+     */
+    protected Geometry clipGeometry(Geometry geometry) {
+        try {
+            Geometry original = geometry;
+            geometry = clipGeometry.intersection(original);
+
+            // some times a intersection is returned as an empty geometry.
+            // going via wkt fixes the problem.
+            if (geometry.isEmpty() && original.intersects(clipGeometry)) {
+                Geometry originalViaWkt = new WKTReader().read(original.toText());
+                geometry = clipGeometry.intersection(originalViaWkt);
+            }
+
+            return geometry;
+        } catch (TopologyException e) {
+            // could not intersect. original geometry will be used instead.
+            return geometry;
+        } catch (ParseException e1) {
+            // could not encode/decode WKT. original geometry will be used
+            // instead.
+            return geometry;
+        }
     }
 
     private void splitAndAddFeatures(String layerName, Map<String, ?> attributes, GeometryCollection geometry) {
