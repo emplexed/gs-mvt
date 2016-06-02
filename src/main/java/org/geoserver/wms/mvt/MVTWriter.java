@@ -175,7 +175,17 @@ public class MVTWriter {
             Envelope targetBBOX,
             CoordinateReferenceSystem sourceCRS,
             int bufferSize, double genFactor, double smallGeometryThreshold) throws TransformException, FactoryException {
-		this(sourceBBOX, targetBBOX, sourceCRS, bufferSize);
+        MathTransform transform = CRS.findMathTransform(sourceCRS, TARGET_CRS);
+        sourceBBOX = JTS.transform(sourceBBOX, transform);
+        if (bufferSize > 0) {
+            sourceBBOX = this.getBufferedSourceBBOX(bufferSize,sourceBBOX,targetBBOX, TARGET_CRS);
+            targetBBOX = new ReferencedEnvelope(targetBBOX.getMinX() - bufferSize, targetBBOX.getMaxX() + bufferSize,
+                    targetBBOX.getMinY() - bufferSize, targetBBOX.getMaxY() + bufferSize,TARGET_CRS);
+        }
+        this.sourceBBOX = sourceBBOX;
+        this.targetBBOX = targetBBOX;
+        this.xScale = this.calculateXFactor();
+        this.yScale = this.calculateYFactor();
 		this.vectorTileEncoder = new VectorTileEncoder(4096, targetBBOX, genFactor, smallGeometryThreshold);
 	}
 
