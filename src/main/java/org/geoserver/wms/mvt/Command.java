@@ -3,19 +3,24 @@ package org.geoserver.wms.mvt;
 /**
  * The Command enumaration needed by the VectorTile encoder
  */
-enum Command {
+final class Command {
 
-    MOVETO(1),
-    LINETO(2),
-    CLOSEPATH(7);
+    /**
+     * MoveTo: 1. (2 parameters follow)
+     */
+    static final int MoveTo = 1;
 
-    private int value;
+    /**
+     * LineTo: 2. (2 parameters follow)
+     */
+    static final int LineTo = 2;
 
-    Command(int value) {
-        this.value = value;
-    }
+    /**
+     * ClosePath: 7. (no parameters follow)
+     */
+    static final int ClosePath = 7;
 
-    public int getValue() {
-        return this.value;
+    private Command() {
+
     }
 }

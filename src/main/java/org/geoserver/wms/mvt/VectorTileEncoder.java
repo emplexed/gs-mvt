@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.util.logging.Logging;
 
@@ -38,13 +39,16 @@ import static org.geoserver.wms.mvt.MVTStreamingMapResponse.DEFAULT_SMALL_GEOMET
  */
 public class VectorTileEncoder {
 
-    private final Map<String, Layer> layers = new LinkedHashMap<>();
+    private final Map<String, Layer> layers = new LinkedHashMap<String, Layer>();
 
-
-    
     private final int extent;
 
     private final Geometry clipGeometry;
+
+    /**
+     * autoscale limits the coordinatesystem of the tiles to 256
+     */
+    private final boolean autoScale;
 
     private final double simplificationFactor;
     private final double smallGeometryThreshold;
@@ -77,6 +81,7 @@ public class VectorTileEncoder {
      * @param smallGeometryThreshold defines the threshold in length / area when geometries should be skipped in output. 0 or negative means all geoms are included
      */
     public VectorTileEncoder(int extent, Envelope targetBbox, double simplificationFactor, double smallGeometryThreshold) {
+        this.autoScale = true;
         this.extent = extent;
         this.clipGeometry = JTS.toGeometry(targetBbox);
         this.simplificationFactor = simplificationFactor;
@@ -100,7 +105,7 @@ public class VectorTileEncoder {
      * @param smallGeometryThreshold defines the threshold in length / area when geometries should be skipped in output. 0 or negative means all geoms are included
      */
     public VectorTileEncoder(int extent, int polygonClipBuffer, double simplificationFactor, double smallGeometryThreshold) {
-        this(extent,createTileEnvelope(polygonClipBuffer),simplificationFactor, smallGeometryThreshold);
+        this(extent,createTileEnvelope(polygonClipBuffer,256),simplificationFactor, smallGeometryThreshold);
     }
 
     /**
@@ -108,11 +113,11 @@ public class VectorTileEncoder {
      * @param buffer the buffer parameter
      * @return buffered result
      */
-    private static Envelope createTileEnvelope(int buffer) {
+    private static Envelope createTileEnvelope(int buffer, int size) {
         Coordinate[] coords = new Coordinate[5];
-        coords[0] = new Coordinate(0 - buffer, 256 + buffer);
-        coords[1] = new Coordinate(256 + buffer, 256 + buffer);
-        coords[2] = new Coordinate(256 + buffer, 0);
+        coords[0] = new Coordinate(0 - buffer, size + buffer);
+        coords[1] = new Coordinate(size + buffer, size + buffer);
+        coords[2] = new Coordinate(size + buffer, 0 - buffer);
         coords[3] = new Coordinate(0 - buffer, 0 - buffer);
         coords[4] = coords[0];
         return new GeometryFactory().createPolygon(coords).getEnvelopeInternal();
@@ -369,32 +374,52 @@ public class VectorTileEncoder {
         return (geometry instanceof Polygon) || (geometry instanceof LinearRing);
     }
 
+    private int x = 0;
+    private int y = 0;
+
     List<Integer> commands(Geometry geometry) {
 
-        Coordinate relativeCoordinate = new Coordinate();
+        x = 0;
+        y = 0;
 
         if (geometry instanceof Polygon) {
             Polygon polygon = (Polygon) geometry;
-            if (polygon.getNumInteriorRing() > 0) {
-                List<Integer> commands = new ArrayList<>();
-                commands.addAll(commands(polygon.getExteriorRing().getCoordinates(),relativeCoordinate,true));
-                for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
-                    commands.addAll(commands(polygon.getInteriorRingN(i).getCoordinates(),relativeCoordinate,true));
-                }
-                return commands;
+            List<Integer> commands = new ArrayList<Integer>();
+
+            // According to the vector tile specification, the exterior ring of a polygon
+            // must be in clockwise order, while the interior ring in counter-clockwise order.
+            // In the tile coordinate system, Y axis is positive down.
+            //
+            // However, in geographic coordinate system, Y axis is positive up.
+            // Therefore, we must reverse the coordinates.
+            // So, the code below will make sure that exterior ring is in counter-clockwise order
+            // and interior ring in clockwise order.
+            LineString exteriorRing = polygon.getExteriorRing();
+            if (!CGAlgorithms.isCCW(exteriorRing.getCoordinates())) {
+                exteriorRing = (LineString) exteriorRing.reverse();
             }
+            commands.addAll(commands(exteriorRing.getCoordinates(), true));
+
+            for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
+                LineString interiorRing = polygon.getInteriorRingN(i);
+                if (CGAlgorithms.isCCW(interiorRing.getCoordinates())) {
+                    interiorRing = (LineString) interiorRing.reverse();
+                }
+                commands.addAll(commands(interiorRing.getCoordinates(), true));
+            }
+            return commands;
         }
 
         if (geometry instanceof MultiLineString) {
             List<Integer> commands = new ArrayList<>();
             GeometryCollection gc = (GeometryCollection) geometry;
             for (int i = 0; i < gc.getNumGeometries(); i++) {
-                commands.addAll(commands(gc.getGeometryN(i).getCoordinates(),relativeCoordinate,false));
+                commands.addAll(commands(gc.getGeometryN(i).getCoordinates(), false));
             }
             return commands;
         }
 
-        return commands(geometry.getCoordinates(),relativeCoordinate,shouldClosePath(geometry), geometry instanceof MultiPoint);
+        return commands(geometry.getCoordinates(), shouldClosePath(geometry), geometry instanceof MultiPoint);
     }
 
     /**
@@ -408,38 +433,38 @@ public class VectorTileEncoder {
      * Vertex parameters are // also encoded as deltas to the previous position.
      * The original // position is (0,0)
      *
-     * @param cs an array of coordinates
-     * @return list of integer commands
+     * @param cs
+     * @return
      */
-    List<Integer> commands(Coordinate[] cs, Coordinate relativeCoordinate, boolean closePathAtEnd) {
-        return commands(cs, relativeCoordinate, closePathAtEnd, false);
+    List<Integer> commands(Coordinate[] cs, boolean closePathAtEnd) {
+        return commands(cs, closePathAtEnd, false);
     }
 
-    List<Integer> commands(Coordinate[] cs, Coordinate relativeCoordinate, boolean closePathAtEnd, boolean multiPoint) {
+    List<Integer> commands(Coordinate[] cs, boolean closePathAtEnd, boolean multiPoint) {
 
         if (cs.length == 0) {
             throw new IllegalArgumentException("empty geometry");
         }
 
-        List<Integer> r = new ArrayList<>();
+        List<Integer> r = new ArrayList<Integer>();
 
         int lineToIndex = 0;
         int lineToLength = 0;
 
-        double scale = extent / 256.0;
+        double scale = autoScale ? (extent / 256.0) : 1.0;
 
         for (int i = 0; i < cs.length; i++) {
             Coordinate c = cs[i];
 
             if (i == 0) {
-                r.add(commandAndLength(Command.MOVETO.getValue(), multiPoint ? cs.length : 1));
+                r.add(commandAndLength(Command.MoveTo, multiPoint ? cs.length : 1));
             }
 
             int _x = (int) Math.round(c.x * scale);
             int _y = (int) Math.round(c.y * scale);
 
             // prevent point equal to the previous
-            if (i > 0 && _x == relativeCoordinate.x && _y == relativeCoordinate.y) {
+            if (i > 0 && _x == x && _y == y) {
                 lineToLength--;
                 continue;
             }
@@ -451,17 +476,17 @@ public class VectorTileEncoder {
             }
 
             // delta, then zigzag
-            r.add(zigZagEncode(_x - (int) relativeCoordinate.x));
-            r.add(zigZagEncode(_y - (int) relativeCoordinate.y));
+            r.add(zigZagEncode(_x - x));
+            r.add(zigZagEncode(_y - y));
 
-            relativeCoordinate.x = _x;
-            relativeCoordinate.y = _y;
+            x = _x;
+            y = _y;
 
             if (i == 0 && cs.length > 1 && !multiPoint) {
                 // can length be too long?
                 lineToIndex = r.size();
                 lineToLength = cs.length - 1;
-                r.add(commandAndLength(Command.LINETO.getValue(), lineToLength));
+                r.add(commandAndLength(Command.LineTo, lineToLength));
             }
 
         }
@@ -469,16 +494,16 @@ public class VectorTileEncoder {
         // update LineTo length
         if (lineToIndex > 0) {
             if (lineToLength == 0) {
-                //remove empty LineTo
+                // remove empty LineTo
                 r.remove(lineToIndex);
             } else {
-                //update LineTo with new length
-                r.set(lineToIndex, commandAndLength(Command.LINETO.getValue(), lineToLength));
+                // update LineTo with new length
+                r.set(lineToIndex, commandAndLength(Command.LineTo, lineToLength));
             }
         }
 
         if (closePathAtEnd) {
-            r.add(commandAndLength(Command.CLOSEPATH.getValue(), 1));
+            r.add(commandAndLength(Command.ClosePath, 1));
         }
 
         return r;
@@ -523,7 +548,7 @@ public class VectorTileEncoder {
         }
 
         public List<Object> values() {
-            return Collections.unmodifiableList(new ArrayList<>(values.keySet()));
+            return Collections.unmodifiableList(new ArrayList<Object>(values.keySet()));
         }
     }
 
