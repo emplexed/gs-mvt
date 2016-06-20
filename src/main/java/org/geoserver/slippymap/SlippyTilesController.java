@@ -61,6 +61,7 @@ public class SlippyTilesController {
             @RequestParam(value = PARAM_GENERALISATION_FACTOR, required = false) Double gen_factor,
             @RequestParam(value = PARAM_GENERALISATION_LEVEL, required = false) GeneralisationLevel gen_level,
             @RequestParam(value = PARAM_SMALL_GEOM_THRESHOLD, required = false) Double small_geom_threshold,
+            @RequestParam(value = "cql_filter", required = false) String cql_filter,
             final HttpServletRequest request,
             final HttpServletResponse response) throws IOException, ServletException {
 
@@ -88,6 +89,9 @@ public class SlippyTilesController {
         }
         if (sld_body != null) {
             sb.append("&SLD_BODY=").append(sld_body);
+        }
+        if (cql_filter != null) {
+            sb.append("&CQL_FILTER=").append(cql_filter);
         }
         boolean envAppended = false;
         if(gen_factor != null) {
