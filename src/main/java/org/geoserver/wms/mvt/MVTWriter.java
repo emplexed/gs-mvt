@@ -175,8 +175,12 @@ public class MVTWriter {
             Envelope targetBBOX,
             CoordinateReferenceSystem sourceCRS,
             int bufferSize, double genFactor, double smallGeometryThreshold) throws TransformException, FactoryException {
-        MathTransform transform = CRS.findMathTransform(sourceCRS, TARGET_CRS);
-        sourceBBOX = JTS.transform(sourceBBOX, transform);
+        if (sourceBBOX instanceof ReferencedEnvelope) {
+            sourceBBOX = ((ReferencedEnvelope) sourceBBOX).transform(TARGET_CRS,true);
+        } else {
+            MathTransform transform = CRS.findMathTransform(sourceCRS, TARGET_CRS);
+            sourceBBOX = JTS.transform(sourceBBOX, transform);
+        }
         if (bufferSize > 0) {
             sourceBBOX = this.getBufferedSourceBBOX(bufferSize,sourceBBOX,targetBBOX, TARGET_CRS);
             targetBBOX = new ReferencedEnvelope(targetBBOX.getMinX() - bufferSize, targetBBOX.getMaxX() + bufferSize,
@@ -287,20 +291,25 @@ public class MVTWriter {
             Style featureStyle = featureCollectionStyleMap.get(featureCollection);
             try (FeatureIterator<SimpleFeature> it = featureCollection.features()) {
                 while (it.hasNext()) {
-                    SimpleFeature feature = it.next();
-                    Collection<Property> propertiesList = feature.getProperties();
-                    Map<String, Object> attributeMap = new HashMap<>();
-                    for (Property property : propertiesList) {
-                        if (!(property.getValue() instanceof Geometry)) {
-                            attributeMap.put(property.getName().toString(), property.getValue());
+                    SimpleFeature feature = null;
+                    try {
+                        feature = it.next();
+                        Collection<Property> propertiesList = feature.getProperties();
+                        Map<String, Object> attributeMap = new HashMap<>();
+                        for (Property property : propertiesList) {
+                            if (!(property.getValue() instanceof Geometry)) {
+                                attributeMap.put(property.getName().toString(), property.getValue());
+                            }
                         }
-                    }
-                    //Process GeometryTransformations in Symbolizers. It is possible to render the same geometry
-                    //with more than one symbolizer. Therefore a list is returned.
-                    List<Geometry> geometryList = processSymbolizers(featureStyle,feature,scaleDenominator);
-                    for (Geometry geometry : geometryList) {
-                        geometry = transFormGeometry(geometry);
-                        this.vectorTileEncoder.addFeature(layerName, attributeMap, geometry);
+                        //Process GeometryTransformations in Symbolizers. It is possible to render the same geometry
+                        //with more than one symbolizer. Therefore a list is returned.
+                        List<Geometry> geometryList = processSymbolizers(featureStyle, feature, scaleDenominator);
+                        for (Geometry geometry : geometryList) {
+                            geometry = transFormGeometry(geometry);
+                            this.vectorTileEncoder.addFeature(layerName, attributeMap, geometry);
+                        }
+                    } catch (IllegalStateException ex) {
+                        LOGGER.warning(ex.getMessage());
                     }
                 }
             }
