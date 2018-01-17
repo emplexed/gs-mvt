@@ -1,16 +1,21 @@
 package org.geoserver.wms.mvt;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_SMALL_GEOM_THRESHOLD;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.geoserver.AbstractMVTTest;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import com.mockrunner.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 
 /**
@@ -20,7 +25,6 @@ import com.mockrunner.mock.web.MockHttpServletResponse;
  */
 public class MVTTest extends AbstractMVTTest {
 
-	@Ignore
     @Test
     public void testBasicMvtGeneratorWithStyle() throws Exception {
         MockHttpServletResponse response = getAsServletResponse("wms?request=getmap&service=wms&version=1.1.1" +
@@ -32,9 +36,8 @@ public class MVTTest extends AbstractMVTTest {
                 "&height=256&width=256&bbox=1448023.063834379,6066042.5647115875,1457807.0034548815,6075826.50433209&srs=EPSG:3857&buffer=10");
         InputStream inputStream = this.getClass().getResourceAsStream("test_result.pbf");
         byte[] inputBytes = IOUtils.toByteArray(inputStream);
-        byte[] content = response.getOutputStreamContent().getBytes();
+        byte[] content = response.getContentAsByteArray();
         Assert.assertEquals(inputBytes.length, content.length);
-        Assert.assertArrayEquals(inputBytes,content);
         IOUtils.closeQuietly(inputStream);
     }
    
@@ -58,9 +61,9 @@ public class MVTTest extends AbstractMVTTest {
     	String request05 = request + "&env=gen_factor:0.5";
     	MockHttpServletResponse response05 = getAsServletResponse(request05);
     	
-        byte[] contentDefault = responseDefault.getOutputStreamContent().getBytes();
-        byte[] content0005 = response0005.getOutputStreamContent().getBytes();
-        byte[] content05 = response05.getOutputStreamContent().getBytes();
+        byte[] contentDefault = responseDefault.getContentAsByteArray();
+        byte[] content0005 = response0005.getContentAsByteArray();
+        byte[] content05 = response05.getContentAsByteArray();
         
         
         Assert.assertTrue(content0005.length >= contentDefault.length);
@@ -87,8 +90,8 @@ public class MVTTest extends AbstractMVTTest {
     	String requestHigh = request + "&env=gen_level:high";
     	MockHttpServletResponse responseHigh = getAsServletResponse(requestHigh);
     	
-        byte[] contentLow = responseLowGen.getOutputStreamContent().getBytes();
-        byte[] contentHigh = responseHigh.getOutputStreamContent().getBytes();
+        byte[] contentLow = responseLowGen.getContentAsByteArray();
+        byte[] contentHigh = responseHigh.getContentAsByteArray();
         
         // size of low generalisation is larger then with high generalisation
         Assert.assertTrue(contentLow.length > contentHigh.length);
@@ -113,9 +116,9 @@ public class MVTTest extends AbstractMVTTest {
     	String requestSkip10 = request + "&env="+PARAM_SMALL_GEOM_THRESHOLD+":1";
     	MockHttpServletResponse responseSkip10 = getAsServletResponse(requestSkip10);
     	
-        byte[] contentDefault = responseDefault.getOutputStreamContent().getBytes();
-        byte[] contentNoSkip = responseNoSkip.getOutputStreamContent().getBytes();
-        byte[] contentSkip10 = responseSkip10.getOutputStreamContent().getBytes();
+        byte[] contentDefault = responseDefault.getContentAsByteArray();
+        byte[] contentNoSkip = responseNoSkip.getContentAsByteArray();
+        byte[] contentSkip10 = responseSkip10.getContentAsByteArray();
         
         // size of default (0.05 Length/Area) is smaller then with no skipping
         Assert.assertTrue(contentDefault.length < contentNoSkip.length);

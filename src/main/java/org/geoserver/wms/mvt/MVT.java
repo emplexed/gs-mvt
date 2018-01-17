@@ -15,6 +15,6 @@ interface MVT {
 
     Set<String> OUTPUT_FORMATS = Collections
             .unmodifiableSet(new HashSet<>(Arrays.asList(MIME_TYPE, "application/pbf",
-                    "application/mvt")));
+                    "application/mvt","application/x-protobuf;type=mapbox-vector")));
 
 }
