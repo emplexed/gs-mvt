@@ -56,8 +56,8 @@ public class StreamingMVTMap extends WebMap {
      *
      * @param out the outputstream to write to
      * @param smallGeometryThreshold defines the threshold in length / area when geometries should be skipped in output. 0 or negative means all geoms are included
-     * @param double genFactors map of generalization factors per zoom level
-     * @param double fallBackGen fallback value if no suiting value can be found in genFactors map
+     * @param genFactors map of generalization factors per zoom level
+     * @param fallBackGen fallback value if no suiting value can be found in genFactors map
      * @throws IOException
      */
     public void encode(final OutputStream out, double smallGeometryThreshold, 
@@ -79,8 +79,8 @@ public class StreamingMVTMap extends WebMap {
      * Retrieves the feature from the underlying datasource and encodes them the MVT PBF format.
      *
      * @param out the outputstream to write to
-     * @param boolean skipSmallGeoms
-     * @param double genFactor
+     * @param smallGeometryThreshold threshold for skipping small geometries
+     * @param genFactor the factor for generalisation
      * @throws IOException
      */
     public void encode(final OutputStream out, double smallGeometryThreshold, double genFactor) throws IOException {
@@ -123,7 +123,7 @@ public class StreamingMVTMap extends WebMap {
             //Write all features to the output stream
             mvtWriter.writeFeatures(featureCollectionStyleMap, this.mapContent.getScaleDenominator(), out);
         } catch (TransformException | FactoryException e) {
-            e.printStackTrace();
+            LOGGER.warning(e.getMessage());
         }
     }
 
@@ -150,7 +150,9 @@ public class StreamingMVTMap extends WebMap {
             for (Rule rule : featureTypeStyle.rules()) {
                 if ((rule.getMaxScaleDenominator() < Double.POSITIVE_INFINITY && currentScaleDenominator < rule.getMaxScaleDenominator())
                         || (rule.getMinScaleDenominator() > 0 && currentScaleDenominator > rule.getMinScaleDenominator())) {
-                    filter.add(rule.getFilter());
+                    if (rule.getFilter() != null) {
+                        filter.add(rule.getFilter());
+                    }
                 } else if (rule.getMinScaleDenominator() == 0 && rule.getMaxScaleDenominator() == Double.POSITIVE_INFINITY) {
                     //No Scale denominator defined so render all
                     if (rule.getFilter() == null) {
@@ -161,6 +163,6 @@ public class StreamingMVTMap extends WebMap {
                 }
             }
         }
-        return ff.or(filter);
+        return filter.isEmpty() ? null : ff.or(filter);
     }
 }

@@ -1,28 +1,25 @@
 package org.geoserver.slippymap;
 
+import com.vividsolutions.jts.geom.Polygon;
 import org.geoserver.wms.GeneralisationLevel;
+import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.opengis.referencing.ReferenceIdentifier;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 
-import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_GENERALISATION_FACTOR;
-import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_SMALL_GEOM_THRESHOLD;
-import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_GENERALISATION_LEVEL;
+import static org.geoserver.wms.mvt.MVTStreamingMapResponse.*;
 
 /**
  * Slippy Map Tiles controller that converts the requests into WMS requests. Answers with an redirect to the WMS service
@@ -30,6 +27,7 @@ import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_GENERALISATION
  *
  */
 @Controller
+@RequestMapping("/slippymap")
 public class SlippyTilesController {
 
     private int defaultBuffer = 10;
@@ -39,13 +37,13 @@ public class SlippyTilesController {
     private Map<String,String> supportedOutputFormats;
     private Map<String,String> defaultTileSize;
 
-    
+
     @InitBinder
 	public void initBinder(WebDataBinder dataBinder) {
     	dataBinder.registerCustomEditor(GeneralisationLevel.class, new GeneralisationLevelEnumConverter());
 	}
-    
-    @RequestMapping(value="{layers}/{z}/{x}/{y}.{format}", method = RequestMethod.GET)
+
+    @RequestMapping(value="/{layers}/{z}/{x}/{y}.{format}", method = RequestMethod.GET)
     public void doGetSlippyWmsMap(
             @PathVariable String layers,
             @PathVariable int z,
@@ -62,6 +60,7 @@ public class SlippyTilesController {
             @RequestParam(value = PARAM_GENERALISATION_LEVEL, required = false) GeneralisationLevel gen_level,
             @RequestParam(value = PARAM_SMALL_GEOM_THRESHOLD, required = false) Double small_geom_threshold,
             @RequestParam(value = "cql_filter", required = false) String cql_filter,
+            @RequestParam(value = "bboxToBoundsViewparam", required = false, defaultValue="false") boolean bboxToBoundsViewparam,
             final HttpServletRequest request,
             final HttpServletResponse response) throws IOException, ServletException {
 
@@ -106,7 +105,7 @@ public class SlippyTilesController {
         	else {
         		sb.append(";");
         	}
-        	sb.append(PARAM_GENERALISATION_LEVEL).append(":").append(gen_level.getValue());        	
+        	sb.append(PARAM_GENERALISATION_LEVEL).append(":").append(gen_level.getValue());
         }
         if(small_geom_threshold != null) {
         	if(!envAppended) {
@@ -115,12 +114,22 @@ public class SlippyTilesController {
         	else {
         		sb.append(";");
         	}
-        	sb.append(PARAM_SMALL_GEOM_THRESHOLD).append(":").append(small_geom_threshold);        	
+        	sb.append(PARAM_SMALL_GEOM_THRESHOLD).append(":").append(small_geom_threshold);
         }
-        
+        if(bboxToBoundsViewparam) {
+            sb.append("&VIEWPARAMS=").append(buildBoundsViewparam(bbox));
+        }
         String url = sb.toString();
         RequestDispatcher dispatcher = request.getRequestDispatcher(response.encodeRedirectURL(url));
         dispatcher.forward(request,response);
+    }
+
+    private String buildBoundsViewparam(ReferencedEnvelope bbox) throws UnsupportedEncodingException {
+        Polygon poly = JTS.toGeometry(bbox);
+        String boundsWKT = "bounds:'"+ poly.toText()+"';";
+        boundsWKT = boundsWKT.replaceAll(", ", "|");
+        boundsWKT = URLEncoder.encode(boundsWKT, "UTF-8");
+        return boundsWKT;
     }
 
     private String getCRSIdentifier(CoordinateReferenceSystem coordinateReferenceSystem) {

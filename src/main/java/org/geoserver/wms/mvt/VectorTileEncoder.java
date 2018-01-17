@@ -39,7 +39,7 @@ import static org.geoserver.wms.mvt.MVTStreamingMapResponse.DEFAULT_SMALL_GEOMET
  */
 public class VectorTileEncoder {
 
-    private final Map<String, Layer> layers = new LinkedHashMap<String, Layer>();
+    private final Map<String, Layer> layers = new LinkedHashMap<>();
 
     private final int extent;
 
@@ -229,7 +229,7 @@ public class VectorTileEncoder {
     protected boolean clipCovers(Geometry geom) {
         if (geom instanceof Point) {
             Point p = (Point) geom;
-            return geom.getEnvelopeInternal().covers(p.getCoordinate());
+            return clipGeometry.getEnvelopeInternal().covers(p.getCoordinate());
         }
         return clipGeometry.covers(geom);
     }
@@ -307,7 +307,7 @@ public class VectorTileEncoder {
             Layer layer = e.getValue();
 
             VectorTile.Tile.Layer.Builder layerBuilder = VectorTile.Tile.Layer.newBuilder();
-            layerBuilder.setVersion(1);
+            layerBuilder.setVersion(2);
             layerBuilder.setName(layerName);
 
             layerBuilder.addAllKeys(layer.keys());
@@ -317,14 +317,17 @@ public class VectorTileEncoder {
                 if (value instanceof String) {
                     valueBuilder.setStringValue((String) value);
                 } else if (value instanceof Integer) {
-                    valueBuilder.setSintValue((Integer) value);
+                    valueBuilder.setIntValue((Integer) value);
                 } else if (value instanceof Long) {
                     valueBuilder.setSintValue((Long) value);
                 } else if (value instanceof Float) {
                     valueBuilder.setFloatValue((Float) value);
                 } else if (value instanceof Double) {
                     valueBuilder.setDoubleValue((Double) value);
-                } else {
+                } else if (value instanceof Boolean) {
+                    valueBuilder.setBoolValue((Boolean)value);
+                }
+                else {
                     valueBuilder.setStringValue(value.toString());
                 }
                 layerBuilder.addValues(valueBuilder.build());
