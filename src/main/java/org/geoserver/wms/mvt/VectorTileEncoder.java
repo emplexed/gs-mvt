@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
+import org.geotools.geometry.jts.GeometryClipper;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.util.logging.Logging;
 
@@ -160,6 +161,9 @@ public class VectorTileEncoder {
             }
         } else {
             geometry = clipGeometry(geometry);
+            if (geometry == null) {
+                return;
+            }
         }
 
         // if clipping result in MultiPolygon, then split once more
@@ -188,6 +192,13 @@ public class VectorTileEncoder {
                     }
                     GeometryFactory gm = new GeometryFactory();
                     geometry = gm.createLineString(coordinates.toArray(new Coordinate[coordinates.size()]));
+                }
+            }
+            if (geometry instanceof Polygon) {
+                // Known bug in TopologyPreservingSimplifier
+                // (see https://locationtech.github.io/jts/javadoc/org/locationtech/jts/simplify/TopologyPreservingSimplifier.html)
+                if (!geometry.isValid()) {
+                    geometry = checkPolygonRingsIntersecting((Polygon) geometry);
                 }
             }
         }
@@ -239,30 +250,13 @@ public class VectorTileEncoder {
      * can be overridden to change clipping behavior. See also
      * {@link #clipCovers(Geometry)}.
      *
-     * @param geometry
-     * @return
+     * @param geometry the geometry to be clipped
+     * @return clipped geometry
      */
     protected Geometry clipGeometry(Geometry geometry) {
-        try {
-            Geometry original = geometry;
-            geometry = clipGeometry.intersection(original);
-
-            // some times a intersection is returned as an empty geometry.
-            // going via wkt fixes the problem.
-            if (geometry.isEmpty() && original.intersects(clipGeometry)) {
-                Geometry originalViaWkt = new WKTReader().read(original.toText());
-                geometry = clipGeometry.intersection(originalViaWkt);
-            }
-
-            return geometry;
-        } catch (TopologyException e) {
-            // could not intersect. original geometry will be used instead.
-            return geometry;
-        } catch (ParseException e1) {
-            // could not encode/decode WKT. original geometry will be used
-            // instead.
-            return geometry;
-        }
+        final GeometryClipper clipper = new GeometryClipper(clipGeometry.getEnvelopeInternal());
+        geometry = clipper.clipSafe(geometry, false, 0);
+        return geometry;
     }
 
     private void splitAndAddFeatures(String layerName, Map<String, ?> attributes, GeometryCollection geometry) {
@@ -270,6 +264,48 @@ public class VectorTileEncoder {
             Geometry subGeometry = geometry.getGeometryN(i);
             addFeature(layerName, attributes, subGeometry);
         }
+    }
+
+    /**
+     * Method that checks if the exterior and interior rings are intersecting. In this case the intersecting interior
+     * rings are skipped to retrieve a valid geometry again.
+     *
+     * @param polygon the invalid polygon to be handeld
+     * @return the geometry with intersecting rings removed
+     */
+    private Geometry checkPolygonRingsIntersecting(Polygon polygon) {
+        //Check if there are intersecting rings in this case skip the interior rings which are intersecting
+        final LineString exteriorRing = polygon.getExteriorRing();
+        final List<LineString> interiorRings = new ArrayList<>();
+        final List<LineString> intersectingRings = new ArrayList<>();
+        for (int i = 0; i < polygon.getNumInteriorRing(); i++) {
+            LineString interiorRing = polygon.getInteriorRingN(i);
+            if (!exteriorRing.intersects(interiorRing)) {
+                interiorRings.add(interiorRing);
+            } else {
+                LOGGER.info("Polygon intersecting interior ring with exterior ring after simplifying");
+            }
+        }
+        for (int i = 0; i < interiorRings.size(); i++) {
+            LineString interiorRing = interiorRings.get(i);
+            for (int j = i + 1; j < interiorRings.size() - 1; j++) {
+                LineString toCompare = interiorRings.get(j);
+                if (toCompare.intersects(interiorRing)) {
+                    LOGGER.info("Polygon intersecting interior ring with interior ring after simplifying");
+                    intersectingRings.add(interiorRing);
+                    break;
+                }
+            }
+        }
+        GeometryFactory gm = new GeometryFactory();
+        LinearRing[] interiorRingArray = new LinearRing[interiorRings.size() - intersectingRings.size()];
+        int i = 0;
+        for (LineString lineString : interiorRings) {
+            if (!intersectingRings.contains(lineString)) {
+                interiorRingArray[i++] = gm.createLinearRing(lineString.getCoordinateSequence());
+            }
+        }
+        return gm.createPolygon(gm.createLinearRing(exteriorRing.getCoordinateSequence()),interiorRingArray);
     }
 
     /**
