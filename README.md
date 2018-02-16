@@ -107,7 +107,7 @@ Request Parameter | Description | Type
 http://localhost/geoserver/slippymap/streets/13/4390/2854.pbf?buffer=5&styles=line
 ```
 
-##Styling
+## Styling
 Since the vector features are usualy styled on client side only the filter rules and not the symbolizers of a **GeoServer Style Sheet (SLD)** are considered. Using scale denominators the filter rules can be adjusted so that for example some features are not delivered at higher zoom levels. This prevents unnecessary delivery of features that are not rendered on the client anyway.
 
 Following example shows an GeoServer Style Sheet (SLD) filtering features by a frc value.
