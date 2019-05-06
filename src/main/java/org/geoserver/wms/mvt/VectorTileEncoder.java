@@ -154,20 +154,20 @@ public class VectorTileEncoder {
         // skip small Polygon/LineString.
         if (this.smallGeometryThreshold > 0) {
             if (geometry instanceof Polygon && geometry.getArea() < this.smallGeometryThreshold) {
-                LOGGER.info(
-                        "skiped geometry, area was: "
-                                + geometry.getArea()
-                                + " threshold was:"
-                                + smallGeometryThreshold);
+//                LOGGER.fine(
+//                        "skiped geometry, area was: "
+//                                + geometry.getArea()
+//                                + " threshold was:"
+//                                + smallGeometryThreshold);
                 return;
             }
             if (geometry instanceof LineString
                     && geometry.getLength() < this.smallGeometryThreshold) {
-                LOGGER.info(
-                        "skiped geometry, length was: "
-                                + geometry.getArea()
-                                + " threshold was:"
-                                + smallGeometryThreshold);
+//                LOGGER.fine(
+//                        "skiped geometry, length was: "
+//                                + geometry.getArea()
+//                                + " threshold was:"
+//                                + smallGeometryThreshold);
                 return;
             }
         }
