@@ -470,6 +470,10 @@ public class MVTWriter {
                             + (targetBBOX.getHeight()
                                     - ((coordinate.y - sourceBBOX.getMinY()) * yScale));
         }
+        // forces e.g. cached internal envelope to be discarded! otherwise the envelope could
+        // be in wrong CRS (can happen if an e.g. a sld function calls getEnvelope() or
+        // getEnvelopeInternal()
+        geometry.geometryChanged();
         return geometry;
     }
 
