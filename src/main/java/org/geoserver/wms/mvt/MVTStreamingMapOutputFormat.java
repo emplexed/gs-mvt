@@ -1,20 +1,17 @@
 package org.geoserver.wms.mvt;
 
+import java.io.IOException;
+import java.util.Set;
 import org.geoserver.platform.ServiceException;
 import org.geoserver.wms.GetMapOutputFormat;
 import org.geoserver.wms.MapProducerCapabilities;
 import org.geoserver.wms.WMSMapContent;
 
-import java.io.IOException;
-import java.util.Set;
-
-/**
- * The Streaming map outputFormat class for WMS PBF files
- *
- */
+/** The Streaming map outputFormat class for WMS PBF files */
 public class MVTStreamingMapOutputFormat implements GetMapOutputFormat {
 
-    private static MapProducerCapabilities CAPABILITIES= new MapProducerCapabilities(false, false, false, false, null);
+    private static MapProducerCapabilities CAPABILITIES =
+            new MapProducerCapabilities(false, false, false, false, null);
 
     /**
      * @return {@code ["application/x-protobuf", "application/pbf", "application/mvt"]}
@@ -32,15 +29,12 @@ public class MVTStreamingMapOutputFormat implements GetMapOutputFormat {
         return MVT.MIME_TYPE;
     }
 
-    /**
-     *
-     * @see org.geoserver.wms.GetMapOutputFormat#produceMap(org.geoserver.wms.WMSMapContent)
-     */
-    public StreamingMVTMap produceMap(WMSMapContent mapContent) throws ServiceException,
-            IOException {
+    /** @see org.geoserver.wms.GetMapOutputFormat#produceMap(org.geoserver.wms.WMSMapContent) */
+    public StreamingMVTMap produceMap(WMSMapContent mapContent)
+            throws ServiceException, IOException {
         StreamingMVTMap mvt = new StreamingMVTMap(mapContent);
         mvt.setMimeType(getMimeType());
-        mvt.setContentDispositionHeader(mapContent,".pbf",false);
+        mvt.setContentDispositionHeader(mapContent, ".pbf", false);
         return mvt;
     }
 
