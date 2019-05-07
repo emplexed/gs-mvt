@@ -1,7 +1,11 @@
 # Geoserver MVT Extension
 
 ## Overview
-This extension for the **Geoserver** adds the possibility to deliver [Mapnik Vector Tiles](https://github.com/mapbox/mapnik-vector-tile/) in Protocol Buffers outputformat as result of an **WMS** or **Slippy Map Tile** request. This Version (0.3.X) has been developed and tested with [Geoserver 2.12](http://geoserver.org) but might also work with preceding versions.
+This extension for the **Geoserver** adds the possibility to deliver [Mapnik Vector Tiles](https://github.com/mapbox/mapnik-vector-tile/) in Protocol Buffers outputformat as result of an **WMS** or **Slippy Map Tile** request. This Version (0.3.X) has been developed and tested with [Geoserver 2.12](http://geoserver.org) but might also work with preceding versions. 
+Starting with Geoserver 2.14 and its upgrade to Geotools 20.0 this PlugIn will not work because of changes in the used JTS Library Version. 
+For Geoserver Versions 2.14 the migration from jts 1.14 - jts 1.15+ is required. This process will be done in an seperate branch.
+
+
 The resulting Vector Tiles can e.g. be rendered by WebGL JS clients like [Mapbox GL JS](https://www.mapbox.com/mapbox-gl-js/api/) or [Tangram](https://github.com/tangrams/tangram).
 
 ## Getting Started
@@ -96,6 +100,9 @@ Request Parameter | Description | Type
 *tileSize* | size of result coordinate system (width and height) | integer default 256
 *styles* | used styles for the layer(s) | String or comma separated Strings if more than one layer
 *time* | translated to WMS time parameter | Date String
+*cql_filter* | translated to WMS cql_filter parameter | String
+*viewparams* | translated to WMS viewparams parameter | String
+*bboxToBoundsViewparam* | if set to true adds the WMS bounds as a viewparams value (can than be used e.g. to improve performance in Geoserver SQL Views) | Boolean
 *sld* | External Style Sheed Descriptor | URL (Location of SLD to be used)
 *sld_body* | Style Description | SLD XML
 *gen_level* | generalisation level | String (ENUM) Values LOW/MID/HIGH default MID
