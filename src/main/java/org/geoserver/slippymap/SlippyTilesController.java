@@ -62,7 +62,7 @@ public class SlippyTilesController {
             @RequestParam(value = "cql_filter", required = false) String cql_filter,
             @RequestParam(value = "bboxToBoundsViewparam", required = false, defaultValue = "false")
                     boolean bboxToBoundsViewparam,
-            @RequestParam(value = "viewParams", required = false) String viewParams,
+            @RequestParam(value = "viewparams", required = false) String viewParams,
             final HttpServletRequest request,
             final HttpServletResponse response)
             throws IOException, ServletException {
@@ -138,10 +138,11 @@ public class SlippyTilesController {
         }
         // both, merge external viewparams and bbox to geoserver request
         else if (bboxToBoundsViewparam && viewParams != null) {
-            sb.append("&VIEWPARAMS=")
-                    .append(viewParams)
-                    .append(";")
-                    .append(buildBoundsViewparam(bbox));
+            sb.append("&VIEWPARAMS=").append(viewParams);
+            if (!viewParams.endsWith(";")) {
+                sb.append(";");
+            }
+            sb.append(buildBoundsViewparam(bbox));
         }
         String url = sb.toString();
         RequestDispatcher dispatcher =

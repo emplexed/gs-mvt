@@ -35,7 +35,8 @@ public class SlippyTilesControllerTest extends AbstractMVTTest {
                         + buffer
                         + "&styles="
                         + STYLE_NAME
-                        + "&tileSize=256&gen_level=low";
+                        + "&tileSize=256&gen_level=low"
+                        + "&bboxToBoundsViewparam=true&viewparams=test123:test123;";
         MockHttpServletResponse responseSlippy = getAsServletResponse(requestSlippy);
         Assert.assertEquals(200, responseSlippy.getStatus());
         String forwardedUrl = responseSlippy.getForwardedUrl();
