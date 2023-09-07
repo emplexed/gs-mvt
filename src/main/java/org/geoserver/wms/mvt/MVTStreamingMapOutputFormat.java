@@ -11,7 +11,8 @@ import org.geoserver.wms.WMSMapContent;
 public class MVTStreamingMapOutputFormat implements GetMapOutputFormat {
 
     private static MapProducerCapabilities CAPABILITIES =
-            new MapProducerCapabilities(false, false, false, false, null);
+            // new MapProducerCapabilities(false, false, false, false, null);
+            new MapProducerCapabilities(false, false, false);
 
     /**
      * @return {@code ["application/x-protobuf", "application/pbf", "application/mvt"]}

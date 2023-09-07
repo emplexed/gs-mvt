@@ -1,8 +1,5 @@
 package org.geoserver.wms.mvt;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
@@ -17,6 +14,9 @@ import org.geotools.referencing.CRS;
 import org.geotools.styling.AbstractSymbolizer;
 import org.geotools.styling.Style;
 import org.geotools.util.logging.Logging;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Envelope;
+import org.locationtech.jts.geom.Geometry;
 import org.opengis.feature.Feature;
 import org.opengis.feature.Property;
 import org.opengis.feature.simple.SimpleFeature;

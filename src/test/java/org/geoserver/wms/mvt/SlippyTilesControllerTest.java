@@ -5,10 +5,20 @@ import org.geoserver.slippymap.SlippyMapTileCalculator;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 /** Test for access to slippy map controller */
 public class SlippyTilesControllerTest extends AbstractMVTTest {
+
+    protected MockHttpServletResponse getAsServletResponse(String path, String charset)
+            throws Exception {
+        MockHttpServletRequest request = this.createRequest(path);
+        request.setServletPath("");
+        request.setMethod("GET");
+        request.setContent(new byte[0]);
+        return this.dispatch(request, (String) charset);
+    }
 
     @Test
     public void testRequestParams() throws Exception {
@@ -20,7 +30,7 @@ public class SlippyTilesControllerTest extends AbstractMVTTest {
         int buffer = 10;
 
         String requestSlippy =
-                "slippymap/"
+                "/slippymap/"
                         + TEST_LINES.getPrefix()
                         + ":"
                         + TEST_LINES.getLocalPart()

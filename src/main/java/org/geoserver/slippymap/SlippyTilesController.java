@@ -2,7 +2,6 @@ package org.geoserver.slippymap;
 
 import static org.geoserver.wms.mvt.MVTStreamingMapResponse.*;
 
-import com.vividsolutions.jts.geom.Polygon;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -14,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.geoserver.wms.GeneralisationLevel;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.locationtech.jts.geom.Polygon;
 import org.opengis.referencing.ReferenceIdentifier;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
  * redirect to the WMS service so that the security rules of the WMS service are used.
  */
 @Controller
-@RequestMapping("/slippymap")
+// @RequestMapping("/slippymap")
 public class SlippyTilesController {
 
     private int defaultBuffer = 10;
@@ -41,13 +41,24 @@ public class SlippyTilesController {
                 GeneralisationLevel.class, new GeneralisationLevelEnumConverter());
     }
 
-    @RequestMapping(value = "/{layers}/{z}/{x}/{y}.{format}", method = RequestMethod.GET)
+    /*@ResponseBody
+    @RequestMapping(value = "/slippymap/**", produces = {"application/text"})
+    public String testGet(  @PathVariable(required = false) String test,
+                            @PathVariable(required = false) Integer z,
+                            HttpServletRequest request) {
+        final String path =
+                request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString();
+        return test;
+    }*/
+
+    // @RequestMapping(path = "/slippymap/{layers}", produces = {"application/text"})
+    @RequestMapping(path = "/slippymap/{layers}/{z}/{x}/{y}.{format}", method = RequestMethod.GET)
     public void doGetSlippyWmsMap(
             @PathVariable String layers,
-            @PathVariable int z,
-            @PathVariable int x,
-            @PathVariable int y,
-            @PathVariable String format,
+            @PathVariable(required = false) int z,
+            @PathVariable(required = false) int x,
+            @PathVariable(required = false) int y,
+            @PathVariable(required = false) String format,
             @RequestParam(value = "buffer", required = false) Integer buffer,
             @RequestParam(value = "tileSize", required = false) Integer tileSize,
             @RequestParam(value = "styles", required = false) String styles,
