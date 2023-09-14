@@ -12,7 +12,6 @@
 
     <properties>
         <protobuf-java.version>3.24.2</protobuf-java.version>
-        <!--<protobuf-java.version>2.6.1</protobuf-java.version>-->
     </properties>
 
     <!-- set parent pom to extension pom -->
