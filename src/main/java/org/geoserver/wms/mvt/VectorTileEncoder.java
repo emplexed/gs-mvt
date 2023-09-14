@@ -59,7 +59,7 @@ public class VectorTileEncoder {
      * @param targetBBox the target bbox
      */
     public VectorTileEncoder(Envelope targetBBox) {
-        this(4096, targetBBox, false,0.1d, DEFAULT_SMALL_GEOMETRY_THRESHOLD);
+        this(4096, targetBBox, false, 0.1d, DEFAULT_SMALL_GEOMETRY_THRESHOLD);
     }
 
     /**
@@ -73,8 +73,8 @@ public class VectorTileEncoder {
      *
      * @param extent a int with extent value. 4096 is a good value.
      * @param targetBbox the bbox defined for the target tile
-     * @param includeLayersOnEmptyFeatureList include layer message even if no feature messages are present for this layer
-     *                        (by adding the layer element which is valid in vector tiles spec)
+     * @param includeLayersOnEmptyFeatureList include layer message even if no feature messages are
+     *     present for this layer (by adding the layer element which is valid in vector tiles spec)
      * @param simplificationFactor the factor for simplification
      * @param smallGeometryThreshold defines the threshold in length / area when geometries should
      *     be skipped in output. 0 or negative means all geoms are included
@@ -151,8 +151,9 @@ public class VectorTileEncoder {
     public void addFeature(
             String layerName, Map<String, ?> attributes, String idString, Geometry geometry) {
 
-        // if enabled always add the layer even if probably no feature will be added (avoid 0 byte protobufs)
-        if(includeLayersOnEmptyFeatureList) {
+        // if enabled always add the layer even if probably no feature will be added (avoid 0 byte
+        // protobufs)
+        if (includeLayersOnEmptyFeatureList) {
             Layer layer = layers.get(layerName);
             if (layer == null) {
                 layer = new Layer();

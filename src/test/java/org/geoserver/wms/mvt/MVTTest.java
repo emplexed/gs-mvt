@@ -1,7 +1,7 @@
 package org.geoserver.wms.mvt;
 
-import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_SMALL_GEOM_THRESHOLD;
 import static org.geoserver.wms.mvt.MVTStreamingMapResponse.AVOID_EMPTY_PROTO;
+import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_SMALL_GEOM_THRESHOLD;
 
 import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
@@ -191,15 +191,18 @@ public class MVTTest extends AbstractMVTTest {
         // every feature is filtered, returned content is a null / empty byte array
         Assert.assertEquals(0, contentEmpty.length);
 
-
-        String requestNotEmpty = request + "&env=" + PARAM_SMALL_GEOM_THRESHOLD + ":1.000;" + AVOID_EMPTY_PROTO + ":true";
+        String requestNotEmpty =
+                request
+                        + "&env="
+                        + PARAM_SMALL_GEOM_THRESHOLD
+                        + ":1.000;"
+                        + AVOID_EMPTY_PROTO
+                        + ":true";
         MockHttpServletResponse responseNotEmpty = getAsServletResponse(requestNotEmpty);
 
         byte[] contentNotEmpty = responseNotEmpty.getContentAsByteArray();
 
         // every feature is filtered, returned content is a null / empty byte array
         Assert.assertTrue(contentNotEmpty.length > 0);
-
     }
-
 }

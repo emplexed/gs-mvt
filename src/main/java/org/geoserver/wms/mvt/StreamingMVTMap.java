@@ -50,8 +50,8 @@ public class StreamingMVTMap extends WebMap {
      * Retrieves the feature from the underlying datasource and encodes them the MVT PBF format.
      *
      * @param out the outputstream to write to
-     * @param avoidEmptyProto indicates that if no feature has to be serialized a not empty protobuf is generated
-     *                        (by adding the layer element which is valid in vector tiles spec)
+     * @param avoidEmptyProto indicates that if no feature has to be serialized a not empty protobuf
+     *     is generated (by adding the layer element which is valid in vector tiles spec)
      * @param smallGeometryThreshold defines the threshold in length / area when geometries should
      *     be skipped in output. 0 or negative means all geoms are included
      * @param genFactors map of generalization factors per zoom level
@@ -85,13 +85,17 @@ public class StreamingMVTMap extends WebMap {
      * Retrieves the feature from the underlying datasource and encodes them the MVT PBF format.
      *
      * @param out the outputstream to write to
-     * @param avoidEmptyProto indicates that if no feature has to be serialized a not empty protobuf is generated
-     *                        (by adding the layer element which is valid in vector tiles spec)
+     * @param avoidEmptyProto indicates that if no feature has to be serialized a not empty protobuf
+     *     is generated (by adding the layer element which is valid in vector tiles spec)
      * @param smallGeometryThreshold threshold for skipping small geometries
      * @param genFactor the factor for generalisation
      * @throws IOException
      */
-    public void encode(final OutputStream out, boolean avoidEmptyProto, double smallGeometryThreshold, double genFactor)
+    public void encode(
+            final OutputStream out,
+            boolean avoidEmptyProto,
+            double smallGeometryThreshold,
+            double genFactor)
             throws IOException {
         ReferencedEnvelope renderingArea = this.mapContent.getRenderingArea();
         try {

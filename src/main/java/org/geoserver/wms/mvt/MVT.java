@@ -8,7 +8,7 @@ import java.util.Set;
 /** MVT constants (mimetype and output formats) */
 interface MVT {
 
-    //#String MIME_TYPE = "application/x-protobuf";
+    // #String MIME_TYPE = "application/x-protobuf";
     String MIME_TYPE = "application/vnd.mapbox-vector-tile";
 
     Set<String> OUTPUT_FORMATS =

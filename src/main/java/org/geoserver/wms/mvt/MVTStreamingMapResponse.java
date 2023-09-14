@@ -68,10 +68,11 @@ public class MVTStreamingMapResponse extends AbstractMapResponse {
                         NumberUtils.toDouble(
                                 (String) reqSkipSmallGeoms, DEFAULT_SMALL_GEOMETRY_THRESHOLD);
             }
-            // check if env if empty protos (if no features are found should be avoided by adding an empty layer object
+            // check if env if empty protos (if no features are found should be avoided by adding an
+            // empty layer object
             // in the protobuf
             Object reqAvoidEmptyProto = request.getEnv().get(AVOID_EMPTY_PROTO);
-            if(reqAvoidEmptyProto != null) {
+            if (reqAvoidEmptyProto != null) {
                 avoidEmptyProto = Boolean.parseBoolean(reqAvoidEmptyProto.toString());
             }
         }

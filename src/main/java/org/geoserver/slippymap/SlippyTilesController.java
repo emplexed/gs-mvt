@@ -70,8 +70,7 @@ public class SlippyTilesController {
                     GeneralisationLevel gen_level,
             @RequestParam(value = PARAM_SMALL_GEOM_THRESHOLD, required = false)
                     Double small_geom_threshold,
-            @RequestParam(value = AVOID_EMPTY_PROTO, required = false)
-                    Boolean avoid_empty_proto,
+            @RequestParam(value = AVOID_EMPTY_PROTO, required = false) Boolean avoid_empty_proto,
             @RequestParam(value = "cql_filter", required = false) String cql_filter,
             @RequestParam(value = "bboxToBoundsViewparam", required = false, defaultValue = "false")
                     boolean bboxToBoundsViewparam,
