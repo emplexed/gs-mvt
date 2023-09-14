@@ -19,7 +19,8 @@
 	<bean id="slippyTilesController" class="org.geoserver.slippymap.SlippyTilesController">
          <property name="supportedOutputFormats">
              <map>
-                 <entry key="pbf" value="application/x-protobuf"/>
+                 <!--<entry key="pbf" value="application/x-protobuf"/>-->
+				 <entry key="pbf" value="application/vnd.mapbox-vector-tile"/>
                  <entry key="png" value="image/png"/>
                  <entry key="jpg" value="image/jpg"/>
                  <entry key="gif" value="image/gif"/>
