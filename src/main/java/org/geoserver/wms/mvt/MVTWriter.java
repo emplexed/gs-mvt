@@ -72,6 +72,8 @@ public class MVTWriter {
      * @param tileSizeX the tile size of the resulting vector tile in x direction (without buffer)
      * @param tileSizeY the tile size of the resulting vector tile in y direction (without buffer)
      * @param buffer the buffer of the vector tiles
+     * @param includeLayersOnEmptyFeatureList include layer message even if no feature messages are present for this layer
+     *                        (by adding the layer element which is valid in vector tiles spec)
      * @param genFactor generalisation factor, value used as parameter in simplification algorithm
      * @param smallGeometryThreshold defines the threshold in length / area when geometries should
      *     be skipped in output. 0 or negative means all geoms are included
@@ -85,12 +87,13 @@ public class MVTWriter {
             int tileSizeX,
             int tileSizeY,
             int buffer,
+            boolean includeLayersOnEmptyFeatureList,
             double genFactor,
             double smallGeometryThreshold)
             throws FactoryException, TransformException {
         Envelope targetBBOX = new ReferencedEnvelope(0, tileSizeX, 0, tileSizeY, TARGET_CRS);
         return new MVTWriter(
-                sourceBBOX, targetBBOX, sourceCRS, buffer, genFactor, smallGeometryThreshold);
+                sourceBBOX, targetBBOX, sourceCRS, buffer, includeLayersOnEmptyFeatureList, genFactor, smallGeometryThreshold);
     }
 
     /**
@@ -182,6 +185,7 @@ public class MVTWriter {
             Envelope targetBBOX,
             CoordinateReferenceSystem sourceCRS,
             int bufferSize,
+            boolean includeLayersOnEmptyFeatureList,
             double genFactor,
             double smallGeometryThreshold)
             throws TransformException, FactoryException {
@@ -206,7 +210,7 @@ public class MVTWriter {
         this.xScale = this.calculateXFactor();
         this.yScale = this.calculateYFactor();
         this.vectorTileEncoder =
-                new VectorTileEncoder(4096, targetBBOX, genFactor, smallGeometryThreshold);
+                new VectorTileEncoder(4096, targetBBOX, includeLayersOnEmptyFeatureList, genFactor, smallGeometryThreshold);
     }
 
     private MVTWriter(

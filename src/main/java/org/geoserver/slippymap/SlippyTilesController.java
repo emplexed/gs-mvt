@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 public class SlippyTilesController {
 
     private int defaultBuffer = 10;
-    private String defaultFormat = "application/x-protobuf";
+    private String defaultFormat = "application/vnd.mapbox-vector-tile";
     private String defaultStyles = "";
 
     private Map<String, String> supportedOutputFormats;

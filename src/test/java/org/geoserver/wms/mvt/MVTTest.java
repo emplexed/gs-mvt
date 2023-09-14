@@ -1,6 +1,7 @@
 package org.geoserver.wms.mvt;
 
 import static org.geoserver.wms.mvt.MVTStreamingMapResponse.PARAM_SMALL_GEOM_THRESHOLD;
+import static org.geoserver.wms.mvt.MVTStreamingMapResponse.AVOID_EMPTY_PROTO;
 
 import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
@@ -166,4 +167,39 @@ public class MVTTest extends AbstractMVTTest {
         // size of default (0.05 Length/Area) is smaller then with 0.01 (less skipped)
         Assert.assertTrue(contentDefault.length < contentSkip001.length);
     }
+
+    @Test
+    public void testEmptyResponseBehavior() throws Exception {
+        String request =
+                "wms?request=getmap&service=wms&version=1.1.1"
+                        + "&format="
+                        + MVT.MIME_TYPE
+                        + "&layers="
+                        + TEST_POLYGONS.getPrefix()
+                        + ":"
+                        + TEST_POLYGONS.getLocalPart()
+                        + "&styles="
+                        + STYLE_NAME
+                        + "&height=256&width=256"
+                        + "&bbox=1448023.063834379,6066042.5647115875,1457807.0034548815,6075826.50433209&srs=EPSG:3857&buffer=10";
+
+        String requestEmpty = request + "&env=" + PARAM_SMALL_GEOM_THRESHOLD + ":1.000";
+        MockHttpServletResponse responseEmpty = getAsServletResponse(requestEmpty);
+
+        byte[] contentEmpty = responseEmpty.getContentAsByteArray();
+
+        // every feature is filtered, returned content is a null / empty byte array
+        Assert.assertEquals(0, contentEmpty.length);
+
+
+        String requestNotEmpty = request + "&env=" + PARAM_SMALL_GEOM_THRESHOLD + ":1.000;" + AVOID_EMPTY_PROTO + ":true";
+        MockHttpServletResponse responseNotEmpty = getAsServletResponse(requestNotEmpty);
+
+        byte[] contentNotEmpty = responseNotEmpty.getContentAsByteArray();
+
+        // every feature is filtered, returned content is a null / empty byte array
+        Assert.assertTrue(contentNotEmpty.length > 0);
+
+    }
+
 }

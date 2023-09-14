@@ -24,6 +24,7 @@ public class MVTStreamingMapResponse extends AbstractMapResponse {
     public static final String PARAM_GENERALISATION_FACTOR = "gen_factor";
     public static final String PARAM_GENERALISATION_LEVEL = "gen_level";
     public static final String PARAM_SMALL_GEOM_THRESHOLD = "small_geom_threshold";
+    public static final String AVOID_EMPTY_PROTO = "avoid_empty_proto";
 
     private GeneralisationLevel defaultGenLevel;
     private Map<GeneralisationLevel, Map<Integer, Double>> generalisationTables;
@@ -42,6 +43,8 @@ public class MVTStreamingMapResponse extends AbstractMapResponse {
         // double genFactor = getGenFactorForGenLevel(defaultGenLevel);
         Double genFactor = null;
         Double smallGeometryThreshold = DEFAULT_SMALL_GEOMETRY_THRESHOLD;
+        Boolean avoidEmptyProto = false;
+
         Map<Integer, Double> genFactorTable = getGenFactorForGenLevel(defaultGenLevel);
         if (operation.getParameters()[0] instanceof GetMapRequest) {
             // check configuration based on parameters
@@ -65,15 +68,22 @@ public class MVTStreamingMapResponse extends AbstractMapResponse {
                         NumberUtils.toDouble(
                                 (String) reqSkipSmallGeoms, DEFAULT_SMALL_GEOMETRY_THRESHOLD);
             }
+            // check if env if empty protos (if no features are found should be avoided by adding an empty layer object
+            // in the protobuf
+            Object reqAvoidEmptyProto = request.getEnv().get(AVOID_EMPTY_PROTO);
+            if(reqAvoidEmptyProto != null) {
+                avoidEmptyProto = Boolean.parseBoolean(reqAvoidEmptyProto.toString());
+            }
         }
         try {
             // passed in generlalisation factor is overriding default configuration (table for
             // zooms)
             if (genFactor != null) {
-                map.encode(output, smallGeometryThreshold, genFactor);
+                map.encode(output, avoidEmptyProto, smallGeometryThreshold, genFactor);
             } else {
                 map.encode(
                         output,
+                        avoidEmptyProto,
                         smallGeometryThreshold,
                         genFactorTable,
                         DEFAULT_GENERALISATION_FACTOR);
