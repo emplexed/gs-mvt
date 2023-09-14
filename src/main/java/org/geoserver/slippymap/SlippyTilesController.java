@@ -70,6 +70,8 @@ public class SlippyTilesController {
                     GeneralisationLevel gen_level,
             @RequestParam(value = PARAM_SMALL_GEOM_THRESHOLD, required = false)
                     Double small_geom_threshold,
+            @RequestParam(value = AVOID_EMPTY_PROTO, required = false)
+                    Boolean avoid_empty_proto,
             @RequestParam(value = "cql_filter", required = false) String cql_filter,
             @RequestParam(value = "bboxToBoundsViewparam", required = false, defaultValue = "false")
                     boolean bboxToBoundsViewparam,
@@ -138,6 +140,14 @@ public class SlippyTilesController {
                 sb.append(";");
             }
             sb.append(PARAM_SMALL_GEOM_THRESHOLD).append(":").append(small_geom_threshold);
+        }
+        if (avoid_empty_proto != null) {
+            if (!envAppended) {
+                sb.append("&ENV=");
+            } else {
+                sb.append(";");
+            }
+            sb.append(AVOID_EMPTY_PROTO).append(":").append(avoid_empty_proto);
         }
         // no view params, just encode bbox in viewparams param for geoserver request
         if (bboxToBoundsViewparam && viewParams == null) {
