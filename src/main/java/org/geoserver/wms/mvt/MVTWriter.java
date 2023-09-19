@@ -337,6 +337,7 @@ public class MVTWriter {
      */
     private void addFeaturesToEncoder(
             Map<FeatureCollection, Style> featureCollectionStyleMap, double scaleDenominator) {
+        boolean atLeastOneFeatureAdded = false;
         for (FeatureCollection featureCollection : featureCollectionStyleMap.keySet()) {
             String layerName = featureCollection.getSchema().getName().getLocalPart();
             Style featureStyle = featureCollectionStyleMap.get(featureCollection);
@@ -362,11 +363,21 @@ public class MVTWriter {
                             geometry = transFormGeometry(geometry);
                             this.vectorTileEncoder.addFeature(
                                     layerName, attributeMap, feature.getID(), geometry);
+                            atLeastOneFeatureAdded = true;
                         }
                     } catch (IllegalStateException ex) {
                         LOGGER.warning(ex.getMessage());
                     }
                 }
+            }
+        }
+        if (!atLeastOneFeatureAdded && vectorTileEncoder.isIncludeLayersOnEmptyFeatureList()) {
+            for (FeatureCollection featureCollection : featureCollectionStyleMap.keySet()) {
+                String layerName = featureCollection.getSchema().getName().getLocalPart();
+                LOGGER.fine(
+                        "adding empty layer message cause no feature messages present, layernname: "
+                                + layerName);
+                vectorTileEncoder.getOrAddLayer(layerName);
             }
         }
     }

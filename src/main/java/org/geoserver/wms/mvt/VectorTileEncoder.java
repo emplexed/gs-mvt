@@ -137,6 +137,14 @@ public class VectorTileEncoder {
         return new GeometryFactory().createPolygon(coords).getEnvelopeInternal();
     }
 
+    public Layer getOrAddLayer(String layerName) {
+        Layer layer = layers.get(layerName);
+        if (layer == null) {
+            layer = new Layer();
+            layers.put(layerName, layer);
+        }
+        return layer;
+    }
     /**
      * Add a feature with layer name (typically feature type name), some attributes and a Geometry.
      * The Geometry must be in "pixel" space 0,0 lower left and 256,256 upper right.
@@ -154,11 +162,7 @@ public class VectorTileEncoder {
         // if enabled always add the layer even if probably no feature will be added (avoid 0 byte
         // protobufs)
         if (includeLayersOnEmptyFeatureList) {
-            Layer layer = layers.get(layerName);
-            if (layer == null) {
-                layer = new Layer();
-                layers.put(layerName, layer);
-            }
+            getOrAddLayer(layerName);
         }
 
         // split up MultiPolygon and GeometryCollection (without subclasses)
@@ -252,11 +256,12 @@ public class VectorTileEncoder {
             }
         }
 
-        Layer layer = layers.get(layerName);
+        Layer layer = getOrAddLayer(layerName);
+        /*  Layer layer = layers.get(layerName);
         if (layer == null) {
             layer = new Layer();
             layers.put(layerName, layer);
-        }
+        }*/
 
         Feature feature = new Feature();
         feature.geometry = geometry;
@@ -396,6 +401,10 @@ public class VectorTileEncoder {
         } catch (NoClassDefFoundError cex) {
             LOGGER.log(Level.SEVERE, "Google Protocol Buffers Library not found in Classpath");
         }
+    }
+
+    public boolean isIncludeLayersOnEmptyFeatureList() {
+        return includeLayersOnEmptyFeatureList;
     }
 
     private VectorTile.Tile retrieveVectorTile() {
