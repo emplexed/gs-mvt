@@ -204,5 +204,34 @@ public class MVTTest extends AbstractMVTTest {
 
         // every feature is filtered, returned content is a null / empty byte array
         Assert.assertTrue(contentNotEmpty.length > 0);
+
+        // if datastore already doesn´t provide any features, behaviour should also add layer
+        // (request requests with bounds outside present data)
+        request =
+                "wms?request=getmap&service=wms&version=1.1.1"
+                        + "&format="
+                        + MVT.MIME_TYPE
+                        + "&layers="
+                        + TEST_POLYGONS.getPrefix()
+                        + ":"
+                        + TEST_POLYGONS.getLocalPart()
+                        + "&styles="
+                        + STYLE_NAME
+                        + "&height=256&width=256"
+                        + "&bbox=2448023.063834379,6066042.5647115875,2457807.0034548815,6075826.50433209&srs=EPSG:3857&buffer=10";
+
+        responseEmpty = getAsServletResponse(requestEmpty);
+
+        contentEmpty = responseEmpty.getContentAsByteArray();
+
+        // every feature is filtered, returned content is a null / empty byte array
+        Assert.assertEquals(0, contentEmpty.length);
+
+        requestNotEmpty = request + "&env=" + AVOID_EMPTY_PROTO + ":true";
+        responseNotEmpty = getAsServletResponse(requestNotEmpty);
+        contentNotEmpty = responseNotEmpty.getContentAsByteArray();
+
+        // every feature is filtered, returned content is a null / empty byte array
+        Assert.assertTrue(contentNotEmpty.length > 0);
     }
 }
