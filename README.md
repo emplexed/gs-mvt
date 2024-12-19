@@ -10,22 +10,38 @@ or [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/).
 
 ### Geoserver Version Support
 
-Current Version (0.4.X) has been developed and tested with [Geoserver 2.23](http://geoserver.org) but might also work with preceding
+#### Version 0.5.X
+Version 0.5.X has been developed and tested with [Geoserver 2.26](http://geoserver.org) but should also work with versions
+starting from 2.24. 
+
+0.5.X just migrates to the changes in org.openapi packages to org.geotools.api described in the [Developer updates section](https://geoserver.org/announcements/2023/09/25/geoserver-2-24-RC-released.html)
+since Geoserver Version 2.24 RC.
+
+see [Branch 0_4_x_pre_geoserver_2.24.RC](https://github.com/emplexed/gs-mvt/tree/0_4_x_pre_geoserver_2.24.RC) and use
+[Release 0.4.3](https://github.com/emplexed/gs-mvt/releases/tag/v0.4.3).
+
+##### Changes from 0.4.X to 0.5.X
+none
+
+#### Version 0.4.X 
+Version 0.4.X has been developed and tested with [Geoserver 2.23](http://geoserver.org) but might also work with preceding
 versions.
 
 After several changes in Geoserver dependencies around Version 2.14 (JTS version with changed package definitions, Geotools Changes, ... )
-this version of the PlugIn will not work in earlier versions.
+version 0.4.X of the PlugIn will not work in earlier versions.
 
-For usage of the PlugIn in pre 2.14 Geoserver Version
-see [Branch 0_3_x_pre_geoserver_2.14.X](https://github.com/emplexed/gs-mvt/tree/0_3_x_pre_geoserver_2.14.X) and use
-[Release 0.3.3](https://github.com/emplexed/gs-mvt/releases/tag/v0.3.3).
-
-### Changes from 0.3.X to 0.4.X
+##### Changes from 0.3.X to 0.4.X
 
 * returned Mime-Type of output is application/vnd.mapbox-vector-tile
 * default format name has changed from ```application/x-protobuf``` to ```application/vnd.mapbox-vector-tile```
 * introduced additional ```env``` (avoid 0 byte protos to play nicer
   with [GeoWebCache](https://docs.geoserver.org/main/en/user/geowebcache/index.html))
+
+#### Version 0.3.X
+For usage of the PlugIn in pre 2.14 Geoserver Version
+see [Branch 0_3_x_pre_geoserver_2.14.X](https://github.com/emplexed/gs-mvt/tree/0_3_x_pre_geoserver_2.14.X) and use
+[Release 0.3.3](https://github.com/emplexed/gs-mvt/releases/tag/v0.3.3).
+
 
 ## Getting Started
 
