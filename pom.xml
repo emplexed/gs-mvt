@@ -1,68 +1,65 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.geoserver.extension</groupId>
+  <artifactId>gs-mvt</artifactId>
+  <version>0.5.0</version>
+  <packaging>jar</packaging>
+  <name>MVT WMS output format</name>
 
-    <modelVersion>4.0.0</modelVersion>
-	<version>0.4.3</version>
+  <!-- set parent pom to extension pom -->
+  <parent>
+    <groupId>org.geoserver</groupId>
+    <artifactId>extension</artifactId>
+    <version>2.26.1</version>
+  </parent>
 
-    <properties>
-        <protobuf-java.version>3.24.2</protobuf-java.version>
-    </properties>
+  <properties>
+    <protobuf-java.version>3.24.2</protobuf-java.version>
+  </properties>
 
-    <!-- set parent pom to extension pom -->
-    <parent>
-        <groupId>org.geoserver</groupId>
-        <artifactId>extension</artifactId>
-        <version>2.23.2</version>
-    </parent>
+  <dependencies>
+    <dependency>
+      <groupId>org.geoserver</groupId>
+      <artifactId>gs-wms</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+      <version>${protobuf-java.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.geoserver</groupId>
+      <artifactId>gs-wms</artifactId>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.geoserver</groupId>
+      <artifactId>gs-main</artifactId>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
-    <groupId>org.geoserver.extension</groupId>
-    <artifactId>gs-mvt</artifactId>
-    <packaging>jar</packaging>
-    <name>MVT WMS output format</name>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.geoserver</groupId>
-            <artifactId>gs-wms</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>${protobuf-java.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.geoserver</groupId>
-            <artifactId>gs-wms</artifactId>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.geoserver</groupId>
-            <artifactId>gs-main</artifactId>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>xmlunit</groupId>
-            <artifactId>xmlunit</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-    
-    <repositories>
-		<repository>
-			<id>boundless</id>
-			<url>http://repo.boundlessgeo.com/main/</url>
-		</repository>
-		<repository>
-			<id>osgeo</id>
-			<url>http://download.osgeo.org/webdav/geotools/</url>
-		</repository>
-	</repositories>
+  <repositories>
+    <repository>
+      <id>boundless</id>
+      <url>http://repo.boundlessgeo.com/main/</url>
+    </repository>
+    <repository>
+      <id>osgeo</id>
+      <url>http://download.osgeo.org/webdav/geotools/</url>
+    </repository>
+  </repositories>
 </project>

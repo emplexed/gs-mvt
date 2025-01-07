@@ -11,23 +11,23 @@ import java.util.Map;
 import java.util.logging.Logger;
 import org.geoserver.wms.WMSMapContent;
 import org.geoserver.wms.WebMap;
+import org.geotools.api.data.Query;
+import org.geotools.api.data.SimpleFeatureSource;
+import org.geotools.api.feature.simple.SimpleFeatureType;
+import org.geotools.api.filter.Filter;
+import org.geotools.api.filter.FilterFactory;
+import org.geotools.api.filter.spatial.BBOX;
+import org.geotools.api.referencing.FactoryException;
+import org.geotools.api.referencing.operation.TransformException;
+import org.geotools.api.style.FeatureTypeStyle;
+import org.geotools.api.style.Rule;
+import org.geotools.api.style.Style;
 import org.geotools.data.DataUtilities;
-import org.geotools.data.Query;
-import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.map.Layer;
-import org.geotools.styling.FeatureTypeStyle;
-import org.geotools.styling.Rule;
-import org.geotools.styling.Style;
 import org.geotools.util.logging.Logging;
-import org.opengis.feature.simple.SimpleFeatureType;
-import org.opengis.filter.Filter;
-import org.opengis.filter.FilterFactory2;
-import org.opengis.filter.spatial.BBOX;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.operation.TransformException;
 
 /**
  * Adapted WebMap implementation. Gets the style and retrieves filter rules. These rules are
@@ -110,7 +110,7 @@ public class StreamingMVTMap extends WebMap {
                             genFactor,
                             smallGeometryThreshold);
             Map<FeatureCollection, Style> featureCollectionStyleMap = new HashMap<>();
-            FilterFactory2 ff = CommonFactoryFinder.getFilterFactory2();
+            FilterFactory ff = CommonFactoryFinder.getFilterFactory();
             // Iterate through all layers. Layers can be requested through WMS with comma separation
             for (Layer layer : this.mapContent.layers()) {
                 SimpleFeatureSource featureSource = (SimpleFeatureSource) layer.getFeatureSource();
@@ -176,7 +176,7 @@ public class StreamingMVTMap extends WebMap {
      *     filter is difined.
      */
     private Filter getFeatureFilterFromStyle(
-            Style style, FilterFactory2 ff, double currentScaleDenominator) {
+            Style style, FilterFactory ff, double currentScaleDenominator) {
         List<Filter> filter = new ArrayList<>();
         for (FeatureTypeStyle featureTypeStyle : style.featureTypeStyles()) {
             for (Rule rule : featureTypeStyle.rules()) {
