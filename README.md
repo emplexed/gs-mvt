@@ -17,9 +17,6 @@ starting from 2.24.
 0.5.X just migrates to the changes in org.openapi packages to org.geotools.api described in the [Developer updates section](https://geoserver.org/announcements/2023/09/25/geoserver-2-24-RC-released.html)
 since Geoserver Version 2.24 RC.
 
-see [Branch 0_4_x_pre_geoserver_2.24.RC](https://github.com/emplexed/gs-mvt/tree/0_4_x_pre_geoserver_2.24.RC) and use
-[Release 0.4.3](https://github.com/emplexed/gs-mvt/releases/tag/v0.4.3).
-
 ##### Changes from 0.4.X to 0.5.X
 none
 
@@ -29,6 +26,9 @@ versions.
 
 After several changes in Geoserver dependencies around Version 2.14 (JTS version with changed package definitions, Geotools Changes, ... )
 version 0.4.X of the PlugIn will not work in earlier versions.
+
+See [Branch 0_4_x_pre_geoserver_2.24.RC](https://github.com/emplexed/gs-mvt/tree/0_4_x_pre_geoserver_2.24.RC) and use
+[Release 0.4.3](https://github.com/emplexed/gs-mvt/releases/tag/v0.4.3) for Geoserver Versions between 2.14 and 2.23.
 
 ##### Changes from 0.3.X to 0.4.X
 
