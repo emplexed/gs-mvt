@@ -234,4 +234,69 @@ public class MVTTest extends AbstractMVTTest {
         // every feature is filtered, returned content is a null / empty byte array
         Assert.assertTrue(contentNotEmpty.length > 0);
     }
+
+    /**
+     * A layer whose style has no rule applicable at the requested scale is not queried at all, but
+     * it still has to behave like a layer that simply delivered no feature.
+     */
+    @Test
+    public void testOutOfScaleLayerBehavesLikeAnEmptyLayer() throws Exception {
+        String request =
+                "wms?request=getmap&service=wms&version=1.1.1"
+                        + "&format="
+                        + MVT.MIME_TYPE
+                        + "&layers="
+                        + TEST_POLYGONS.getPrefix()
+                        + ":"
+                        + TEST_POLYGONS.getLocalPart()
+                        + "&styles="
+                        + OUT_OF_SCALE_STYLE_NAME
+                        + "&height=256&width=256"
+                        + "&bbox=1448023.063834379,6066042.5647115875,1457807.0034548815,6075826.50433209&srs=EPSG:3857&buffer=10"
+                        // the layer would deliver features here, only the scale keeps it empty
+                        + "&env="
+                        + PARAM_SMALL_GEOM_THRESHOLD
+                        + ":-1";
+
+        byte[] contentEmpty = getAsServletResponse(request).getContentAsByteArray();
+        // no rule is in scale, so no feature may be encoded
+        Assert.assertEquals(0, contentEmpty.length);
+
+        byte[] contentNotEmpty =
+                getAsServletResponse(request + ";" + AVOID_EMPTY_PROTO + ":true")
+                        .getContentAsByteArray();
+        // with avoid_empty_proto the layer message has to be present nevertheless
+        Assert.assertTrue(contentNotEmpty.length > 0);
+        VectorTile.Tile tile = VectorTile.Tile.parseFrom(contentNotEmpty);
+        Assert.assertEquals(1, tile.getLayersCount());
+        Assert.assertEquals(TEST_POLYGONS.getLocalPart(), tile.getLayersList().get(0).getName());
+        Assert.assertEquals(0, tile.getLayersList().get(0).getFeaturesCount());
+    }
+
+    /** The same layer with an in scale style still delivers features. */
+    @Test
+    public void testInScaleLayerIsStillEncoded() throws Exception {
+        String request =
+                "wms?request=getmap&service=wms&version=1.1.1"
+                        + "&format="
+                        + MVT.MIME_TYPE
+                        + "&layers="
+                        + TEST_POLYGONS.getPrefix()
+                        + ":"
+                        + TEST_POLYGONS.getLocalPart()
+                        + "&styles="
+                        + STYLE_NAME
+                        + "&height=256&width=256"
+                        + "&bbox=1448023.063834379,6066042.5647115875,1457807.0034548815,6075826.50433209&srs=EPSG:3857&buffer=10"
+                        // keep the small geometries of the test data, they would be skipped with
+                        // the default threshold
+                        + "&env="
+                        + PARAM_SMALL_GEOM_THRESHOLD
+                        + ":-1";
+
+        byte[] content = getAsServletResponse(request).getContentAsByteArray();
+        VectorTile.Tile tile = VectorTile.Tile.parseFrom(content);
+        Assert.assertEquals(1, tile.getLayersCount());
+        Assert.assertTrue(tile.getLayersList().get(0).getFeaturesCount() > 0);
+    }
 }

@@ -18,7 +18,11 @@ starting from 2.24.
 since Geoserver Version 2.24 RC.
 
 ##### Changes from 0.4.X to 0.5.X
-none
+* Scale denominators of the SLD rules are now evaluated identically for the datastore query and for the encoding of the
+features. Only the filter rules that are in scale are pushed down into the query, and layers without any rule in scale are not
+queried at all (see [Scale Denominators](#scale-denominators)).
+* The maximum scale denominator is now exclusive as defined by the SLD specification, so two adjacent rules no longer both
+apply at the shared boundary value.
 
 #### Version 0.4.X 
 Version 0.4.X has been developed and tested with [Geoserver 2.23](http://geoserver.org) but might also work with preceding
@@ -260,3 +264,21 @@ Following example shows an GeoServer Style Sheet (SLD) filtering features by a f
 
 In this example features with the property ```frc=0``` are never filtered. All other features containing a frc value are filtered if the
 requested **ScaleDenominator** exceeds the defined **MaxScaleDenominator**.
+
+### Scale Denominators
+
+A rule applies if ```MinScaleDenominator <= ScaleDenominator < MaxScaleDenominator```, as defined by the SLD specification, so
+the minimum is inclusive and the maximum is exclusive. Two adjacent rules using the same value for **MaxScaleDenominator** and
+**MinScaleDenominator** therefore never both apply at that value.
+
+The same evaluation is used for the query that is sent to the datastore and for the encoding of the features. Only the filter
+rules that are in scale are pushed down into the query, and a layer whose style has no rule in scale at all is not queried at
+all. This is especially relevant for layer groups, where without this every member layer would be read from the datastore on
+every tile even if its features were discarded afterwards.
+
+A layer that is skipped this way behaves exactly like a layer that delivered no feature, so it still appears as an empty layer
+message if [avoid_empty_proto](#avoid-output-of-0-byte-protobuf) is enabled.
+
+Note that the **ScaleDenominator** is computed by GeoServer from the **WIDTH** / **HEIGHT** of the WMS request, not from the
+internal tile extent. Requesting the same bounding box with 512x512 instead of 256x256 halves the scale denominator and thus
+shifts the zoom level at which a rule starts to apply.

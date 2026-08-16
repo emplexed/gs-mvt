@@ -23,6 +23,7 @@ import org.geotools.api.style.FeatureTypeStyle;
 import org.geotools.api.style.Rule;
 import org.geotools.api.style.Style;
 import org.geotools.data.DataUtilities;
+import org.geotools.data.store.EmptyFeatureCollection;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.feature.FeatureCollection;
 import org.geotools.geometry.jts.ReferencedEnvelope;
@@ -111,10 +112,27 @@ public class StreamingMVTMap extends WebMap {
                             smallGeometryThreshold);
             Map<FeatureCollection, Style> featureCollectionStyleMap = new HashMap<>();
             FilterFactory ff = CommonFactoryFinder.getFilterFactory();
+            double scaleDenominator = this.mapContent.getScaleDenominator();
             // Iterate through all layers. Layers can be requested through WMS with comma separation
             for (Layer layer : this.mapContent.layers()) {
                 SimpleFeatureSource featureSource = (SimpleFeatureSource) layer.getFeatureSource();
                 SimpleFeatureType schema = featureSource.getSchema();
+                // Layers whose style has no rule applicable at the current scale cannot contribute
+                // a single feature, the encoder would drop all of them again. Register an empty
+                // collection instead of querying the store: this keeps the layer known to the
+                // encoder (so includeLayersOnEmptyFeatureList still emits the empty layer message)
+                // but avoids reading any row. Relevant for layer groups where every member is
+                // queried on every tile otherwise.
+                if (!MVTStyleScaleSupport.hasRuleInScale(layer.getStyle(), scaleDenominator)) {
+                    LOGGER.fine(
+                            "skipping datastore query for layer "
+                                    + schema.getTypeName()
+                                    + ", no rule of its style applies at scale denominator "
+                                    + scaleDenominator);
+                    featureCollectionStyleMap.put(
+                            new EmptyFeatureCollection(schema), layer.getStyle());
+                    continue;
+                }
                 String defaultGeometry = schema.getGeometryDescriptor().getName().getLocalPart();
                 // Retrieve rendering area. In case of a buffer the extent is the buffered extent
                 // and not the requested
@@ -132,8 +150,7 @@ public class StreamingMVTMap extends WebMap {
                 if (layer.getStyle() != null) {
                     // Add Style Filters to the request
                     Filter styleFilter =
-                            getFeatureFilterFromStyle(
-                                    layer.getStyle(), ff, this.mapContent.getScaleDenominator());
+                            getFeatureFilterFromStyle(layer.getStyle(), ff, scaleDenominator);
                     if (styleFilter != null) {
                         Query filterQuery = new Query(schema.getTypeName(), styleFilter);
                         finalQuery =
@@ -151,13 +168,22 @@ public class StreamingMVTMap extends WebMap {
                         featureSource.getFeatures(finalQuery), layer.getStyle());
             }
             // Write all features to the output stream
-            mvtWriter.writeFeatures(
-                    featureCollectionStyleMap, this.mapContent.getScaleDenominator(), out);
+            mvtWriter.writeFeatures(featureCollectionStyleMap, scaleDenominator, out);
         } catch (TransformException | FactoryException e) {
             LOGGER.warning(e.getMessage());
         }
     }
 
+    /**
+     * Derives the zoom level used to look up the generalisation factor from the scale denominator.
+     *
+     * <p>Note that this calculation assumes 96 DPI while the scale denominator handed in by the
+     * {@link org.geoserver.wms.WMSMapContent} is based on the OGC standard pixel size of 0.28 mm
+     * (~90.71 DPI). Zoom level derivation and SLD rule matching are therefore not based on the very
+     * same formula and the resulting zoom level can be off by one close to a zoom boundary. Left
+     * unchanged on purpose, correcting it would silently alter the generalisation of every existing
+     * deployment.
+     */
     private int getZoomLevel(double scale) {
         double maxRes = 156543.03;
         double rs = scale / (96 * 39.37);
@@ -169,35 +195,43 @@ public class StreamingMVTMap extends WebMap {
      * Retrieve Filter information from the Layer Style. TODO maybe there is a better method to do
      * that e.g. using a {@link org.geotools.styling.StyleVisitor}
      *
+     * <p>Only rules that apply at the current scale denominator are taken into account, using the
+     * same scale evaluation as the encoder ({@link MVTStyleScaleSupport}). A feature is rendered as
+     * soon as one of those rules accepts it, hence the filters are combined with OR.
+     *
      * @param style the style of the layer
      * @param ff the filter factory to create (concat) filters
      * @param currentScaleDenominator the current scale denominator of the reuquested tiles
-     * @return The filter containing all relevant filters for the current solutions or null if no
-     *     filter is difined.
+     * @return the filter containing all relevant filters for the current scale, null if the style
+     *     does not restrict the features at all, or {@link Filter#EXCLUDE} if no rule of the style
+     *     applies at the current scale
      */
-    private Filter getFeatureFilterFromStyle(
+    // package visible for testing
+    Filter getFeatureFilterFromStyle(
             Style style, FilterFactory ff, double currentScaleDenominator) {
         List<Filter> filter = new ArrayList<>();
+        boolean hasRules = false;
         for (FeatureTypeStyle featureTypeStyle : style.featureTypeStyles()) {
             for (Rule rule : featureTypeStyle.rules()) {
-                if ((rule.getMaxScaleDenominator() < Double.POSITIVE_INFINITY
-                                && currentScaleDenominator < rule.getMaxScaleDenominator())
-                        || (rule.getMinScaleDenominator() > 0
-                                && currentScaleDenominator > rule.getMinScaleDenominator())) {
-                    if (rule.getFilter() != null) {
-                        filter.add(rule.getFilter());
-                    }
-                } else if (rule.getMinScaleDenominator() == 0
-                        && rule.getMaxScaleDenominator() == Double.POSITIVE_INFINITY) {
-                    // No Scale denominator defined so render all
-                    if (rule.getFilter() == null) {
-                        return null;
-                    } else {
-                        filter.add(rule.getFilter());
-                    }
+                hasRules = true;
+                // Rules out of scale contribute nothing, the encoder discards their features
+                if (!MVTStyleScaleSupport.ruleInScale(rule, currentScaleDenominator)) {
+                    continue;
                 }
+                if (rule.getFilter() == null) {
+                    // An in scale rule without a filter matches every feature, so OR-ing it with
+                    // anything else still matches every feature
+                    return null;
+                }
+                filter.add(rule.getFilter());
             }
         }
-        return filter.isEmpty() ? null : ff.or(filter);
+        if (filter.isEmpty()) {
+            // A style without any rule does not restrict the features to be encoded. If it has
+            // rules but none of them is in scale nothing can be rendered - callers are expected to
+            // skip such a layer beforehand, exclude everything in case they did not.
+            return hasRules ? Filter.EXCLUDE : null;
+        }
+        return filter.size() == 1 ? filter.get(0) : ff.or(filter);
     }
 }

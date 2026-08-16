@@ -397,7 +397,7 @@ public class MVTWriter {
         if (style != null && feature != null) {
             for (FeatureTypeStyle featureTypeStyle : style.featureTypeStyles()) {
                 for (Rule rule : featureTypeStyle.rules()) {
-                    if (ruleInScale(rule, currentScaleDenominator)) {
+                    if (MVTStyleScaleSupport.ruleInScale(rule, currentScaleDenominator)) {
                         Filter filter = rule.getFilter();
                         // If no filter is present or the feature evaluates positive against the
                         // filter
@@ -440,27 +440,6 @@ public class MVTWriter {
             }
         }
         return geometryList;
-    }
-
-    /**
-     * This method evaluates the rule against the current scale denominator.
-     *
-     * @param rule the current rule to be checked
-     * @param currentScaleDenominator the current scale denominator
-     * @return true if the current rule matches to the current scale denominator, otherwise false
-     */
-    private boolean ruleInScale(Rule rule, double currentScaleDenominator) {
-        // true if within range or no cale denominator set
-        boolean inScale = true;
-        if (rule.getMinScaleDenominator() > 0
-                && currentScaleDenominator < rule.getMinScaleDenominator()) {
-            inScale = false;
-        }
-        if (rule.getMaxScaleDenominator() < Double.POSITIVE_INFINITY
-                && currentScaleDenominator > rule.getMaxScaleDenominator()) {
-            inScale = false;
-        }
-        return inScale;
     }
 
     /**
