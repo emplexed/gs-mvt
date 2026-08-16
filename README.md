@@ -10,6 +10,18 @@ or [MapLibre GL JS](https://maplibre.org/projects/maplibre-gl-js/).
 
 ### Geoserver Version Support
 
+#### Version 0.6.X
+Version 0.6.X has been developed and tested with the last Geoserver 2.X Version [Geoserver 2.28.5](http://geoserver.org) but should also work with versions
+starting from 2.24.
+
+
+##### Changes from 0.5.X to 0.6.X
+* Scale denominators of the SLD rules are now evaluated identically for the datastore query and for the encoding of the
+  features. Only the filter rules that are in scale are pushed down into the query, and layers without any rule in scale are not
+  queried at all (see [Scale Denominators](#scale-denominators)).
+* The maximum scale denominator is now exclusive as defined by the SLD specification, so two adjacent rules no longer both
+  apply at the shared boundary value.
+
 #### Version 0.5.X
 Version 0.5.X has been developed and tested with [Geoserver 2.26](http://geoserver.org) but should also work with versions
 starting from 2.24. 
@@ -18,11 +30,7 @@ starting from 2.24.
 since Geoserver Version 2.24 RC.
 
 ##### Changes from 0.4.X to 0.5.X
-* Scale denominators of the SLD rules are now evaluated identically for the datastore query and for the encoding of the
-features. Only the filter rules that are in scale are pushed down into the query, and layers without any rule in scale are not
-queried at all (see [Scale Denominators](#scale-denominators)).
-* The maximum scale denominator is now exclusive as defined by the SLD specification, so two adjacent rules no longer both
-apply at the shared boundary value.
+none
 
 #### Version 0.4.X 
 Version 0.4.X has been developed and tested with [Geoserver 2.23](http://geoserver.org) but might also work with preceding
