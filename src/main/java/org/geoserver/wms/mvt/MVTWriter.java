@@ -32,8 +32,8 @@ import org.locationtech.jts.geom.Envelope;
 import org.locationtech.jts.geom.Geometry;
 
 /**
- * Class is not stateless. Writer transforms the geometries into the local tile coordinate System.
- * For each tile an own MVTWriter instance is needed.
+ * Class is not stateless. Writer transforms the geometries into the local tile coordinate System. For each tile an own
+ * MVTWriter instance is needed.
  */
 public class MVTWriter {
 
@@ -72,11 +72,11 @@ public class MVTWriter {
      * @param tileSizeX the tile size of the resulting vector tile in x direction (without buffer)
      * @param tileSizeY the tile size of the resulting vector tile in y direction (without buffer)
      * @param buffer the buffer of the vector tiles
-     * @param includeLayersOnEmptyFeatureList include layer message even if no feature messages are
-     *     present for this layer (by adding the layer element which is valid in vector tiles spec)
+     * @param includeLayersOnEmptyFeatureList include layer message even if no feature messages are present for this
+     *     layer (by adding the layer element which is valid in vector tiles spec)
      * @param genFactor generalisation factor, value used as parameter in simplification algorithm
-     * @param smallGeometryThreshold defines the threshold in length / area when geometries should
-     *     be skipped in output. 0 or negative means all geoms are included
+     * @param smallGeometryThreshold defines the threshold in length / area when geometries should be skipped in output.
+     *     0 or negative means all geoms are included
      * @return an MVTWriter instance for further processing
      * @throws FactoryException in case of the SRS is unknown
      * @throws TransformException in case of the transformation failed
@@ -115,19 +115,15 @@ public class MVTWriter {
      * @throws TransformException in case of the transformation failed
      */
     public static MVTWriter getInstance(
-            Envelope sourceBBOX,
-            CoordinateReferenceSystem sourceCRS,
-            int tileSizeX,
-            int tileSizeY,
-            int buffer)
+            Envelope sourceBBOX, CoordinateReferenceSystem sourceCRS, int tileSizeX, int tileSizeY, int buffer)
             throws FactoryException, TransformException {
         Envelope targetBBOX = new ReferencedEnvelope(0, tileSizeX, 0, tileSizeY, TARGET_CRS);
         return new MVTWriter(sourceBBOX, targetBBOX, sourceCRS, buffer);
     }
 
     /**
-     * Retrieves an instance of the MVTWriter. The tileSize is assumes as identical in x and y. A
-     * buffer of 0 is requested.
+     * Retrieves an instance of the MVTWriter. The tileSize is assumes as identical in x and y. A buffer of 0 is
+     * requested.
      *
      * @param sourceBBOX the bbox envelope requested in World coordinates
      * @param sourceCRS the rereference system of the source bbox
@@ -136,15 +132,14 @@ public class MVTWriter {
      * @throws FactoryException in case of the SRS is unknown
      * @throws TransformException in case of the transformation failed
      */
-    public static MVTWriter getInstance(
-            Envelope sourceBBOX, CoordinateReferenceSystem sourceCRS, int tileSize)
+    public static MVTWriter getInstance(Envelope sourceBBOX, CoordinateReferenceSystem sourceCRS, int tileSize)
             throws FactoryException, TransformException {
         return MVTWriter.getInstance(sourceBBOX, sourceCRS, tileSize, tileSize, 0);
     }
 
     /**
-     * Retrieves an instance of the MVTWriter. The tileSize is assumed as 256 units in x and y
-     * direction. A buffer of 0 is requested.
+     * Retrieves an instance of the MVTWriter. The tileSize is assumed as 256 units in x and y direction. A buffer of 0
+     * is requested.
      *
      * @param sourceBBOX the bbox envelope requested in World coordinates
      * @param sourceCRS the rereference system of the source bbox
@@ -158,8 +153,8 @@ public class MVTWriter {
     }
 
     /**
-     * Retrieves an instance of the MVTWriter. The tileSize is assumed as 256 units in x and y
-     * direction. A buffer of 0 is requested.
+     * Retrieves an instance of the MVTWriter. The tileSize is assumed as 256 units in x and y direction. A buffer of 0
+     * is requested.
      *
      * @param bbox the bbox envelope requested in World coordinates
      * @param sourceCRS the rereference system of the source bbox
@@ -174,15 +169,14 @@ public class MVTWriter {
     }
 
     /**
-     * Returns the buffered bounding box. This is needed for the request to the datasource to get
-     * all features that are within the buffered bounds.
+     * Returns the buffered bounding box. This is needed for the request to the datasource to get all features that are
+     * within the buffered bounds.
      *
      * @return a referenced envelope containig the bounds with buffer (if existent)
      * @throws TransformException
      * @throws FactoryException
      */
-    public ReferencedEnvelope getSourceBBOXWithBuffer()
-            throws TransformException, FactoryException {
+    public ReferencedEnvelope getSourceBBOXWithBuffer() throws TransformException, FactoryException {
         return new ReferencedEnvelope(this.sourceBBOX, TARGET_CRS);
     }
 
@@ -203,44 +197,33 @@ public class MVTWriter {
         }
         if (bufferSize > 0) {
             sourceBBOX = this.getBufferedSourceBBOX(bufferSize, sourceBBOX, targetBBOX, TARGET_CRS);
-            targetBBOX =
-                    new ReferencedEnvelope(
-                            targetBBOX.getMinX() - bufferSize,
-                            targetBBOX.getMaxX() + bufferSize,
-                            targetBBOX.getMinY() - bufferSize,
-                            targetBBOX.getMaxY() + bufferSize,
-                            TARGET_CRS);
+            targetBBOX = new ReferencedEnvelope(
+                    targetBBOX.getMinX() - bufferSize,
+                    targetBBOX.getMaxX() + bufferSize,
+                    targetBBOX.getMinY() - bufferSize,
+                    targetBBOX.getMaxY() + bufferSize,
+                    TARGET_CRS);
         }
         this.sourceBBOX = sourceBBOX;
         this.targetBBOX = targetBBOX;
         this.xScale = this.calculateXFactor();
         this.yScale = this.calculateYFactor();
-        this.vectorTileEncoder =
-                new VectorTileEncoder(
-                        4096,
-                        targetBBOX,
-                        includeLayersOnEmptyFeatureList,
-                        genFactor,
-                        smallGeometryThreshold);
+        this.vectorTileEncoder = new VectorTileEncoder(
+                4096, targetBBOX, includeLayersOnEmptyFeatureList, genFactor, smallGeometryThreshold);
     }
 
-    private MVTWriter(
-            Envelope sourceBBOX,
-            Envelope targetBBOX,
-            CoordinateReferenceSystem sourceCRS,
-            int bufferSize)
+    private MVTWriter(Envelope sourceBBOX, Envelope targetBBOX, CoordinateReferenceSystem sourceCRS, int bufferSize)
             throws TransformException, FactoryException {
         MathTransform transform = CRS.findMathTransform(sourceCRS, TARGET_CRS);
         sourceBBOX = JTS.transform(sourceBBOX, transform);
         if (bufferSize > 0) {
             sourceBBOX = this.getBufferedSourceBBOX(bufferSize, sourceBBOX, targetBBOX, TARGET_CRS);
-            targetBBOX =
-                    new ReferencedEnvelope(
-                            targetBBOX.getMinX() - bufferSize,
-                            targetBBOX.getMaxX() + bufferSize,
-                            targetBBOX.getMinY() - bufferSize,
-                            targetBBOX.getMaxY() + bufferSize,
-                            TARGET_CRS);
+            targetBBOX = new ReferencedEnvelope(
+                    targetBBOX.getMinX() - bufferSize,
+                    targetBBOX.getMaxX() + bufferSize,
+                    targetBBOX.getMinY() - bufferSize,
+                    targetBBOX.getMaxY() + bufferSize,
+                    TARGET_CRS);
         }
         this.sourceBBOX = sourceBBOX;
         this.targetBBOX = targetBBOX;
@@ -260,10 +243,7 @@ public class MVTWriter {
      * @throws TransformException
      */
     private ReferencedEnvelope getBufferedSourceBBOX(
-            int bufferSize,
-            Envelope sourceBBOX,
-            Envelope targetBBOX,
-            CoordinateReferenceSystem targetCRS)
+            int bufferSize, Envelope sourceBBOX, Envelope targetBBOX, CoordinateReferenceSystem targetCRS)
             throws TransformException {
         if (bufferSize > 0) {
             double xBuffer = sourceBBOX.getWidth() * bufferSize / targetBBOX.getWidth();
@@ -306,8 +286,7 @@ public class MVTWriter {
      * @param featureCollectionStyleMap a map of all features and its refering style
      * @return byte[] containing the information in the MVT format
      */
-    public byte[] adaptFeatures(
-            Map<FeatureCollection, Style> featureCollectionStyleMap, double scaleDenominator) {
+    public byte[] adaptFeatures(Map<FeatureCollection, Style> featureCollectionStyleMap, double scaleDenominator) {
         this.addFeaturesToEncoder(featureCollectionStyleMap, scaleDenominator);
         return this.vectorTileEncoder.encode();
     }
@@ -320,20 +299,17 @@ public class MVTWriter {
      * @throws IOException
      */
     public void writeFeatures(
-            Map<FeatureCollection, Style> featureCollectionStyleMap,
-            double scaleDenominator,
-            OutputStream outputStream)
+            Map<FeatureCollection, Style> featureCollectionStyleMap, double scaleDenominator, OutputStream outputStream)
             throws IOException {
         this.addFeaturesToEncoder(featureCollectionStyleMap, scaleDenominator);
         this.vectorTileEncoder.encode(outputStream);
     }
 
     /**
-     * Adds all features to the encoder and prepares it before. So geometries are removed from the
-     * attribute map and the geometry is transformed to the target tile local system
+     * Adds all features to the encoder and prepares it before. So geometries are removed from the attribute map and the
+     * geometry is transformed to the target tile local system
      *
-     * @param featureCollectionStyleMap the feature collection map to be encoded and its refering
-     *     style
+     * @param featureCollectionStyleMap the feature collection map to be encoded and its refering style
      */
     private void addFeaturesToEncoder(
             Map<FeatureCollection, Style> featureCollectionStyleMap, double scaleDenominator) {
@@ -350,19 +326,16 @@ public class MVTWriter {
                         Map<String, Object> attributeMap = new HashMap<>();
                         for (Property property : propertiesList) {
                             if (!(property.getValue() instanceof Geometry)) {
-                                attributeMap.put(
-                                        property.getName().toString(), property.getValue());
+                                attributeMap.put(property.getName().toString(), property.getValue());
                             }
                         }
                         // Process GeometryTransformations in Symbolizers. It is possible to render
                         // the same geometry
                         // with more than one symbolizer. Therefore a list is returned.
-                        List<Geometry> geometryList =
-                                processSymbolizers(featureStyle, feature, scaleDenominator);
+                        List<Geometry> geometryList = processSymbolizers(featureStyle, feature, scaleDenominator);
                         for (Geometry geometry : geometryList) {
                             geometry = transFormGeometry(geometry);
-                            this.vectorTileEncoder.addFeature(
-                                    layerName, attributeMap, feature.getID(), geometry);
+                            this.vectorTileEncoder.addFeature(layerName, attributeMap, feature.getID(), geometry);
                             atLeastOneFeatureAdded = true;
                         }
                     } catch (IllegalStateException ex) {
@@ -374,25 +347,22 @@ public class MVTWriter {
         if (!atLeastOneFeatureAdded && vectorTileEncoder.isIncludeLayersOnEmptyFeatureList()) {
             for (FeatureCollection featureCollection : featureCollectionStyleMap.keySet()) {
                 String layerName = featureCollection.getSchema().getName().getLocalPart();
-                LOGGER.fine(
-                        "adding empty layer message cause no feature messages present, layernname: "
-                                + layerName);
+                LOGGER.fine("adding empty layer message cause no feature messages present, layernname: " + layerName);
                 vectorTileEncoder.getOrAddLayer(layerName);
             }
         }
     }
 
     /**
-     * All geometries that are generated by this style with the symbolizers are returned by this
-     * method. If no symbolizer has been defined the original geometry is returned.
+     * All geometries that are generated by this style with the symbolizers are returned by this method. If no
+     * symbolizer has been defined the original geometry is returned.
      *
      * @param style the style for the feature containing all rules
      * @param feature the feature that should be rendered
-     * @return all geometries that can be generated by the symbolizers or the original geometry if
-     *     no symbolizers are defined
+     * @return all geometries that can be generated by the symbolizers or the original geometry if no symbolizers are
+     *     defined
      */
-    private List<Geometry> processSymbolizers(
-            Style style, SimpleFeature feature, double currentScaleDenominator) {
+    private List<Geometry> processSymbolizers(Style style, SimpleFeature feature, double currentScaleDenominator) {
         List<Geometry> geometryList = new ArrayList<>();
         if (style != null && feature != null) {
             for (FeatureTypeStyle featureTypeStyle : style.featureTypeStyles()) {
@@ -416,9 +386,7 @@ public class MVTWriter {
                                 for (Symbolizer symbolizer : rule.symbolizers()) {
                                     if (symbolizer instanceof AbstractSymbolizer) {
                                         boolean duplicateGeometry = false;
-                                        geometry =
-                                                findGeometry(
-                                                        feature, (AbstractSymbolizer) symbolizer);
+                                        geometry = findGeometry(feature, (AbstractSymbolizer) symbolizer);
                                         // Check for duplicate geometries, e.g. if you use a
                                         // ordinary wms style with
                                         // foreground and background rendering then the geometries
@@ -443,8 +411,8 @@ public class MVTWriter {
     }
 
     /**
-     * Transforms the geometry to the tile local CRS. In a second step some affine transformations
-     * are performed to match the coordinates to the target system.
+     * Transforms the geometry to the tile local CRS. In a second step some affine transformations are performed to
+     * match the coordinates to the target system.
      *
      * @param geometry the geometry to be transformed
      * @return the transformed geometry
@@ -455,12 +423,11 @@ public class MVTWriter {
     }
 
     /**
-     * Transforms the geometries in several steps. First a translation is done. The coordinates are
-     * reduced to the tile edges. In a second step the coordinates are scaled to the target system.
-     * In a third the coordinates are mirrored horizontally since the origin of the target
-     * coordinate system is top left and not bottom left. In a last step the coordinates are clipped
-     * to the start coordinate. In case of a buffer the targetBBOX coordinates are negative. Without
-     * buffer the last step is not necessary because the min values of the targetBBOX are always 0.
+     * Transforms the geometries in several steps. First a translation is done. The coordinates are reduced to the tile
+     * edges. In a second step the coordinates are scaled to the target system. In a third the coordinates are mirrored
+     * horizontally since the origin of the target coordinate system is top left and not bottom left. In a last step the
+     * coordinates are clipped to the start coordinate. In case of a buffer the targetBBOX coordinates are negative.
+     * Without buffer the last step is not necessary because the min values of the targetBBOX are always 0.
      *
      * @param geometry the geometry to be converted
      * @return the converted geometry
@@ -471,9 +438,7 @@ public class MVTWriter {
         for (Coordinate coordinate : geometry.getCoordinates()) {
             coordinate.x = targetBBOX.getMinX() + ((coordinate.x - sourceBBOX.getMinX()) * xScale);
             coordinate.y =
-                    targetBBOX.getMinY()
-                            + (targetBBOX.getHeight()
-                                    - ((coordinate.y - sourceBBOX.getMinY()) * yScale));
+                    targetBBOX.getMinY() + (targetBBOX.getHeight() - ((coordinate.y - sourceBBOX.getMinY()) * yScale));
         }
         // forces e.g. cached internal envelope to be discarded! otherwise the envelope could
         // be in wrong CRS (can happen if an e.g. a sld function calls getEnvelope() or
@@ -483,14 +448,12 @@ public class MVTWriter {
     }
 
     /**
-     * Finds the geometric attribute requested by the symbolizer. Method copied from {@link
-     * org.geotools.renderer.lite.StreamingRenderer#findGeometry(Object,
-     * org.geotools.styling.Symbolizer)}
+     * Finds the geometric attribute requested by the symbolizer. Method copied from
+     * {@link org.geotools.renderer.lite.StreamingRenderer#findGeometry(Object, org.geotools.styling.Symbolizer)}
      *
      * @param drawMe the feature
      * @param s the symbolizer
-     * @return The geometry requested in the symbolizer, or the default geometry if none is
-     *     specified
+     * @return The geometry requested in the symbolizer, or the default geometry if none is specified
      */
     private Geometry findGeometry(Object drawMe, AbstractSymbolizer s) {
         Expression geomExpr = s.getGeometry();
@@ -501,12 +464,10 @@ public class MVTWriter {
             if (drawMe instanceof SimpleFeature) {
                 geom = (Geometry) ((SimpleFeature) drawMe).getDefaultGeometry();
             } else if (drawMe instanceof Feature) {
-                geom = (Geometry) ((Feature) drawMe).getDefaultGeometryProperty().getValue();
+                geom = (Geometry)
+                        ((Feature) drawMe).getDefaultGeometryProperty().getValue();
             } else {
-                geom =
-                        CommonFactoryFinder.getFilterFactory()
-                                .property("")
-                                .evaluate(drawMe, Geometry.class);
+                geom = CommonFactoryFinder.getFilterFactory().property("").evaluate(drawMe, Geometry.class);
             }
         } else {
             geom = geomExpr.evaluate(drawMe, Geometry.class);

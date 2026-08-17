@@ -24,22 +24,19 @@ public final class VectorTile {
         /** <code>repeated .org.geoserver.wms.mvt.Tile.Layer layers = 3;</code> */
         int getLayersCount();
         /** <code>repeated .org.geoserver.wms.mvt.Tile.Layer layers = 3;</code> */
-        java.util.List<? extends org.geoserver.wms.mvt.VectorTile.Tile.LayerOrBuilder>
-                getLayersOrBuilderList();
+        java.util.List<? extends org.geoserver.wms.mvt.VectorTile.Tile.LayerOrBuilder> getLayersOrBuilderList();
         /** <code>repeated .org.geoserver.wms.mvt.Tile.Layer layers = 3;</code> */
         org.geoserver.wms.mvt.VectorTile.Tile.LayerOrBuilder getLayersOrBuilder(int index);
     }
     /** Protobuf type {@code org.geoserver.wms.mvt.Tile} */
-    public static final class Tile
-            extends com.google.protobuf.GeneratedMessageV3.ExtendableMessage<Tile>
+    public static final class Tile extends com.google.protobuf.GeneratedMessageV3.ExtendableMessage<Tile>
             implements
             // @@protoc_insertion_point(message_implements:org.geoserver.wms.mvt.Tile)
             TileOrBuilder {
         private static final long serialVersionUID = 0L;
         // Use Tile.newBuilder() to construct.
         private Tile(
-                com.google.protobuf.GeneratedMessageV3.ExtendableBuilder<
-                                org.geoserver.wms.mvt.VectorTile.Tile, ?>
+                com.google.protobuf.GeneratedMessageV3.ExtendableBuilder<org.geoserver.wms.mvt.VectorTile.Tile, ?>
                         builder) {
             super(builder);
         }
@@ -55,15 +52,12 @@ public final class VectorTile {
         }
 
         public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-            return org.geoserver.wms.mvt.VectorTile
-                    .internal_static_org_geoserver_wms_mvt_Tile_descriptor;
+            return org.geoserver.wms.mvt.VectorTile.internal_static_org_geoserver_wms_mvt_Tile_descriptor;
         }
 
         @java.lang.Override
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-                internalGetFieldAccessorTable() {
-            return org.geoserver.wms.mvt.VectorTile
-                    .internal_static_org_geoserver_wms_mvt_Tile_fieldAccessorTable
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+            return org.geoserver.wms.mvt.VectorTile.internal_static_org_geoserver_wms_mvt_Tile_fieldAccessorTable
                     .ensureFieldAccessorsInitialized(
                             org.geoserver.wms.mvt.VectorTile.Tile.class,
                             org.geoserver.wms.mvt.VectorTile.Tile.Builder.class);
@@ -135,13 +129,12 @@ public final class VectorTile {
                 return internalValueMap;
             }
 
-            private static final com.google.protobuf.Internal.EnumLiteMap<GeomType>
-                    internalValueMap =
-                            new com.google.protobuf.Internal.EnumLiteMap<GeomType>() {
-                                public GeomType findValueByNumber(int number) {
-                                    return GeomType.forNumber(number);
-                                }
-                            };
+            private static final com.google.protobuf.Internal.EnumLiteMap<GeomType> internalValueMap =
+                    new com.google.protobuf.Internal.EnumLiteMap<GeomType>() {
+                        public GeomType findValueByNumber(int number) {
+                            return GeomType.forNumber(number);
+                        }
+                    };
 
             public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
                 return getDescriptor().getValues().get(ordinal());
@@ -152,16 +145,16 @@ public final class VectorTile {
             }
 
             public static final com.google.protobuf.Descriptors.EnumDescriptor getDescriptor() {
-                return org.geoserver.wms.mvt.VectorTile.Tile.getDescriptor().getEnumTypes().get(0);
+                return org.geoserver.wms.mvt.VectorTile.Tile.getDescriptor()
+                        .getEnumTypes()
+                        .get(0);
             }
 
             private static final GeomType[] VALUES = values();
 
-            public static GeomType valueOf(
-                    com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+            public static GeomType valueOf(com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
                 if (desc.getType() != getDescriptor()) {
-                    throw new java.lang.IllegalArgumentException(
-                            "EnumValueDescriptor is not for this type.");
+                    throw new java.lang.IllegalArgumentException("EnumValueDescriptor is not for this type.");
                 }
                 return VALUES[desc.getIndex()];
             }
@@ -305,8 +298,7 @@ public final class VectorTile {
          *
          * Protobuf type {@code org.geoserver.wms.mvt.Tile.Value}
          */
-        public static final class Value
-                extends com.google.protobuf.GeneratedMessageV3.ExtendableMessage<Value>
+        public static final class Value extends com.google.protobuf.GeneratedMessageV3.ExtendableMessage<Value>
                 implements
                 // @@protoc_insertion_point(message_implements:org.geoserver.wms.mvt.Tile.Value)
                 ValueOrBuilder {
@@ -330,13 +322,11 @@ public final class VectorTile {
             }
 
             public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return org.geoserver.wms.mvt.VectorTile
-                        .internal_static_org_geoserver_wms_mvt_Tile_Value_descriptor;
+                return org.geoserver.wms.mvt.VectorTile.internal_static_org_geoserver_wms_mvt_Tile_Value_descriptor;
             }
 
             @java.lang.Override
-            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-                    internalGetFieldAccessorTable() {
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
                 return org.geoserver.wms.mvt.VectorTile
                         .internal_static_org_geoserver_wms_mvt_Tile_Value_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
@@ -556,10 +546,8 @@ public final class VectorTile {
             }
 
             @java.lang.Override
-            public void writeTo(com.google.protobuf.CodedOutputStream output)
-                    throws java.io.IOException {
-                com.google.protobuf.GeneratedMessageV3.ExtendableMessage<
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Value>
+            public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
+                com.google.protobuf.GeneratedMessageV3.ExtendableMessage<org.geoserver.wms.mvt.VectorTile.Tile.Value>
                                 .ExtensionWriter
                         extensionWriter = newExtensionWriter();
                 if (((bitField0_ & 0x00000001) != 0)) {
@@ -594,17 +582,13 @@ public final class VectorTile {
 
                 size = 0;
                 if (((bitField0_ & 0x00000001) != 0)) {
-                    size +=
-                            com.google.protobuf.GeneratedMessageV3.computeStringSize(
-                                    1, stringValue_);
+                    size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, stringValue_);
                 }
                 if (((bitField0_ & 0x00000002) != 0)) {
                     size += com.google.protobuf.CodedOutputStream.computeFloatSize(2, floatValue_);
                 }
                 if (((bitField0_ & 0x00000004) != 0)) {
-                    size +=
-                            com.google.protobuf.CodedOutputStream.computeDoubleSize(
-                                    3, doubleValue_);
+                    size += com.google.protobuf.CodedOutputStream.computeDoubleSize(3, doubleValue_);
                 }
                 if (((bitField0_ & 0x00000008) != 0)) {
                     size += com.google.protobuf.CodedOutputStream.computeInt64Size(4, intValue_);
@@ -632,8 +616,7 @@ public final class VectorTile {
                 if (!(obj instanceof org.geoserver.wms.mvt.VectorTile.Tile.Value)) {
                     return super.equals(obj);
                 }
-                org.geoserver.wms.mvt.VectorTile.Tile.Value other =
-                        (org.geoserver.wms.mvt.VectorTile.Tile.Value) obj;
+                org.geoserver.wms.mvt.VectorTile.Tile.Value other = (org.geoserver.wms.mvt.VectorTile.Tile.Value) obj;
 
                 if (hasStringValue() != other.hasStringValue()) return false;
                 if (hasStringValue()) {
@@ -647,8 +630,7 @@ public final class VectorTile {
                 if (hasDoubleValue() != other.hasDoubleValue()) return false;
                 if (hasDoubleValue()) {
                     if (java.lang.Double.doubleToLongBits(getDoubleValue())
-                            != java.lang.Double.doubleToLongBits(other.getDoubleValue()))
-                        return false;
+                            != java.lang.Double.doubleToLongBits(other.getDoubleValue())) return false;
                 }
                 if (hasIntValue() != other.hasIntValue()) return false;
                 if (hasIntValue()) {
@@ -688,10 +670,9 @@ public final class VectorTile {
                 }
                 if (hasDoubleValue()) {
                     hash = (37 * hash) + DOUBLE_VALUE_FIELD_NUMBER;
-                    hash =
-                            (53 * hash)
-                                    + com.google.protobuf.Internal.hashLong(
-                                            java.lang.Double.doubleToLongBits(getDoubleValue()));
+                    hash = (53 * hash)
+                            + com.google.protobuf.Internal.hashLong(
+                                    java.lang.Double.doubleToLongBits(getDoubleValue()));
                 }
                 if (hasIntValue()) {
                     hash = (37 * hash) + INT_VALUE_FIELD_NUMBER;
@@ -715,28 +696,24 @@ public final class VectorTile {
                 return hash;
             }
 
-            public static org.geoserver.wms.mvt.VectorTile.Tile.Value parseFrom(
-                    java.nio.ByteBuffer data)
+            public static org.geoserver.wms.mvt.VectorTile.Tile.Value parseFrom(java.nio.ByteBuffer data)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return PARSER.parseFrom(data);
             }
 
             public static org.geoserver.wms.mvt.VectorTile.Tile.Value parseFrom(
-                    java.nio.ByteBuffer data,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    java.nio.ByteBuffer data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return PARSER.parseFrom(data, extensionRegistry);
             }
 
-            public static org.geoserver.wms.mvt.VectorTile.Tile.Value parseFrom(
-                    com.google.protobuf.ByteString data)
+            public static org.geoserver.wms.mvt.VectorTile.Tile.Value parseFrom(com.google.protobuf.ByteString data)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return PARSER.parseFrom(data);
             }
 
             public static org.geoserver.wms.mvt.VectorTile.Tile.Value parseFrom(
-                    com.google.protobuf.ByteString data,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    com.google.protobuf.ByteString data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return PARSER.parseFrom(data, extensionRegistry);
             }
@@ -752,28 +729,24 @@ public final class VectorTile {
                 return PARSER.parseFrom(data, extensionRegistry);
             }
 
-            public static org.geoserver.wms.mvt.VectorTile.Tile.Value parseFrom(
-                    java.io.InputStream input) throws java.io.IOException {
+            public static org.geoserver.wms.mvt.VectorTile.Tile.Value parseFrom(java.io.InputStream input)
+                    throws java.io.IOException {
                 return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
             }
 
             public static org.geoserver.wms.mvt.VectorTile.Tile.Value parseFrom(
-                    java.io.InputStream input,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
-                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-                        PARSER, input, extensionRegistry);
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input, extensionRegistry);
+            }
+
+            public static org.geoserver.wms.mvt.VectorTile.Tile.Value parseDelimitedFrom(java.io.InputStream input)
+                    throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
             }
 
             public static org.geoserver.wms.mvt.VectorTile.Tile.Value parseDelimitedFrom(
-                    java.io.InputStream input) throws java.io.IOException {
-                return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-                        PARSER, input);
-            }
-
-            public static org.geoserver.wms.mvt.VectorTile.Tile.Value parseDelimitedFrom(
-                    java.io.InputStream input,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
                 return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
                         PARSER, input, extensionRegistry);
@@ -788,8 +761,7 @@ public final class VectorTile {
                     com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
-                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-                        PARSER, input, extensionRegistry);
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input, extensionRegistry);
             }
 
             @java.lang.Override
@@ -801,8 +773,7 @@ public final class VectorTile {
                 return DEFAULT_INSTANCE.toBuilder();
             }
 
-            public static Builder newBuilder(
-                    org.geoserver.wms.mvt.VectorTile.Tile.Value prototype) {
+            public static Builder newBuilder(org.geoserver.wms.mvt.VectorTile.Tile.Value prototype) {
                 return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
             }
 
@@ -812,8 +783,7 @@ public final class VectorTile {
             }
 
             @java.lang.Override
-            protected Builder newBuilderForType(
-                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            protected Builder newBuilderForType(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
                 Builder builder = new Builder(parent);
                 return builder;
             }
@@ -834,13 +804,11 @@ public final class VectorTile {
                     // @@protoc_insertion_point(builder_implements:org.geoserver.wms.mvt.Tile.Value)
                     org.geoserver.wms.mvt.VectorTile.Tile.ValueOrBuilder {
                 public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                    return org.geoserver.wms.mvt.VectorTile
-                            .internal_static_org_geoserver_wms_mvt_Tile_Value_descriptor;
+                    return org.geoserver.wms.mvt.VectorTile.internal_static_org_geoserver_wms_mvt_Tile_Value_descriptor;
                 }
 
                 @java.lang.Override
-                protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-                        internalGetFieldAccessorTable() {
+                protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
                     return org.geoserver.wms.mvt.VectorTile
                             .internal_static_org_geoserver_wms_mvt_Tile_Value_fieldAccessorTable
                             .ensureFieldAccessorsInitialized(
@@ -871,8 +839,7 @@ public final class VectorTile {
 
                 @java.lang.Override
                 public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-                    return org.geoserver.wms.mvt.VectorTile
-                            .internal_static_org_geoserver_wms_mvt_Tile_Value_descriptor;
+                    return org.geoserver.wms.mvt.VectorTile.internal_static_org_geoserver_wms_mvt_Tile_Value_descriptor;
                 }
 
                 @java.lang.Override
@@ -940,9 +907,7 @@ public final class VectorTile {
                 }
 
                 @java.lang.Override
-                public Builder setField(
-                        com.google.protobuf.Descriptors.FieldDescriptor field,
-                        java.lang.Object value) {
+                public Builder setField(com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
                     return super.setField(field, value);
                 }
 
@@ -958,16 +923,13 @@ public final class VectorTile {
 
                 @java.lang.Override
                 public Builder setRepeatedField(
-                        com.google.protobuf.Descriptors.FieldDescriptor field,
-                        int index,
-                        java.lang.Object value) {
+                        com.google.protobuf.Descriptors.FieldDescriptor field, int index, java.lang.Object value) {
                     return super.setRepeatedField(field, index, value);
                 }
 
                 @java.lang.Override
                 public Builder addRepeatedField(
-                        com.google.protobuf.Descriptors.FieldDescriptor field,
-                        java.lang.Object value) {
+                        com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
                     return super.addRepeatedField(field, value);
                 }
 
@@ -983,8 +945,7 @@ public final class VectorTile {
                 @java.lang.Override
                 public <Type> Builder setExtension(
                         com.google.protobuf.GeneratedMessage.GeneratedExtension<
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Value,
-                                        java.util.List<Type>>
+                                        org.geoserver.wms.mvt.VectorTile.Tile.Value, java.util.List<Type>>
                                 extension,
                         int index,
                         Type value) {
@@ -994,8 +955,7 @@ public final class VectorTile {
                 @java.lang.Override
                 public <Type> Builder addExtension(
                         com.google.protobuf.GeneratedMessage.GeneratedExtension<
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Value,
-                                        java.util.List<Type>>
+                                        org.geoserver.wms.mvt.VectorTile.Tile.Value, java.util.List<Type>>
                                 extension,
                         Type value) {
                     return super.addExtension(extension, value);
@@ -1020,8 +980,7 @@ public final class VectorTile {
                 }
 
                 public Builder mergeFrom(org.geoserver.wms.mvt.VectorTile.Tile.Value other) {
-                    if (other == org.geoserver.wms.mvt.VectorTile.Tile.Value.getDefaultInstance())
-                        return this;
+                    if (other == org.geoserver.wms.mvt.VectorTile.Tile.Value.getDefaultInstance()) return this;
                     if (other.hasStringValue()) {
                         stringValue_ = other.stringValue_;
                         bitField0_ |= 0x00000001;
@@ -1075,56 +1034,47 @@ public final class VectorTile {
                                 case 0:
                                     done = true;
                                     break;
-                                case 10:
-                                    {
-                                        stringValue_ = input.readBytes();
-                                        bitField0_ |= 0x00000001;
-                                        break;
-                                    } // case 10
-                                case 21:
-                                    {
-                                        floatValue_ = input.readFloat();
-                                        bitField0_ |= 0x00000002;
-                                        break;
-                                    } // case 21
-                                case 25:
-                                    {
-                                        doubleValue_ = input.readDouble();
-                                        bitField0_ |= 0x00000004;
-                                        break;
-                                    } // case 25
-                                case 32:
-                                    {
-                                        intValue_ = input.readInt64();
-                                        bitField0_ |= 0x00000008;
-                                        break;
-                                    } // case 32
-                                case 40:
-                                    {
-                                        uintValue_ = input.readUInt64();
-                                        bitField0_ |= 0x00000010;
-                                        break;
-                                    } // case 40
-                                case 48:
-                                    {
-                                        sintValue_ = input.readSInt64();
-                                        bitField0_ |= 0x00000020;
-                                        break;
-                                    } // case 48
-                                case 56:
-                                    {
-                                        boolValue_ = input.readBool();
-                                        bitField0_ |= 0x00000040;
-                                        break;
-                                    } // case 56
-                                default:
-                                    {
-                                        if (!super.parseUnknownField(
-                                                input, extensionRegistry, tag)) {
-                                            done = true; // was an endgroup tag
-                                        }
-                                        break;
-                                    } // default:
+                                case 10: {
+                                    stringValue_ = input.readBytes();
+                                    bitField0_ |= 0x00000001;
+                                    break;
+                                } // case 10
+                                case 21: {
+                                    floatValue_ = input.readFloat();
+                                    bitField0_ |= 0x00000002;
+                                    break;
+                                } // case 21
+                                case 25: {
+                                    doubleValue_ = input.readDouble();
+                                    bitField0_ |= 0x00000004;
+                                    break;
+                                } // case 25
+                                case 32: {
+                                    intValue_ = input.readInt64();
+                                    bitField0_ |= 0x00000008;
+                                    break;
+                                } // case 32
+                                case 40: {
+                                    uintValue_ = input.readUInt64();
+                                    bitField0_ |= 0x00000010;
+                                    break;
+                                } // case 40
+                                case 48: {
+                                    sintValue_ = input.readSInt64();
+                                    bitField0_ |= 0x00000020;
+                                    break;
+                                } // case 48
+                                case 56: {
+                                    boolValue_ = input.readBool();
+                                    bitField0_ |= 0x00000040;
+                                    break;
+                                } // case 56
+                                default: {
+                                    if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                                        done = true; // was an endgroup tag
+                                    }
+                                    break;
+                                } // default:
                             } // switch (tag)
                         } // while (!done)
                     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -1523,14 +1473,12 @@ public final class VectorTile {
                 }
 
                 @java.lang.Override
-                public final Builder setUnknownFields(
-                        final com.google.protobuf.UnknownFieldSet unknownFields) {
+                public final Builder setUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
                     return super.setUnknownFields(unknownFields);
                 }
 
                 @java.lang.Override
-                public final Builder mergeUnknownFields(
-                        final com.google.protobuf.UnknownFieldSet unknownFields) {
+                public final Builder mergeUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
                     return super.mergeUnknownFields(unknownFields);
                 }
 
@@ -1562,8 +1510,7 @@ public final class VectorTile {
                             } catch (com.google.protobuf.InvalidProtocolBufferException e) {
                                 throw e.setUnfinishedMessage(builder.buildPartial());
                             } catch (com.google.protobuf.UninitializedMessageException e) {
-                                throw e.asInvalidProtocolBufferException()
-                                        .setUnfinishedMessage(builder.buildPartial());
+                                throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
                             } catch (java.io.IOException e) {
                                 throw new com.google.protobuf.InvalidProtocolBufferException(e)
                                         .setUnfinishedMessage(builder.buildPartial());
@@ -1755,13 +1702,11 @@ public final class VectorTile {
             }
 
             public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return org.geoserver.wms.mvt.VectorTile
-                        .internal_static_org_geoserver_wms_mvt_Tile_Feature_descriptor;
+                return org.geoserver.wms.mvt.VectorTile.internal_static_org_geoserver_wms_mvt_Tile_Feature_descriptor;
             }
 
             @java.lang.Override
-            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-                    internalGetFieldAccessorTable() {
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
                 return org.geoserver.wms.mvt.VectorTile
                         .internal_static_org_geoserver_wms_mvt_Tile_Feature_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
@@ -1885,9 +1830,7 @@ public final class VectorTile {
             public org.geoserver.wms.mvt.VectorTile.Tile.GeomType getType() {
                 org.geoserver.wms.mvt.VectorTile.Tile.GeomType result =
                         org.geoserver.wms.mvt.VectorTile.Tile.GeomType.forNumber(type_);
-                return result == null
-                        ? org.geoserver.wms.mvt.VectorTile.Tile.GeomType.UNKNOWN
-                        : result;
+                return result == null ? org.geoserver.wms.mvt.VectorTile.Tile.GeomType.UNKNOWN : result;
             }
 
             public static final int GEOMETRY_FIELD_NUMBER = 4;
@@ -1960,8 +1903,7 @@ public final class VectorTile {
             }
 
             @java.lang.Override
-            public void writeTo(com.google.protobuf.CodedOutputStream output)
-                    throws java.io.IOException {
+            public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
                 getSerializedSize();
                 if (((bitField0_ & 0x00000001) != 0)) {
                     output.writeUInt64(1, id_);
@@ -1998,16 +1940,12 @@ public final class VectorTile {
                 {
                     int dataSize = 0;
                     for (int i = 0; i < tags_.size(); i++) {
-                        dataSize +=
-                                com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(
-                                        tags_.getInt(i));
+                        dataSize += com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(tags_.getInt(i));
                     }
                     size += dataSize;
                     if (!getTagsList().isEmpty()) {
                         size += 1;
-                        size +=
-                                com.google.protobuf.CodedOutputStream.computeInt32SizeNoTag(
-                                        dataSize);
+                        size += com.google.protobuf.CodedOutputStream.computeInt32SizeNoTag(dataSize);
                     }
                     tagsMemoizedSerializedSize = dataSize;
                 }
@@ -2017,16 +1955,12 @@ public final class VectorTile {
                 {
                     int dataSize = 0;
                     for (int i = 0; i < geometry_.size(); i++) {
-                        dataSize +=
-                                com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(
-                                        geometry_.getInt(i));
+                        dataSize += com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(geometry_.getInt(i));
                     }
                     size += dataSize;
                     if (!getGeometryList().isEmpty()) {
                         size += 1;
-                        size +=
-                                com.google.protobuf.CodedOutputStream.computeInt32SizeNoTag(
-                                        dataSize);
+                        size += com.google.protobuf.CodedOutputStream.computeInt32SizeNoTag(dataSize);
                     }
                     geometryMemoizedSerializedSize = dataSize;
                 }
@@ -2088,28 +2022,24 @@ public final class VectorTile {
                 return hash;
             }
 
-            public static org.geoserver.wms.mvt.VectorTile.Tile.Feature parseFrom(
-                    java.nio.ByteBuffer data)
+            public static org.geoserver.wms.mvt.VectorTile.Tile.Feature parseFrom(java.nio.ByteBuffer data)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return PARSER.parseFrom(data);
             }
 
             public static org.geoserver.wms.mvt.VectorTile.Tile.Feature parseFrom(
-                    java.nio.ByteBuffer data,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    java.nio.ByteBuffer data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return PARSER.parseFrom(data, extensionRegistry);
             }
 
-            public static org.geoserver.wms.mvt.VectorTile.Tile.Feature parseFrom(
-                    com.google.protobuf.ByteString data)
+            public static org.geoserver.wms.mvt.VectorTile.Tile.Feature parseFrom(com.google.protobuf.ByteString data)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return PARSER.parseFrom(data);
             }
 
             public static org.geoserver.wms.mvt.VectorTile.Tile.Feature parseFrom(
-                    com.google.protobuf.ByteString data,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    com.google.protobuf.ByteString data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return PARSER.parseFrom(data, extensionRegistry);
             }
@@ -2125,28 +2055,24 @@ public final class VectorTile {
                 return PARSER.parseFrom(data, extensionRegistry);
             }
 
-            public static org.geoserver.wms.mvt.VectorTile.Tile.Feature parseFrom(
-                    java.io.InputStream input) throws java.io.IOException {
+            public static org.geoserver.wms.mvt.VectorTile.Tile.Feature parseFrom(java.io.InputStream input)
+                    throws java.io.IOException {
                 return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
             }
 
             public static org.geoserver.wms.mvt.VectorTile.Tile.Feature parseFrom(
-                    java.io.InputStream input,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
-                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-                        PARSER, input, extensionRegistry);
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input, extensionRegistry);
+            }
+
+            public static org.geoserver.wms.mvt.VectorTile.Tile.Feature parseDelimitedFrom(java.io.InputStream input)
+                    throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
             }
 
             public static org.geoserver.wms.mvt.VectorTile.Tile.Feature parseDelimitedFrom(
-                    java.io.InputStream input) throws java.io.IOException {
-                return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-                        PARSER, input);
-            }
-
-            public static org.geoserver.wms.mvt.VectorTile.Tile.Feature parseDelimitedFrom(
-                    java.io.InputStream input,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
                 return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
                         PARSER, input, extensionRegistry);
@@ -2161,8 +2087,7 @@ public final class VectorTile {
                     com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
-                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-                        PARSER, input, extensionRegistry);
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input, extensionRegistry);
             }
 
             @java.lang.Override
@@ -2174,8 +2099,7 @@ public final class VectorTile {
                 return DEFAULT_INSTANCE.toBuilder();
             }
 
-            public static Builder newBuilder(
-                    org.geoserver.wms.mvt.VectorTile.Tile.Feature prototype) {
+            public static Builder newBuilder(org.geoserver.wms.mvt.VectorTile.Tile.Feature prototype) {
                 return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
             }
 
@@ -2185,8 +2109,7 @@ public final class VectorTile {
             }
 
             @java.lang.Override
-            protected Builder newBuilderForType(
-                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            protected Builder newBuilderForType(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
                 Builder builder = new Builder(parent);
                 return builder;
             }
@@ -2199,8 +2122,7 @@ public final class VectorTile {
              *
              * Protobuf type {@code org.geoserver.wms.mvt.Tile.Feature}
              */
-            public static final class Builder
-                    extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+            public static final class Builder extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
                     implements
                     // @@protoc_insertion_point(builder_implements:org.geoserver.wms.mvt.Tile.Feature)
                     org.geoserver.wms.mvt.VectorTile.Tile.FeatureOrBuilder {
@@ -2210,8 +2132,7 @@ public final class VectorTile {
                 }
 
                 @java.lang.Override
-                protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-                        internalGetFieldAccessorTable() {
+                protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
                     return org.geoserver.wms.mvt.VectorTile
                             .internal_static_org_geoserver_wms_mvt_Tile_Feature_fieldAccessorTable
                             .ensureFieldAccessorsInitialized(
@@ -2296,9 +2217,7 @@ public final class VectorTile {
                 }
 
                 @java.lang.Override
-                public Builder setField(
-                        com.google.protobuf.Descriptors.FieldDescriptor field,
-                        java.lang.Object value) {
+                public Builder setField(com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
                     return super.setField(field, value);
                 }
 
@@ -2314,16 +2233,13 @@ public final class VectorTile {
 
                 @java.lang.Override
                 public Builder setRepeatedField(
-                        com.google.protobuf.Descriptors.FieldDescriptor field,
-                        int index,
-                        java.lang.Object value) {
+                        com.google.protobuf.Descriptors.FieldDescriptor field, int index, java.lang.Object value) {
                     return super.setRepeatedField(field, index, value);
                 }
 
                 @java.lang.Override
                 public Builder addRepeatedField(
-                        com.google.protobuf.Descriptors.FieldDescriptor field,
-                        java.lang.Object value) {
+                        com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
                     return super.addRepeatedField(field, value);
                 }
 
@@ -2338,8 +2254,7 @@ public final class VectorTile {
                 }
 
                 public Builder mergeFrom(org.geoserver.wms.mvt.VectorTile.Tile.Feature other) {
-                    if (other == org.geoserver.wms.mvt.VectorTile.Tile.Feature.getDefaultInstance())
-                        return this;
+                    if (other == org.geoserver.wms.mvt.VectorTile.Tile.Feature.getDefaultInstance()) return this;
                     if (other.hasId()) {
                         setId(other.getId());
                     }
@@ -2394,70 +2309,61 @@ public final class VectorTile {
                                 case 0:
                                     done = true;
                                     break;
-                                case 8:
-                                    {
-                                        id_ = input.readUInt64();
-                                        bitField0_ |= 0x00000001;
-                                        break;
-                                    } // case 8
-                                case 16:
-                                    {
-                                        int v = input.readUInt32();
-                                        ensureTagsIsMutable();
-                                        tags_.addInt(v);
-                                        break;
-                                    } // case 16
-                                case 18:
-                                    {
-                                        int length = input.readRawVarint32();
-                                        int limit = input.pushLimit(length);
-                                        ensureTagsIsMutable();
-                                        while (input.getBytesUntilLimit() > 0) {
-                                            tags_.addInt(input.readUInt32());
-                                        }
-                                        input.popLimit(limit);
-                                        break;
-                                    } // case 18
-                                case 24:
-                                    {
-                                        int tmpRaw = input.readEnum();
-                                        org.geoserver.wms.mvt.VectorTile.Tile.GeomType tmpValue =
-                                                org.geoserver.wms.mvt.VectorTile.Tile.GeomType
-                                                        .forNumber(tmpRaw);
-                                        if (tmpValue == null) {
-                                            mergeUnknownVarintField(3, tmpRaw);
-                                        } else {
-                                            type_ = tmpRaw;
-                                            bitField0_ |= 0x00000004;
-                                        }
-                                        break;
-                                    } // case 24
-                                case 32:
-                                    {
-                                        int v = input.readUInt32();
-                                        ensureGeometryIsMutable();
-                                        geometry_.addInt(v);
-                                        break;
-                                    } // case 32
-                                case 34:
-                                    {
-                                        int length = input.readRawVarint32();
-                                        int limit = input.pushLimit(length);
-                                        ensureGeometryIsMutable();
-                                        while (input.getBytesUntilLimit() > 0) {
-                                            geometry_.addInt(input.readUInt32());
-                                        }
-                                        input.popLimit(limit);
-                                        break;
-                                    } // case 34
-                                default:
-                                    {
-                                        if (!super.parseUnknownField(
-                                                input, extensionRegistry, tag)) {
-                                            done = true; // was an endgroup tag
-                                        }
-                                        break;
-                                    } // default:
+                                case 8: {
+                                    id_ = input.readUInt64();
+                                    bitField0_ |= 0x00000001;
+                                    break;
+                                } // case 8
+                                case 16: {
+                                    int v = input.readUInt32();
+                                    ensureTagsIsMutable();
+                                    tags_.addInt(v);
+                                    break;
+                                } // case 16
+                                case 18: {
+                                    int length = input.readRawVarint32();
+                                    int limit = input.pushLimit(length);
+                                    ensureTagsIsMutable();
+                                    while (input.getBytesUntilLimit() > 0) {
+                                        tags_.addInt(input.readUInt32());
+                                    }
+                                    input.popLimit(limit);
+                                    break;
+                                } // case 18
+                                case 24: {
+                                    int tmpRaw = input.readEnum();
+                                    org.geoserver.wms.mvt.VectorTile.Tile.GeomType tmpValue =
+                                            org.geoserver.wms.mvt.VectorTile.Tile.GeomType.forNumber(tmpRaw);
+                                    if (tmpValue == null) {
+                                        mergeUnknownVarintField(3, tmpRaw);
+                                    } else {
+                                        type_ = tmpRaw;
+                                        bitField0_ |= 0x00000004;
+                                    }
+                                    break;
+                                } // case 24
+                                case 32: {
+                                    int v = input.readUInt32();
+                                    ensureGeometryIsMutable();
+                                    geometry_.addInt(v);
+                                    break;
+                                } // case 32
+                                case 34: {
+                                    int length = input.readRawVarint32();
+                                    int limit = input.pushLimit(length);
+                                    ensureGeometryIsMutable();
+                                    while (input.getBytesUntilLimit() > 0) {
+                                        geometry_.addInt(input.readUInt32());
+                                    }
+                                    input.popLimit(limit);
+                                    break;
+                                } // case 34
+                                default: {
+                                    if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                                        done = true; // was an endgroup tag
+                                    }
+                                    break;
+                                } // default:
                             } // switch (tag)
                         } // while (!done)
                     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -2698,9 +2604,7 @@ public final class VectorTile {
                 public org.geoserver.wms.mvt.VectorTile.Tile.GeomType getType() {
                     org.geoserver.wms.mvt.VectorTile.Tile.GeomType result =
                             org.geoserver.wms.mvt.VectorTile.Tile.GeomType.forNumber(type_);
-                    return result == null
-                            ? org.geoserver.wms.mvt.VectorTile.Tile.GeomType.UNKNOWN
-                            : result;
+                    return result == null ? org.geoserver.wms.mvt.VectorTile.Tile.GeomType.UNKNOWN : result;
                 }
                 /**
                  *
@@ -2860,8 +2764,7 @@ public final class VectorTile {
                  * @param values The geometry to add.
                  * @return This builder for chaining.
                  */
-                public Builder addAllGeometry(
-                        java.lang.Iterable<? extends java.lang.Integer> values) {
+                public Builder addAllGeometry(java.lang.Iterable<? extends java.lang.Integer> values) {
                     ensureGeometryIsMutable();
                     com.google.protobuf.AbstractMessageLite.Builder.addAll(values, geometry_);
                     bitField0_ |= 0x00000008;
@@ -2889,14 +2792,12 @@ public final class VectorTile {
                 }
 
                 @java.lang.Override
-                public final Builder setUnknownFields(
-                        final com.google.protobuf.UnknownFieldSet unknownFields) {
+                public final Builder setUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
                     return super.setUnknownFields(unknownFields);
                 }
 
                 @java.lang.Override
-                public final Builder mergeUnknownFields(
-                        final com.google.protobuf.UnknownFieldSet unknownFields) {
+                public final Builder mergeUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
                     return super.mergeUnknownFields(unknownFields);
                 }
 
@@ -2928,8 +2829,7 @@ public final class VectorTile {
                             } catch (com.google.protobuf.InvalidProtocolBufferException e) {
                                 throw e.setUnfinishedMessage(builder.buildPartial());
                             } catch (com.google.protobuf.UninitializedMessageException e) {
-                                throw e.asInvalidProtocolBufferException()
-                                        .setUnfinishedMessage(builder.buildPartial());
+                                throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
                             } catch (java.io.IOException e) {
                                 throw new com.google.protobuf.InvalidProtocolBufferException(e)
                                         .setUnfinishedMessage(builder.buildPartial());
@@ -3047,8 +2947,7 @@ public final class VectorTile {
              *
              * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
              */
-            java.util.List<? extends org.geoserver.wms.mvt.VectorTile.Tile.FeatureOrBuilder>
-                    getFeaturesOrBuilderList();
+            java.util.List<? extends org.geoserver.wms.mvt.VectorTile.Tile.FeatureOrBuilder> getFeaturesOrBuilderList();
             /**
              *
              *
@@ -3150,8 +3049,7 @@ public final class VectorTile {
              *
              * <code>repeated .org.geoserver.wms.mvt.Tile.Value values = 4;</code>
              */
-            java.util.List<? extends org.geoserver.wms.mvt.VectorTile.Tile.ValueOrBuilder>
-                    getValuesOrBuilderList();
+            java.util.List<? extends org.geoserver.wms.mvt.VectorTile.Tile.ValueOrBuilder> getValuesOrBuilderList();
             /**
              *
              *
@@ -3199,8 +3097,7 @@ public final class VectorTile {
          *
          * Protobuf type {@code org.geoserver.wms.mvt.Tile.Layer}
          */
-        public static final class Layer
-                extends com.google.protobuf.GeneratedMessageV3.ExtendableMessage<Layer>
+        public static final class Layer extends com.google.protobuf.GeneratedMessageV3.ExtendableMessage<Layer>
                 implements
                 // @@protoc_insertion_point(message_implements:org.geoserver.wms.mvt.Tile.Layer)
                 LayerOrBuilder {
@@ -3229,13 +3126,11 @@ public final class VectorTile {
             }
 
             public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return org.geoserver.wms.mvt.VectorTile
-                        .internal_static_org_geoserver_wms_mvt_Tile_Layer_descriptor;
+                return org.geoserver.wms.mvt.VectorTile.internal_static_org_geoserver_wms_mvt_Tile_Layer_descriptor;
             }
 
             @java.lang.Override
-            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-                    internalGetFieldAccessorTable() {
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
                 return org.geoserver.wms.mvt.VectorTile
                         .internal_static_org_geoserver_wms_mvt_Tile_Layer_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
@@ -3400,16 +3295,14 @@ public final class VectorTile {
              * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
              */
             @java.lang.Override
-            public org.geoserver.wms.mvt.VectorTile.Tile.FeatureOrBuilder getFeaturesOrBuilder(
-                    int index) {
+            public org.geoserver.wms.mvt.VectorTile.Tile.FeatureOrBuilder getFeaturesOrBuilder(int index) {
                 return features_.get(index);
             }
 
             public static final int KEYS_FIELD_NUMBER = 3;
 
             @SuppressWarnings("serial")
-            private com.google.protobuf.LazyStringArrayList keys_ =
-                    com.google.protobuf.LazyStringArrayList.emptyList();
+            private com.google.protobuf.LazyStringArrayList keys_ = com.google.protobuf.LazyStringArrayList.emptyList();
             /**
              *
              *
@@ -3536,8 +3429,7 @@ public final class VectorTile {
              * <code>repeated .org.geoserver.wms.mvt.Tile.Value values = 4;</code>
              */
             @java.lang.Override
-            public org.geoserver.wms.mvt.VectorTile.Tile.ValueOrBuilder getValuesOrBuilder(
-                    int index) {
+            public org.geoserver.wms.mvt.VectorTile.Tile.ValueOrBuilder getValuesOrBuilder(int index) {
                 return values_.get(index);
             }
 
@@ -3607,10 +3499,8 @@ public final class VectorTile {
             }
 
             @java.lang.Override
-            public void writeTo(com.google.protobuf.CodedOutputStream output)
-                    throws java.io.IOException {
-                com.google.protobuf.GeneratedMessageV3.ExtendableMessage<
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Layer>
+            public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
+                com.google.protobuf.GeneratedMessageV3.ExtendableMessage<org.geoserver.wms.mvt.VectorTile.Tile.Layer>
                                 .ExtensionWriter
                         extensionWriter = newExtensionWriter();
                 if (((bitField0_ & 0x00000002) != 0)) {
@@ -3645,9 +3535,7 @@ public final class VectorTile {
                     size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
                 }
                 for (int i = 0; i < features_.size(); i++) {
-                    size +=
-                            com.google.protobuf.CodedOutputStream.computeMessageSize(
-                                    2, features_.get(i));
+                    size += com.google.protobuf.CodedOutputStream.computeMessageSize(2, features_.get(i));
                 }
                 {
                     int dataSize = 0;
@@ -3658,9 +3546,7 @@ public final class VectorTile {
                     size += 1 * getKeysList().size();
                 }
                 for (int i = 0; i < values_.size(); i++) {
-                    size +=
-                            com.google.protobuf.CodedOutputStream.computeMessageSize(
-                                    4, values_.get(i));
+                    size += com.google.protobuf.CodedOutputStream.computeMessageSize(4, values_.get(i));
                 }
                 if (((bitField0_ & 0x00000004) != 0)) {
                     size += com.google.protobuf.CodedOutputStream.computeUInt32Size(5, extent_);
@@ -3682,8 +3568,7 @@ public final class VectorTile {
                 if (!(obj instanceof org.geoserver.wms.mvt.VectorTile.Tile.Layer)) {
                     return super.equals(obj);
                 }
-                org.geoserver.wms.mvt.VectorTile.Tile.Layer other =
-                        (org.geoserver.wms.mvt.VectorTile.Tile.Layer) obj;
+                org.geoserver.wms.mvt.VectorTile.Tile.Layer other = (org.geoserver.wms.mvt.VectorTile.Tile.Layer) obj;
 
                 if (hasVersion() != other.hasVersion()) return false;
                 if (hasVersion()) {
@@ -3742,28 +3627,24 @@ public final class VectorTile {
                 return hash;
             }
 
-            public static org.geoserver.wms.mvt.VectorTile.Tile.Layer parseFrom(
-                    java.nio.ByteBuffer data)
+            public static org.geoserver.wms.mvt.VectorTile.Tile.Layer parseFrom(java.nio.ByteBuffer data)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return PARSER.parseFrom(data);
             }
 
             public static org.geoserver.wms.mvt.VectorTile.Tile.Layer parseFrom(
-                    java.nio.ByteBuffer data,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    java.nio.ByteBuffer data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return PARSER.parseFrom(data, extensionRegistry);
             }
 
-            public static org.geoserver.wms.mvt.VectorTile.Tile.Layer parseFrom(
-                    com.google.protobuf.ByteString data)
+            public static org.geoserver.wms.mvt.VectorTile.Tile.Layer parseFrom(com.google.protobuf.ByteString data)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return PARSER.parseFrom(data);
             }
 
             public static org.geoserver.wms.mvt.VectorTile.Tile.Layer parseFrom(
-                    com.google.protobuf.ByteString data,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    com.google.protobuf.ByteString data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws com.google.protobuf.InvalidProtocolBufferException {
                 return PARSER.parseFrom(data, extensionRegistry);
             }
@@ -3779,28 +3660,24 @@ public final class VectorTile {
                 return PARSER.parseFrom(data, extensionRegistry);
             }
 
-            public static org.geoserver.wms.mvt.VectorTile.Tile.Layer parseFrom(
-                    java.io.InputStream input) throws java.io.IOException {
+            public static org.geoserver.wms.mvt.VectorTile.Tile.Layer parseFrom(java.io.InputStream input)
+                    throws java.io.IOException {
                 return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
             }
 
             public static org.geoserver.wms.mvt.VectorTile.Tile.Layer parseFrom(
-                    java.io.InputStream input,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
-                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-                        PARSER, input, extensionRegistry);
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input, extensionRegistry);
+            }
+
+            public static org.geoserver.wms.mvt.VectorTile.Tile.Layer parseDelimitedFrom(java.io.InputStream input)
+                    throws java.io.IOException {
+                return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
             }
 
             public static org.geoserver.wms.mvt.VectorTile.Tile.Layer parseDelimitedFrom(
-                    java.io.InputStream input) throws java.io.IOException {
-                return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-                        PARSER, input);
-            }
-
-            public static org.geoserver.wms.mvt.VectorTile.Tile.Layer parseDelimitedFrom(
-                    java.io.InputStream input,
-                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
                 return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
                         PARSER, input, extensionRegistry);
@@ -3815,8 +3692,7 @@ public final class VectorTile {
                     com.google.protobuf.CodedInputStream input,
                     com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                     throws java.io.IOException {
-                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-                        PARSER, input, extensionRegistry);
+                return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input, extensionRegistry);
             }
 
             @java.lang.Override
@@ -3828,8 +3704,7 @@ public final class VectorTile {
                 return DEFAULT_INSTANCE.toBuilder();
             }
 
-            public static Builder newBuilder(
-                    org.geoserver.wms.mvt.VectorTile.Tile.Layer prototype) {
+            public static Builder newBuilder(org.geoserver.wms.mvt.VectorTile.Tile.Layer prototype) {
                 return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
             }
 
@@ -3839,8 +3714,7 @@ public final class VectorTile {
             }
 
             @java.lang.Override
-            protected Builder newBuilderForType(
-                    com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            protected Builder newBuilderForType(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
                 Builder builder = new Builder(parent);
                 return builder;
             }
@@ -3860,13 +3734,11 @@ public final class VectorTile {
                     // @@protoc_insertion_point(builder_implements:org.geoserver.wms.mvt.Tile.Layer)
                     org.geoserver.wms.mvt.VectorTile.Tile.LayerOrBuilder {
                 public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                    return org.geoserver.wms.mvt.VectorTile
-                            .internal_static_org_geoserver_wms_mvt_Tile_Layer_descriptor;
+                    return org.geoserver.wms.mvt.VectorTile.internal_static_org_geoserver_wms_mvt_Tile_Layer_descriptor;
                 }
 
                 @java.lang.Override
-                protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-                        internalGetFieldAccessorTable() {
+                protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
                     return org.geoserver.wms.mvt.VectorTile
                             .internal_static_org_geoserver_wms_mvt_Tile_Layer_fieldAccessorTable
                             .ensureFieldAccessorsInitialized(
@@ -3908,8 +3780,7 @@ public final class VectorTile {
 
                 @java.lang.Override
                 public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-                    return org.geoserver.wms.mvt.VectorTile
-                            .internal_static_org_geoserver_wms_mvt_Tile_Layer_descriptor;
+                    return org.geoserver.wms.mvt.VectorTile.internal_static_org_geoserver_wms_mvt_Tile_Layer_descriptor;
                 }
 
                 @java.lang.Override
@@ -3938,8 +3809,7 @@ public final class VectorTile {
                     return result;
                 }
 
-                private void buildPartialRepeatedFields(
-                        org.geoserver.wms.mvt.VectorTile.Tile.Layer result) {
+                private void buildPartialRepeatedFields(org.geoserver.wms.mvt.VectorTile.Tile.Layer result) {
                     if (featuresBuilder_ == null) {
                         if (((bitField0_ & 0x00000004) != 0)) {
                             features_ = java.util.Collections.unmodifiableList(features_);
@@ -3988,9 +3858,7 @@ public final class VectorTile {
                 }
 
                 @java.lang.Override
-                public Builder setField(
-                        com.google.protobuf.Descriptors.FieldDescriptor field,
-                        java.lang.Object value) {
+                public Builder setField(com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
                     return super.setField(field, value);
                 }
 
@@ -4006,16 +3874,13 @@ public final class VectorTile {
 
                 @java.lang.Override
                 public Builder setRepeatedField(
-                        com.google.protobuf.Descriptors.FieldDescriptor field,
-                        int index,
-                        java.lang.Object value) {
+                        com.google.protobuf.Descriptors.FieldDescriptor field, int index, java.lang.Object value) {
                     return super.setRepeatedField(field, index, value);
                 }
 
                 @java.lang.Override
                 public Builder addRepeatedField(
-                        com.google.protobuf.Descriptors.FieldDescriptor field,
-                        java.lang.Object value) {
+                        com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
                     return super.addRepeatedField(field, value);
                 }
 
@@ -4031,8 +3896,7 @@ public final class VectorTile {
                 @java.lang.Override
                 public <Type> Builder setExtension(
                         com.google.protobuf.GeneratedMessage.GeneratedExtension<
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Layer,
-                                        java.util.List<Type>>
+                                        org.geoserver.wms.mvt.VectorTile.Tile.Layer, java.util.List<Type>>
                                 extension,
                         int index,
                         Type value) {
@@ -4042,8 +3906,7 @@ public final class VectorTile {
                 @java.lang.Override
                 public <Type> Builder addExtension(
                         com.google.protobuf.GeneratedMessage.GeneratedExtension<
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Layer,
-                                        java.util.List<Type>>
+                                        org.geoserver.wms.mvt.VectorTile.Tile.Layer, java.util.List<Type>>
                                 extension,
                         Type value) {
                     return super.addExtension(extension, value);
@@ -4068,8 +3931,7 @@ public final class VectorTile {
                 }
 
                 public Builder mergeFrom(org.geoserver.wms.mvt.VectorTile.Tile.Layer other) {
-                    if (other == org.geoserver.wms.mvt.VectorTile.Tile.Layer.getDefaultInstance())
-                        return this;
+                    if (other == org.geoserver.wms.mvt.VectorTile.Tile.Layer.getDefaultInstance()) return this;
                     if (other.hasVersion()) {
                         setVersion(other.getVersion());
                     }
@@ -4096,11 +3958,9 @@ public final class VectorTile {
                                 featuresBuilder_ = null;
                                 features_ = other.features_;
                                 bitField0_ = (bitField0_ & ~0x00000004);
-                                featuresBuilder_ =
-                                        com.google.protobuf.GeneratedMessageV3
-                                                        .alwaysUseFieldBuilders
-                                                ? getFeaturesFieldBuilder()
-                                                : null;
+                                featuresBuilder_ = com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                                        ? getFeaturesFieldBuilder()
+                                        : null;
                             } else {
                                 featuresBuilder_.addAllMessages(other.features_);
                             }
@@ -4134,11 +3994,9 @@ public final class VectorTile {
                                 valuesBuilder_ = null;
                                 values_ = other.values_;
                                 bitField0_ = (bitField0_ & ~0x00000010);
-                                valuesBuilder_ =
-                                        com.google.protobuf.GeneratedMessageV3
-                                                        .alwaysUseFieldBuilders
-                                                ? getValuesFieldBuilder()
-                                                : null;
+                                valuesBuilder_ = com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                                        ? getValuesFieldBuilder()
+                                        : null;
                             } else {
                                 valuesBuilder_.addAllMessages(other.values_);
                             }
@@ -4188,69 +4046,55 @@ public final class VectorTile {
                                 case 0:
                                     done = true;
                                     break;
-                                case 10:
-                                    {
-                                        name_ = input.readBytes();
-                                        bitField0_ |= 0x00000002;
-                                        break;
-                                    } // case 10
-                                case 18:
-                                    {
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Feature m =
-                                                input.readMessage(
-                                                        org.geoserver.wms.mvt.VectorTile.Tile
-                                                                .Feature.PARSER,
-                                                        extensionRegistry);
-                                        if (featuresBuilder_ == null) {
-                                            ensureFeaturesIsMutable();
-                                            features_.add(m);
-                                        } else {
-                                            featuresBuilder_.addMessage(m);
-                                        }
-                                        break;
-                                    } // case 18
-                                case 26:
-                                    {
-                                        com.google.protobuf.ByteString bs = input.readBytes();
-                                        ensureKeysIsMutable();
-                                        keys_.add(bs);
-                                        break;
-                                    } // case 26
-                                case 34:
-                                    {
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Value m =
-                                                input.readMessage(
-                                                        org.geoserver.wms.mvt.VectorTile.Tile.Value
-                                                                .PARSER,
-                                                        extensionRegistry);
-                                        if (valuesBuilder_ == null) {
-                                            ensureValuesIsMutable();
-                                            values_.add(m);
-                                        } else {
-                                            valuesBuilder_.addMessage(m);
-                                        }
-                                        break;
-                                    } // case 34
-                                case 40:
-                                    {
-                                        extent_ = input.readUInt32();
-                                        bitField0_ |= 0x00000020;
-                                        break;
-                                    } // case 40
-                                case 120:
-                                    {
-                                        version_ = input.readUInt32();
-                                        bitField0_ |= 0x00000001;
-                                        break;
-                                    } // case 120
-                                default:
-                                    {
-                                        if (!super.parseUnknownField(
-                                                input, extensionRegistry, tag)) {
-                                            done = true; // was an endgroup tag
-                                        }
-                                        break;
-                                    } // default:
+                                case 10: {
+                                    name_ = input.readBytes();
+                                    bitField0_ |= 0x00000002;
+                                    break;
+                                } // case 10
+                                case 18: {
+                                    org.geoserver.wms.mvt.VectorTile.Tile.Feature m = input.readMessage(
+                                            org.geoserver.wms.mvt.VectorTile.Tile.Feature.PARSER, extensionRegistry);
+                                    if (featuresBuilder_ == null) {
+                                        ensureFeaturesIsMutable();
+                                        features_.add(m);
+                                    } else {
+                                        featuresBuilder_.addMessage(m);
+                                    }
+                                    break;
+                                } // case 18
+                                case 26: {
+                                    com.google.protobuf.ByteString bs = input.readBytes();
+                                    ensureKeysIsMutable();
+                                    keys_.add(bs);
+                                    break;
+                                } // case 26
+                                case 34: {
+                                    org.geoserver.wms.mvt.VectorTile.Tile.Value m = input.readMessage(
+                                            org.geoserver.wms.mvt.VectorTile.Tile.Value.PARSER, extensionRegistry);
+                                    if (valuesBuilder_ == null) {
+                                        ensureValuesIsMutable();
+                                        values_.add(m);
+                                    } else {
+                                        valuesBuilder_.addMessage(m);
+                                    }
+                                    break;
+                                } // case 34
+                                case 40: {
+                                    extent_ = input.readUInt32();
+                                    bitField0_ |= 0x00000020;
+                                    break;
+                                } // case 40
+                                case 120: {
+                                    version_ = input.readUInt32();
+                                    bitField0_ |= 0x00000001;
+                                    break;
+                                } // case 120
+                                default: {
+                                    if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                                        done = true; // was an endgroup tag
+                                    }
+                                    break;
+                                } // default:
                             } // switch (tag)
                         } // while (!done)
                     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -4433,9 +4277,7 @@ public final class VectorTile {
 
                 private void ensureFeaturesIsMutable() {
                     if (!((bitField0_ & 0x00000004) != 0)) {
-                        features_ =
-                                new java.util.ArrayList<
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Feature>(features_);
+                        features_ = new java.util.ArrayList<org.geoserver.wms.mvt.VectorTile.Tile.Feature>(features_);
                         bitField0_ |= 0x00000004;
                     }
                 }
@@ -4455,8 +4297,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
                  */
-                public java.util.List<org.geoserver.wms.mvt.VectorTile.Tile.Feature>
-                        getFeaturesList() {
+                public java.util.List<org.geoserver.wms.mvt.VectorTile.Tile.Feature> getFeaturesList() {
                     if (featuresBuilder_ == null) {
                         return java.util.Collections.unmodifiableList(features_);
                     } else {
@@ -4504,8 +4345,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
                  */
-                public Builder setFeatures(
-                        int index, org.geoserver.wms.mvt.VectorTile.Tile.Feature value) {
+                public Builder setFeatures(int index, org.geoserver.wms.mvt.VectorTile.Tile.Feature value) {
                     if (featuresBuilder_ == null) {
                         if (value == null) {
                             throw new NullPointerException();
@@ -4528,8 +4368,7 @@ public final class VectorTile {
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
                  */
                 public Builder setFeatures(
-                        int index,
-                        org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder builderForValue) {
+                        int index, org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder builderForValue) {
                     if (featuresBuilder_ == null) {
                         ensureFeaturesIsMutable();
                         features_.set(index, builderForValue.build());
@@ -4570,8 +4409,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
                  */
-                public Builder addFeatures(
-                        int index, org.geoserver.wms.mvt.VectorTile.Tile.Feature value) {
+                public Builder addFeatures(int index, org.geoserver.wms.mvt.VectorTile.Tile.Feature value) {
                     if (featuresBuilder_ == null) {
                         if (value == null) {
                             throw new NullPointerException();
@@ -4593,8 +4431,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
                  */
-                public Builder addFeatures(
-                        org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder builderForValue) {
+                public Builder addFeatures(org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder builderForValue) {
                     if (featuresBuilder_ == null) {
                         ensureFeaturesIsMutable();
                         features_.add(builderForValue.build());
@@ -4614,8 +4451,7 @@ public final class VectorTile {
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
                  */
                 public Builder addFeatures(
-                        int index,
-                        org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder builderForValue) {
+                        int index, org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder builderForValue) {
                     if (featuresBuilder_ == null) {
                         ensureFeaturesIsMutable();
                         features_.add(index, builderForValue.build());
@@ -4635,8 +4471,7 @@ public final class VectorTile {
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
                  */
                 public Builder addAllFeatures(
-                        java.lang.Iterable<? extends org.geoserver.wms.mvt.VectorTile.Tile.Feature>
-                                values) {
+                        java.lang.Iterable<? extends org.geoserver.wms.mvt.VectorTile.Tile.Feature> values) {
                     if (featuresBuilder_ == null) {
                         ensureFeaturesIsMutable();
                         com.google.protobuf.AbstractMessageLite.Builder.addAll(values, features_);
@@ -4693,8 +4528,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
                  */
-                public org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder getFeaturesBuilder(
-                        int index) {
+                public org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder getFeaturesBuilder(int index) {
                     return getFeaturesFieldBuilder().getBuilder(index);
                 }
                 /**
@@ -4706,8 +4540,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
                  */
-                public org.geoserver.wms.mvt.VectorTile.Tile.FeatureOrBuilder getFeaturesOrBuilder(
-                        int index) {
+                public org.geoserver.wms.mvt.VectorTile.Tile.FeatureOrBuilder getFeaturesOrBuilder(int index) {
                     if (featuresBuilder_ == null) {
                         return features_.get(index);
                     } else {
@@ -4723,8 +4556,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
                  */
-                public java.util.List<
-                                ? extends org.geoserver.wms.mvt.VectorTile.Tile.FeatureOrBuilder>
+                public java.util.List<? extends org.geoserver.wms.mvt.VectorTile.Tile.FeatureOrBuilder>
                         getFeaturesOrBuilderList() {
                     if (featuresBuilder_ != null) {
                         return featuresBuilder_.getMessageOrBuilderList();
@@ -4743,9 +4575,7 @@ public final class VectorTile {
                  */
                 public org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder addFeaturesBuilder() {
                     return getFeaturesFieldBuilder()
-                            .addBuilder(
-                                    org.geoserver.wms.mvt.VectorTile.Tile.Feature
-                                            .getDefaultInstance());
+                            .addBuilder(org.geoserver.wms.mvt.VectorTile.Tile.Feature.getDefaultInstance());
                 }
                 /**
                  *
@@ -4756,13 +4586,9 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
                  */
-                public org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder addFeaturesBuilder(
-                        int index) {
+                public org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder addFeaturesBuilder(int index) {
                     return getFeaturesFieldBuilder()
-                            .addBuilder(
-                                    index,
-                                    org.geoserver.wms.mvt.VectorTile.Tile.Feature
-                                            .getDefaultInstance());
+                            .addBuilder(index, org.geoserver.wms.mvt.VectorTile.Tile.Feature.getDefaultInstance());
                 }
                 /**
                  *
@@ -4773,8 +4599,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Feature features = 2;</code>
                  */
-                public java.util.List<org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder>
-                        getFeaturesBuilderList() {
+                public java.util.List<org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder> getFeaturesBuilderList() {
                     return getFeaturesFieldBuilder().getBuilderList();
                 }
 
@@ -4784,15 +4609,11 @@ public final class VectorTile {
                                 org.geoserver.wms.mvt.VectorTile.Tile.FeatureOrBuilder>
                         getFeaturesFieldBuilder() {
                     if (featuresBuilder_ == null) {
-                        featuresBuilder_ =
-                                new com.google.protobuf.RepeatedFieldBuilderV3<
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Feature,
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder,
-                                        org.geoserver.wms.mvt.VectorTile.Tile.FeatureOrBuilder>(
-                                        features_,
-                                        ((bitField0_ & 0x00000004) != 0),
-                                        getParentForChildren(),
-                                        isClean());
+                        featuresBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+                                org.geoserver.wms.mvt.VectorTile.Tile.Feature,
+                                org.geoserver.wms.mvt.VectorTile.Tile.Feature.Builder,
+                                org.geoserver.wms.mvt.VectorTile.Tile.FeatureOrBuilder>(
+                                features_, ((bitField0_ & 0x00000004) != 0), getParentForChildren(), isClean());
                         features_ = null;
                     }
                     return featuresBuilder_;
@@ -4976,9 +4797,7 @@ public final class VectorTile {
 
                 private void ensureValuesIsMutable() {
                     if (!((bitField0_ & 0x00000010) != 0)) {
-                        values_ =
-                                new java.util.ArrayList<
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Value>(values_);
+                        values_ = new java.util.ArrayList<org.geoserver.wms.mvt.VectorTile.Tile.Value>(values_);
                         bitField0_ |= 0x00000010;
                     }
                 }
@@ -5046,8 +4865,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Value values = 4;</code>
                  */
-                public Builder setValues(
-                        int index, org.geoserver.wms.mvt.VectorTile.Tile.Value value) {
+                public Builder setValues(int index, org.geoserver.wms.mvt.VectorTile.Tile.Value value) {
                     if (valuesBuilder_ == null) {
                         if (value == null) {
                             throw new NullPointerException();
@@ -5070,8 +4888,7 @@ public final class VectorTile {
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Value values = 4;</code>
                  */
                 public Builder setValues(
-                        int index,
-                        org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder builderForValue) {
+                        int index, org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder builderForValue) {
                     if (valuesBuilder_ == null) {
                         ensureValuesIsMutable();
                         values_.set(index, builderForValue.build());
@@ -5112,8 +4929,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Value values = 4;</code>
                  */
-                public Builder addValues(
-                        int index, org.geoserver.wms.mvt.VectorTile.Tile.Value value) {
+                public Builder addValues(int index, org.geoserver.wms.mvt.VectorTile.Tile.Value value) {
                     if (valuesBuilder_ == null) {
                         if (value == null) {
                             throw new NullPointerException();
@@ -5135,8 +4951,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Value values = 4;</code>
                  */
-                public Builder addValues(
-                        org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder builderForValue) {
+                public Builder addValues(org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder builderForValue) {
                     if (valuesBuilder_ == null) {
                         ensureValuesIsMutable();
                         values_.add(builderForValue.build());
@@ -5156,8 +4971,7 @@ public final class VectorTile {
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Value values = 4;</code>
                  */
                 public Builder addValues(
-                        int index,
-                        org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder builderForValue) {
+                        int index, org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder builderForValue) {
                     if (valuesBuilder_ == null) {
                         ensureValuesIsMutable();
                         values_.add(index, builderForValue.build());
@@ -5177,8 +4991,7 @@ public final class VectorTile {
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Value values = 4;</code>
                  */
                 public Builder addAllValues(
-                        java.lang.Iterable<? extends org.geoserver.wms.mvt.VectorTile.Tile.Value>
-                                values) {
+                        java.lang.Iterable<? extends org.geoserver.wms.mvt.VectorTile.Tile.Value> values) {
                     if (valuesBuilder_ == null) {
                         ensureValuesIsMutable();
                         com.google.protobuf.AbstractMessageLite.Builder.addAll(values, values_);
@@ -5235,8 +5048,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Value values = 4;</code>
                  */
-                public org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder getValuesBuilder(
-                        int index) {
+                public org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder getValuesBuilder(int index) {
                     return getValuesFieldBuilder().getBuilder(index);
                 }
                 /**
@@ -5248,8 +5060,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Value values = 4;</code>
                  */
-                public org.geoserver.wms.mvt.VectorTile.Tile.ValueOrBuilder getValuesOrBuilder(
-                        int index) {
+                public org.geoserver.wms.mvt.VectorTile.Tile.ValueOrBuilder getValuesOrBuilder(int index) {
                     if (valuesBuilder_ == null) {
                         return values_.get(index);
                     } else {
@@ -5265,8 +5076,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Value values = 4;</code>
                  */
-                public java.util.List<
-                                ? extends org.geoserver.wms.mvt.VectorTile.Tile.ValueOrBuilder>
+                public java.util.List<? extends org.geoserver.wms.mvt.VectorTile.Tile.ValueOrBuilder>
                         getValuesOrBuilderList() {
                     if (valuesBuilder_ != null) {
                         return valuesBuilder_.getMessageOrBuilderList();
@@ -5285,9 +5095,7 @@ public final class VectorTile {
                  */
                 public org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder addValuesBuilder() {
                     return getValuesFieldBuilder()
-                            .addBuilder(
-                                    org.geoserver.wms.mvt.VectorTile.Tile.Value
-                                            .getDefaultInstance());
+                            .addBuilder(org.geoserver.wms.mvt.VectorTile.Tile.Value.getDefaultInstance());
                 }
                 /**
                  *
@@ -5298,13 +5106,9 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Value values = 4;</code>
                  */
-                public org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder addValuesBuilder(
-                        int index) {
+                public org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder addValuesBuilder(int index) {
                     return getValuesFieldBuilder()
-                            .addBuilder(
-                                    index,
-                                    org.geoserver.wms.mvt.VectorTile.Tile.Value
-                                            .getDefaultInstance());
+                            .addBuilder(index, org.geoserver.wms.mvt.VectorTile.Tile.Value.getDefaultInstance());
                 }
                 /**
                  *
@@ -5315,8 +5119,7 @@ public final class VectorTile {
                  *
                  * <code>repeated .org.geoserver.wms.mvt.Tile.Value values = 4;</code>
                  */
-                public java.util.List<org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder>
-                        getValuesBuilderList() {
+                public java.util.List<org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder> getValuesBuilderList() {
                     return getValuesFieldBuilder().getBuilderList();
                 }
 
@@ -5326,15 +5129,11 @@ public final class VectorTile {
                                 org.geoserver.wms.mvt.VectorTile.Tile.ValueOrBuilder>
                         getValuesFieldBuilder() {
                     if (valuesBuilder_ == null) {
-                        valuesBuilder_ =
-                                new com.google.protobuf.RepeatedFieldBuilderV3<
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Value,
-                                        org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder,
-                                        org.geoserver.wms.mvt.VectorTile.Tile.ValueOrBuilder>(
-                                        values_,
-                                        ((bitField0_ & 0x00000010) != 0),
-                                        getParentForChildren(),
-                                        isClean());
+                        valuesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+                                org.geoserver.wms.mvt.VectorTile.Tile.Value,
+                                org.geoserver.wms.mvt.VectorTile.Tile.Value.Builder,
+                                org.geoserver.wms.mvt.VectorTile.Tile.ValueOrBuilder>(
+                                values_, ((bitField0_ & 0x00000010) != 0), getParentForChildren(), isClean());
                         values_ = null;
                     }
                     return valuesBuilder_;
@@ -5413,14 +5212,12 @@ public final class VectorTile {
                 }
 
                 @java.lang.Override
-                public final Builder setUnknownFields(
-                        final com.google.protobuf.UnknownFieldSet unknownFields) {
+                public final Builder setUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
                     return super.setUnknownFields(unknownFields);
                 }
 
                 @java.lang.Override
-                public final Builder mergeUnknownFields(
-                        final com.google.protobuf.UnknownFieldSet unknownFields) {
+                public final Builder mergeUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
                     return super.mergeUnknownFields(unknownFields);
                 }
 
@@ -5452,8 +5249,7 @@ public final class VectorTile {
                             } catch (com.google.protobuf.InvalidProtocolBufferException e) {
                                 throw e.setUnfinishedMessage(builder.buildPartial());
                             } catch (com.google.protobuf.UninitializedMessageException e) {
-                                throw e.asInvalidProtocolBufferException()
-                                        .setUnfinishedMessage(builder.buildPartial());
+                                throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
                             } catch (java.io.IOException e) {
                                 throw new com.google.protobuf.InvalidProtocolBufferException(e)
                                         .setUnfinishedMessage(builder.buildPartial());
@@ -5488,8 +5284,7 @@ public final class VectorTile {
         }
         /** <code>repeated .org.geoserver.wms.mvt.Tile.Layer layers = 3;</code> */
         @java.lang.Override
-        public java.util.List<? extends org.geoserver.wms.mvt.VectorTile.Tile.LayerOrBuilder>
-                getLayersOrBuilderList() {
+        public java.util.List<? extends org.geoserver.wms.mvt.VectorTile.Tile.LayerOrBuilder> getLayersOrBuilderList() {
             return layers_;
         }
         /** <code>repeated .org.geoserver.wms.mvt.Tile.Layer layers = 3;</code> */
@@ -5531,10 +5326,8 @@ public final class VectorTile {
         }
 
         @java.lang.Override
-        public void writeTo(com.google.protobuf.CodedOutputStream output)
-                throws java.io.IOException {
-            com.google.protobuf.GeneratedMessageV3.ExtendableMessage<
-                                    org.geoserver.wms.mvt.VectorTile.Tile>
+        public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
+            com.google.protobuf.GeneratedMessageV3.ExtendableMessage<org.geoserver.wms.mvt.VectorTile.Tile>
                             .ExtensionWriter
                     extensionWriter = newExtensionWriter();
             for (int i = 0; i < layers_.size(); i++) {
@@ -5567,8 +5360,7 @@ public final class VectorTile {
             if (!(obj instanceof org.geoserver.wms.mvt.VectorTile.Tile)) {
                 return super.equals(obj);
             }
-            org.geoserver.wms.mvt.VectorTile.Tile other =
-                    (org.geoserver.wms.mvt.VectorTile.Tile) obj;
+            org.geoserver.wms.mvt.VectorTile.Tile other = (org.geoserver.wms.mvt.VectorTile.Tile) obj;
 
             if (!getLayersList().equals(other.getLayersList())) return false;
             if (!getUnknownFields().equals(other.getUnknownFields())) return false;
@@ -5599,21 +5391,18 @@ public final class VectorTile {
         }
 
         public static org.geoserver.wms.mvt.VectorTile.Tile parseFrom(
-                java.nio.ByteBuffer data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                java.nio.ByteBuffer data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
 
-        public static org.geoserver.wms.mvt.VectorTile.Tile parseFrom(
-                com.google.protobuf.ByteString data)
+        public static org.geoserver.wms.mvt.VectorTile.Tile parseFrom(com.google.protobuf.ByteString data)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data);
         }
 
         public static org.geoserver.wms.mvt.VectorTile.Tile parseFrom(
-                com.google.protobuf.ByteString data,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                com.google.protobuf.ByteString data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws com.google.protobuf.InvalidProtocolBufferException {
             return PARSER.parseFrom(data, extensionRegistry);
         }
@@ -5635,38 +5424,32 @@ public final class VectorTile {
         }
 
         public static org.geoserver.wms.mvt.VectorTile.Tile parseFrom(
-                java.io.InputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-                    PARSER, input, extensionRegistry);
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input, extensionRegistry);
+        }
+
+        public static org.geoserver.wms.mvt.VectorTile.Tile parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+            return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
         }
 
         public static org.geoserver.wms.mvt.VectorTile.Tile parseDelimitedFrom(
-                java.io.InputStream input) throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-                    PARSER, input);
-        }
-
-        public static org.geoserver.wms.mvt.VectorTile.Tile parseDelimitedFrom(
-                java.io.InputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
             return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
                     PARSER, input, extensionRegistry);
         }
 
-        public static org.geoserver.wms.mvt.VectorTile.Tile parseFrom(
-                com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+        public static org.geoserver.wms.mvt.VectorTile.Tile parseFrom(com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
             return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
         }
 
         public static org.geoserver.wms.mvt.VectorTile.Tile parseFrom(
-                com.google.protobuf.CodedInputStream input,
-                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                com.google.protobuf.CodedInputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
                 throws java.io.IOException {
-            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-                    PARSER, input, extensionRegistry);
+            return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input, extensionRegistry);
         }
 
         @java.lang.Override
@@ -5688,8 +5471,7 @@ public final class VectorTile {
         }
 
         @java.lang.Override
-        protected Builder newBuilderForType(
-                com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        protected Builder newBuilderForType(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
             Builder builder = new Builder(parent);
             return builder;
         }
@@ -5701,15 +5483,12 @@ public final class VectorTile {
                 // @@protoc_insertion_point(builder_implements:org.geoserver.wms.mvt.Tile)
                 org.geoserver.wms.mvt.VectorTile.TileOrBuilder {
             public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-                return org.geoserver.wms.mvt.VectorTile
-                        .internal_static_org_geoserver_wms_mvt_Tile_descriptor;
+                return org.geoserver.wms.mvt.VectorTile.internal_static_org_geoserver_wms_mvt_Tile_descriptor;
             }
 
             @java.lang.Override
-            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-                    internalGetFieldAccessorTable() {
-                return org.geoserver.wms.mvt.VectorTile
-                        .internal_static_org_geoserver_wms_mvt_Tile_fieldAccessorTable
+            protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable internalGetFieldAccessorTable() {
+                return org.geoserver.wms.mvt.VectorTile.internal_static_org_geoserver_wms_mvt_Tile_fieldAccessorTable
                         .ensureFieldAccessorsInitialized(
                                 org.geoserver.wms.mvt.VectorTile.Tile.class,
                                 org.geoserver.wms.mvt.VectorTile.Tile.Builder.class);
@@ -5738,8 +5517,7 @@ public final class VectorTile {
 
             @java.lang.Override
             public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-                return org.geoserver.wms.mvt.VectorTile
-                        .internal_static_org_geoserver_wms_mvt_Tile_descriptor;
+                return org.geoserver.wms.mvt.VectorTile.internal_static_org_geoserver_wms_mvt_Tile_descriptor;
             }
 
             @java.lang.Override
@@ -5758,8 +5536,7 @@ public final class VectorTile {
 
             @java.lang.Override
             public org.geoserver.wms.mvt.VectorTile.Tile buildPartial() {
-                org.geoserver.wms.mvt.VectorTile.Tile result =
-                        new org.geoserver.wms.mvt.VectorTile.Tile(this);
+                org.geoserver.wms.mvt.VectorTile.Tile result = new org.geoserver.wms.mvt.VectorTile.Tile(this);
                 buildPartialRepeatedFields(result);
                 if (bitField0_ != 0) {
                     buildPartial0(result);
@@ -5790,8 +5567,7 @@ public final class VectorTile {
             }
 
             @java.lang.Override
-            public Builder setField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
+            public Builder setField(com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
                 return super.setField(field, value);
             }
 
@@ -5807,9 +5583,7 @@ public final class VectorTile {
 
             @java.lang.Override
             public Builder setRepeatedField(
-                    com.google.protobuf.Descriptors.FieldDescriptor field,
-                    int index,
-                    java.lang.Object value) {
+                    com.google.protobuf.Descriptors.FieldDescriptor field, int index, java.lang.Object value) {
                 return super.setRepeatedField(field, index, value);
             }
 
@@ -5821,8 +5595,7 @@ public final class VectorTile {
 
             @java.lang.Override
             public <Type> Builder setExtension(
-                    com.google.protobuf.GeneratedMessage.GeneratedExtension<
-                                    org.geoserver.wms.mvt.VectorTile.Tile, Type>
+                    com.google.protobuf.GeneratedMessage.GeneratedExtension<org.geoserver.wms.mvt.VectorTile.Tile, Type>
                             extension,
                     Type value) {
                 return super.setExtension(extension, value);
@@ -5849,8 +5622,7 @@ public final class VectorTile {
 
             @java.lang.Override
             public <T> Builder clearExtension(
-                    com.google.protobuf.GeneratedMessage.GeneratedExtension<
-                                    org.geoserver.wms.mvt.VectorTile.Tile, T>
+                    com.google.protobuf.GeneratedMessage.GeneratedExtension<org.geoserver.wms.mvt.VectorTile.Tile, T>
                             extension) {
                 return super.clearExtension(extension);
             }
@@ -5866,8 +5638,7 @@ public final class VectorTile {
             }
 
             public Builder mergeFrom(org.geoserver.wms.mvt.VectorTile.Tile other) {
-                if (other == org.geoserver.wms.mvt.VectorTile.Tile.getDefaultInstance())
-                    return this;
+                if (other == org.geoserver.wms.mvt.VectorTile.Tile.getDefaultInstance()) return this;
                 if (layersBuilder_ == null) {
                     if (!other.layers_.isEmpty()) {
                         if (layers_.isEmpty()) {
@@ -5886,10 +5657,9 @@ public final class VectorTile {
                             layersBuilder_ = null;
                             layers_ = other.layers_;
                             bitField0_ = (bitField0_ & ~0x00000001);
-                            layersBuilder_ =
-                                    com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
-                                            ? getLayersFieldBuilder()
-                                            : null;
+                            layersBuilder_ = com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
+                                    ? getLayersFieldBuilder()
+                                    : null;
                         } else {
                             layersBuilder_.addAllMessages(other.layers_);
                         }
@@ -5930,28 +5700,23 @@ public final class VectorTile {
                             case 0:
                                 done = true;
                                 break;
-                            case 26:
-                                {
-                                    org.geoserver.wms.mvt.VectorTile.Tile.Layer m =
-                                            input.readMessage(
-                                                    org.geoserver.wms.mvt.VectorTile.Tile.Layer
-                                                            .PARSER,
-                                                    extensionRegistry);
-                                    if (layersBuilder_ == null) {
-                                        ensureLayersIsMutable();
-                                        layers_.add(m);
-                                    } else {
-                                        layersBuilder_.addMessage(m);
-                                    }
-                                    break;
-                                } // case 26
-                            default:
-                                {
-                                    if (!super.parseUnknownField(input, extensionRegistry, tag)) {
-                                        done = true; // was an endgroup tag
-                                    }
-                                    break;
-                                } // default:
+                            case 26: {
+                                org.geoserver.wms.mvt.VectorTile.Tile.Layer m = input.readMessage(
+                                        org.geoserver.wms.mvt.VectorTile.Tile.Layer.PARSER, extensionRegistry);
+                                if (layersBuilder_ == null) {
+                                    ensureLayersIsMutable();
+                                    layers_.add(m);
+                                } else {
+                                    layersBuilder_.addMessage(m);
+                                }
+                                break;
+                            } // case 26
+                            default: {
+                                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                                    done = true; // was an endgroup tag
+                                }
+                                break;
+                            } // default:
                         } // switch (tag)
                     } // while (!done)
                 } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -5969,9 +5734,7 @@ public final class VectorTile {
 
             private void ensureLayersIsMutable() {
                 if (!((bitField0_ & 0x00000001) != 0)) {
-                    layers_ =
-                            new java.util.ArrayList<org.geoserver.wms.mvt.VectorTile.Tile.Layer>(
-                                    layers_);
+                    layers_ = new java.util.ArrayList<org.geoserver.wms.mvt.VectorTile.Tile.Layer>(layers_);
                     bitField0_ |= 0x00000001;
                 }
             }
@@ -6021,9 +5784,7 @@ public final class VectorTile {
                 return this;
             }
             /** <code>repeated .org.geoserver.wms.mvt.Tile.Layer layers = 3;</code> */
-            public Builder setLayers(
-                    int index,
-                    org.geoserver.wms.mvt.VectorTile.Tile.Layer.Builder builderForValue) {
+            public Builder setLayers(int index, org.geoserver.wms.mvt.VectorTile.Tile.Layer.Builder builderForValue) {
                 if (layersBuilder_ == null) {
                     ensureLayersIsMutable();
                     layers_.set(index, builderForValue.build());
@@ -6062,8 +5823,7 @@ public final class VectorTile {
                 return this;
             }
             /** <code>repeated .org.geoserver.wms.mvt.Tile.Layer layers = 3;</code> */
-            public Builder addLayers(
-                    org.geoserver.wms.mvt.VectorTile.Tile.Layer.Builder builderForValue) {
+            public Builder addLayers(org.geoserver.wms.mvt.VectorTile.Tile.Layer.Builder builderForValue) {
                 if (layersBuilder_ == null) {
                     ensureLayersIsMutable();
                     layers_.add(builderForValue.build());
@@ -6074,9 +5834,7 @@ public final class VectorTile {
                 return this;
             }
             /** <code>repeated .org.geoserver.wms.mvt.Tile.Layer layers = 3;</code> */
-            public Builder addLayers(
-                    int index,
-                    org.geoserver.wms.mvt.VectorTile.Tile.Layer.Builder builderForValue) {
+            public Builder addLayers(int index, org.geoserver.wms.mvt.VectorTile.Tile.Layer.Builder builderForValue) {
                 if (layersBuilder_ == null) {
                     ensureLayersIsMutable();
                     layers_.add(index, builderForValue.build());
@@ -6088,8 +5846,7 @@ public final class VectorTile {
             }
             /** <code>repeated .org.geoserver.wms.mvt.Tile.Layer layers = 3;</code> */
             public Builder addAllLayers(
-                    java.lang.Iterable<? extends org.geoserver.wms.mvt.VectorTile.Tile.Layer>
-                            values) {
+                    java.lang.Iterable<? extends org.geoserver.wms.mvt.VectorTile.Tile.Layer> values) {
                 if (layersBuilder_ == null) {
                     ensureLayersIsMutable();
                     com.google.protobuf.AbstractMessageLite.Builder.addAll(values, layers_);
@@ -6126,8 +5883,7 @@ public final class VectorTile {
                 return getLayersFieldBuilder().getBuilder(index);
             }
             /** <code>repeated .org.geoserver.wms.mvt.Tile.Layer layers = 3;</code> */
-            public org.geoserver.wms.mvt.VectorTile.Tile.LayerOrBuilder getLayersOrBuilder(
-                    int index) {
+            public org.geoserver.wms.mvt.VectorTile.Tile.LayerOrBuilder getLayersOrBuilder(int index) {
                 if (layersBuilder_ == null) {
                     return layers_.get(index);
                 } else {
@@ -6146,19 +5902,15 @@ public final class VectorTile {
             /** <code>repeated .org.geoserver.wms.mvt.Tile.Layer layers = 3;</code> */
             public org.geoserver.wms.mvt.VectorTile.Tile.Layer.Builder addLayersBuilder() {
                 return getLayersFieldBuilder()
-                        .addBuilder(
-                                org.geoserver.wms.mvt.VectorTile.Tile.Layer.getDefaultInstance());
+                        .addBuilder(org.geoserver.wms.mvt.VectorTile.Tile.Layer.getDefaultInstance());
             }
             /** <code>repeated .org.geoserver.wms.mvt.Tile.Layer layers = 3;</code> */
             public org.geoserver.wms.mvt.VectorTile.Tile.Layer.Builder addLayersBuilder(int index) {
                 return getLayersFieldBuilder()
-                        .addBuilder(
-                                index,
-                                org.geoserver.wms.mvt.VectorTile.Tile.Layer.getDefaultInstance());
+                        .addBuilder(index, org.geoserver.wms.mvt.VectorTile.Tile.Layer.getDefaultInstance());
             }
             /** <code>repeated .org.geoserver.wms.mvt.Tile.Layer layers = 3;</code> */
-            public java.util.List<org.geoserver.wms.mvt.VectorTile.Tile.Layer.Builder>
-                    getLayersBuilderList() {
+            public java.util.List<org.geoserver.wms.mvt.VectorTile.Tile.Layer.Builder> getLayersBuilderList() {
                 return getLayersFieldBuilder().getBuilderList();
             }
 
@@ -6168,29 +5920,23 @@ public final class VectorTile {
                             org.geoserver.wms.mvt.VectorTile.Tile.LayerOrBuilder>
                     getLayersFieldBuilder() {
                 if (layersBuilder_ == null) {
-                    layersBuilder_ =
-                            new com.google.protobuf.RepeatedFieldBuilderV3<
-                                    org.geoserver.wms.mvt.VectorTile.Tile.Layer,
-                                    org.geoserver.wms.mvt.VectorTile.Tile.Layer.Builder,
-                                    org.geoserver.wms.mvt.VectorTile.Tile.LayerOrBuilder>(
-                                    layers_,
-                                    ((bitField0_ & 0x00000001) != 0),
-                                    getParentForChildren(),
-                                    isClean());
+                    layersBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+                            org.geoserver.wms.mvt.VectorTile.Tile.Layer,
+                            org.geoserver.wms.mvt.VectorTile.Tile.Layer.Builder,
+                            org.geoserver.wms.mvt.VectorTile.Tile.LayerOrBuilder>(
+                            layers_, ((bitField0_ & 0x00000001) != 0), getParentForChildren(), isClean());
                     layers_ = null;
                 }
                 return layersBuilder_;
             }
 
             @java.lang.Override
-            public final Builder setUnknownFields(
-                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+            public final Builder setUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
                 return super.setUnknownFields(unknownFields);
             }
 
             @java.lang.Override
-            public final Builder mergeUnknownFields(
-                    final com.google.protobuf.UnknownFieldSet unknownFields) {
+            public final Builder mergeUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
                 return super.mergeUnknownFields(unknownFields);
             }
 
@@ -6209,28 +5955,26 @@ public final class VectorTile {
         }
 
         @java.lang.Deprecated
-        public static final com.google.protobuf.Parser<Tile> PARSER =
-                new com.google.protobuf.AbstractParser<Tile>() {
-                    @java.lang.Override
-                    public Tile parsePartialFrom(
-                            com.google.protobuf.CodedInputStream input,
-                            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-                            throws com.google.protobuf.InvalidProtocolBufferException {
-                        Builder builder = newBuilder();
-                        try {
-                            builder.mergeFrom(input, extensionRegistry);
-                        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-                            throw e.setUnfinishedMessage(builder.buildPartial());
-                        } catch (com.google.protobuf.UninitializedMessageException e) {
-                            throw e.asInvalidProtocolBufferException()
-                                    .setUnfinishedMessage(builder.buildPartial());
-                        } catch (java.io.IOException e) {
-                            throw new com.google.protobuf.InvalidProtocolBufferException(e)
-                                    .setUnfinishedMessage(builder.buildPartial());
-                        }
-                        return builder.buildPartial();
-                    }
-                };
+        public static final com.google.protobuf.Parser<Tile> PARSER = new com.google.protobuf.AbstractParser<Tile>() {
+            @java.lang.Override
+            public Tile parsePartialFrom(
+                    com.google.protobuf.CodedInputStream input,
+                    com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                    throws com.google.protobuf.InvalidProtocolBufferException {
+                Builder builder = newBuilder();
+                try {
+                    builder.mergeFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                    throw e.setUnfinishedMessage(builder.buildPartial());
+                } catch (com.google.protobuf.UninitializedMessageException e) {
+                    throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+                } catch (java.io.IOException e) {
+                    throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                            .setUnfinishedMessage(builder.buildPartial());
+                }
+                return builder.buildPartial();
+            }
+        };
 
         public static com.google.protobuf.Parser<Tile> parser() {
             return PARSER;
@@ -6290,23 +6034,22 @@ public final class VectorTile {
                     + "e\022\013\n\007UNKNOWN\020\000\022\t\n\005POINT\020\001\022\016\n\nLINESTRING\020"
                     + "\002\022\013\n\007POLYGON\020\003*\005\010\020\020\200@B\002H\003"
         };
-        descriptor =
-                com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
-                        descriptorData, new com.google.protobuf.Descriptors.FileDescriptor[] {});
+        descriptor = com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
+                descriptorData, new com.google.protobuf.Descriptors.FileDescriptor[] {});
         internal_static_org_geoserver_wms_mvt_Tile_descriptor =
                 getDescriptor().getMessageTypes().get(0);
         internal_static_org_geoserver_wms_mvt_Tile_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                        internal_static_org_geoserver_wms_mvt_Tile_descriptor,
-                        new java.lang.String[] {
+                        internal_static_org_geoserver_wms_mvt_Tile_descriptor, new java.lang.String[] {
                             "Layers",
                         });
         internal_static_org_geoserver_wms_mvt_Tile_Value_descriptor =
-                internal_static_org_geoserver_wms_mvt_Tile_descriptor.getNestedTypes().get(0);
+                internal_static_org_geoserver_wms_mvt_Tile_descriptor
+                        .getNestedTypes()
+                        .get(0);
         internal_static_org_geoserver_wms_mvt_Tile_Value_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                        internal_static_org_geoserver_wms_mvt_Tile_Value_descriptor,
-                        new java.lang.String[] {
+                        internal_static_org_geoserver_wms_mvt_Tile_Value_descriptor, new java.lang.String[] {
                             "StringValue",
                             "FloatValue",
                             "DoubleValue",
@@ -6316,19 +6059,21 @@ public final class VectorTile {
                             "BoolValue",
                         });
         internal_static_org_geoserver_wms_mvt_Tile_Feature_descriptor =
-                internal_static_org_geoserver_wms_mvt_Tile_descriptor.getNestedTypes().get(1);
+                internal_static_org_geoserver_wms_mvt_Tile_descriptor
+                        .getNestedTypes()
+                        .get(1);
         internal_static_org_geoserver_wms_mvt_Tile_Feature_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                        internal_static_org_geoserver_wms_mvt_Tile_Feature_descriptor,
-                        new java.lang.String[] {
+                        internal_static_org_geoserver_wms_mvt_Tile_Feature_descriptor, new java.lang.String[] {
                             "Id", "Tags", "Type", "Geometry",
                         });
         internal_static_org_geoserver_wms_mvt_Tile_Layer_descriptor =
-                internal_static_org_geoserver_wms_mvt_Tile_descriptor.getNestedTypes().get(2);
+                internal_static_org_geoserver_wms_mvt_Tile_descriptor
+                        .getNestedTypes()
+                        .get(2);
         internal_static_org_geoserver_wms_mvt_Tile_Layer_fieldAccessorTable =
                 new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-                        internal_static_org_geoserver_wms_mvt_Tile_Layer_descriptor,
-                        new java.lang.String[] {
+                        internal_static_org_geoserver_wms_mvt_Tile_Layer_descriptor, new java.lang.String[] {
                             "Version", "Name", "Features", "Keys", "Values", "Extent",
                         });
     }

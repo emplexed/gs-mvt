@@ -21,8 +21,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Slippy Map Tiles controller that converts the requests into WMS requests. Answers with an
- * redirect to the WMS service so that the security rules of the WMS service are used.
+ * Slippy Map Tiles controller that converts the requests into WMS requests. Answers with an redirect to the WMS service
+ * so that the security rules of the WMS service are used.
  */
 @Controller
 // @RequestMapping("/slippymap")
@@ -37,8 +37,7 @@ public class SlippyTilesController {
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
-        dataBinder.registerCustomEditor(
-                GeneralisationLevel.class, new GeneralisationLevelEnumConverter());
+        dataBinder.registerCustomEditor(GeneralisationLevel.class, new GeneralisationLevelEnumConverter());
     }
 
     /*@ResponseBody
@@ -66,10 +65,8 @@ public class SlippyTilesController {
             @RequestParam(value = "sld", required = false) String sld,
             @RequestParam(value = "sld_body", required = false) String sld_body,
             @RequestParam(value = PARAM_GENERALISATION_FACTOR, required = false) Double gen_factor,
-            @RequestParam(value = PARAM_GENERALISATION_LEVEL, required = false)
-                    GeneralisationLevel gen_level,
-            @RequestParam(value = PARAM_SMALL_GEOM_THRESHOLD, required = false)
-                    Double small_geom_threshold,
+            @RequestParam(value = PARAM_GENERALISATION_LEVEL, required = false) GeneralisationLevel gen_level,
+            @RequestParam(value = PARAM_SMALL_GEOM_THRESHOLD, required = false) Double small_geom_threshold,
             @RequestParam(value = AVOID_EMPTY_PROTO, required = false) Boolean avoid_empty_proto,
             @RequestParam(value = "cql_filter", required = false) String cql_filter,
             @RequestParam(value = "bboxToBoundsViewparam", required = false, defaultValue = "false")
@@ -86,9 +83,7 @@ public class SlippyTilesController {
         sb.append("&LAYERS=").append(layers);
         sb.append("&FORMAT=")
                 .append(
-                        format != null
-                                        && supportedOutputFormats != null
-                                        && !supportedOutputFormats.isEmpty()
+                        format != null && supportedOutputFormats != null && !supportedOutputFormats.isEmpty()
                                 ? supportedOutputFormats.get(format)
                                 : defaultFormat);
         sb.append("&SERVICE=").append("WMS");
@@ -165,13 +160,11 @@ public class SlippyTilesController {
             sb.append(buildBoundsViewparam(bbox));
         }
         String url = sb.toString();
-        RequestDispatcher dispatcher =
-                request.getRequestDispatcher(response.encodeRedirectURL(url));
+        RequestDispatcher dispatcher = request.getRequestDispatcher(response.encodeRedirectURL(url));
         dispatcher.forward(request, response);
     }
 
-    private String buildBoundsViewparam(ReferencedEnvelope bbox)
-            throws UnsupportedEncodingException {
+    private String buildBoundsViewparam(ReferencedEnvelope bbox) throws UnsupportedEncodingException {
         Polygon poly = JTS.toGeometry(bbox);
         String boundsWKT = "bounds:'" + poly.toText() + "';";
         boundsWKT = boundsWKT.replaceAll(", ", "|");
@@ -209,9 +202,8 @@ public class SlippyTilesController {
     }
 
     /**
-     * Mapping of file endings to mime types / output formats know by the geoserver. Unfortunately
-     * file endings are not recored by the {@link org.geoserver.wms.GetMapOutputFormat} interface so
-     * this has to be entered here manually.
+     * Mapping of file endings to mime types / output formats know by the geoserver. Unfortunately file endings are not
+     * recored by the {@link org.geoserver.wms.GetMapOutputFormat} interface so this has to be entered here manually.
      *
      * @param supportedOutputFormats the outputFormat to file ending mapping
      */
@@ -220,9 +212,9 @@ public class SlippyTilesController {
     }
 
     /**
-     * Mapping of file endings to the default tile size. While png slippy maps are requested by
-     * default in 256x256 mapbox requests the vector tiles in 512x512. The tileSize is important to
-     * calculate the scale denominators and pixel offsets
+     * Mapping of file endings to the default tile size. While png slippy maps are requested by default in 256x256
+     * mapbox requests the vector tiles in 512x512. The tileSize is important to calculate the scale denominators and
+     * pixel offsets
      *
      * @param defaultTileSize a map of the default tile sizes
      */

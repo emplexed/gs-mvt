@@ -43,10 +43,8 @@ public class MVTStyleScaleSupportTest {
 
     @Test
     public void testHasRuleInScale() {
-        Style style =
-                MVTStyleTestUtils.style(
-                        MVTStyleTestUtils.rule(0, 20000, null),
-                        MVTStyleTestUtils.rule(1000000, 10000000, null));
+        Style style = MVTStyleTestUtils.style(
+                MVTStyleTestUtils.rule(0, 20000, null), MVTStyleTestUtils.rule(1000000, 10000000, null));
         assertTrue(MVTStyleScaleSupport.hasRuleInScale(style, 5000));
         assertTrue(MVTStyleScaleSupport.hasRuleInScale(style, 2000000));
         // in between both rules, nothing can be rendered
@@ -60,8 +58,7 @@ public class MVTStyleScaleSupportTest {
         assertTrue(MVTStyleScaleSupport.hasRuleInScale(empty, 20000));
         // a style with feature type styles but without any rule must not skip the layer either
         Style emptyFeatureTypeStyle = MVTStyleTestUtils.style();
-        FeatureTypeStyle featureTypeStyle =
-                MVTStyleTestUtils.STYLE_FACTORY.createFeatureTypeStyle();
+        FeatureTypeStyle featureTypeStyle = MVTStyleTestUtils.STYLE_FACTORY.createFeatureTypeStyle();
         emptyFeatureTypeStyle.featureTypeStyles().add(featureTypeStyle);
         assertTrue(MVTStyleScaleSupport.hasRuleInScale(emptyFeatureTypeStyle, 20000));
     }

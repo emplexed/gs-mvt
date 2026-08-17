@@ -31,15 +31,13 @@ import org.geotools.map.Layer;
 import org.geotools.util.logging.Logging;
 
 /**
- * Adapted WebMap implementation. Gets the style and retrieves filter rules. These rules are
- * considered when loading features from the datastore.
+ * Adapted WebMap implementation. Gets the style and retrieves filter rules. These rules are considered when loading
+ * features from the datastore.
  */
 public class StreamingMVTMap extends WebMap {
 
     private static final Logger LOGGER = Logging.getLogger(StreamingMVTMap.class);
-    /**
-     * The Mapbox client requests 512x512 tiles but the target tile has 256 units in each direction.
-     */
+    /** The Mapbox client requests 512x512 tiles but the target tile has 256 units in each direction. */
     private static int targetBinaryCRSTileSize = 256;
 
     /** @param context the map context, can be {@code null} is there's _really_ no context around */
@@ -51,10 +49,10 @@ public class StreamingMVTMap extends WebMap {
      * Retrieves the feature from the underlying datasource and encodes them the MVT PBF format.
      *
      * @param out the outputstream to write to
-     * @param avoidEmptyProto indicates that if no feature has to be serialized a not empty protobuf
-     *     is generated (by adding the layer element which is valid in vector tiles spec)
-     * @param smallGeometryThreshold defines the threshold in length / area when geometries should
-     *     be skipped in output. 0 or negative means all geoms are included
+     * @param avoidEmptyProto indicates that if no feature has to be serialized a not empty protobuf is generated (by
+     *     adding the layer element which is valid in vector tiles spec)
+     * @param smallGeometryThreshold defines the threshold in length / area when geometries should be skipped in output.
+     *     0 or negative means all geoms are included
      * @param genFactors map of generalization factors per zoom level
      * @param fallBackGen fallback value if no suiting value can be found in genFactors map
      * @throws IOException
@@ -72,12 +70,11 @@ public class StreamingMVTMap extends WebMap {
             genFactor = genFactors.get(zoomLevel);
         } else {
             genFactor = fallBackGen;
-            LOGGER.warning(
-                    "computed zoom level ("
-                            + zoomLevel
-                            + ") is out of range, using default generalisation ("
-                            + fallBackGen
-                            + ")");
+            LOGGER.warning("computed zoom level ("
+                    + zoomLevel
+                    + ") is out of range, using default generalisation ("
+                    + fallBackGen
+                    + ")");
         }
         this.encode(out, avoidEmptyProto, smallGeometryThreshold, genFactor);
     }
@@ -86,30 +83,25 @@ public class StreamingMVTMap extends WebMap {
      * Retrieves the feature from the underlying datasource and encodes them the MVT PBF format.
      *
      * @param out the outputstream to write to
-     * @param avoidEmptyProto indicates that if no feature has to be serialized a not empty protobuf
-     *     is generated (by adding the layer element which is valid in vector tiles spec)
+     * @param avoidEmptyProto indicates that if no feature has to be serialized a not empty protobuf is generated (by
+     *     adding the layer element which is valid in vector tiles spec)
      * @param smallGeometryThreshold threshold for skipping small geometries
      * @param genFactor the factor for generalisation
      * @throws IOException
      */
-    public void encode(
-            final OutputStream out,
-            boolean avoidEmptyProto,
-            double smallGeometryThreshold,
-            double genFactor)
+    public void encode(final OutputStream out, boolean avoidEmptyProto, double smallGeometryThreshold, double genFactor)
             throws IOException {
         ReferencedEnvelope renderingArea = this.mapContent.getRenderingArea();
         try {
-            MVTWriter mvtWriter =
-                    MVTWriter.getInstance(
-                            renderingArea,
-                            this.mapContent.getCoordinateReferenceSystem(),
-                            targetBinaryCRSTileSize,
-                            targetBinaryCRSTileSize,
-                            this.mapContent.getBuffer(),
-                            avoidEmptyProto,
-                            genFactor,
-                            smallGeometryThreshold);
+            MVTWriter mvtWriter = MVTWriter.getInstance(
+                    renderingArea,
+                    this.mapContent.getCoordinateReferenceSystem(),
+                    targetBinaryCRSTileSize,
+                    targetBinaryCRSTileSize,
+                    this.mapContent.getBuffer(),
+                    avoidEmptyProto,
+                    genFactor,
+                    smallGeometryThreshold);
             Map<FeatureCollection, Style> featureCollectionStyleMap = new HashMap<>();
             FilterFactory ff = CommonFactoryFinder.getFilterFactory();
             double scaleDenominator = this.mapContent.getScaleDenominator();
@@ -124,39 +116,31 @@ public class StreamingMVTMap extends WebMap {
                 // but avoids reading any row. Relevant for layer groups where every member is
                 // queried on every tile otherwise.
                 if (!MVTStyleScaleSupport.hasRuleInScale(layer.getStyle(), scaleDenominator)) {
-                    LOGGER.fine(
-                            "skipping datastore query for layer "
-                                    + schema.getTypeName()
-                                    + ", no rule of its style applies at scale denominator "
-                                    + scaleDenominator);
-                    featureCollectionStyleMap.put(
-                            new EmptyFeatureCollection(schema), layer.getStyle());
+                    LOGGER.fine("skipping datastore query for layer "
+                            + schema.getTypeName()
+                            + ", no rule of its style applies at scale denominator "
+                            + scaleDenominator);
+                    featureCollectionStyleMap.put(new EmptyFeatureCollection(schema), layer.getStyle());
                     continue;
                 }
-                String defaultGeometry = schema.getGeometryDescriptor().getName().getLocalPart();
+                String defaultGeometry =
+                        schema.getGeometryDescriptor().getName().getLocalPart();
                 // Retrieve rendering area. In case of a buffer the extent is the buffered extent
                 // and not the requested
                 // extent.
-                renderingArea =
-                        mvtWriter.getSourceBBOXWithBuffer() != null
-                                ? mvtWriter.getSourceBBOXWithBuffer()
-                                : renderingArea;
+                renderingArea = mvtWriter.getSourceBBOXWithBuffer() != null
+                        ? mvtWriter.getSourceBBOXWithBuffer()
+                        : renderingArea;
                 BBOX bboxFilter = ff.bbox(ff.property(defaultGeometry), renderingArea);
                 Query bboxQuery = new Query(schema.getTypeName(), bboxFilter);
                 Query definitionQuery = layer.getQuery();
-                Query finalQuery =
-                        new Query(
-                                DataUtilities.mixQueries(definitionQuery, bboxQuery, "mvtEncoder"));
+                Query finalQuery = new Query(DataUtilities.mixQueries(definitionQuery, bboxQuery, "mvtEncoder"));
                 if (layer.getStyle() != null) {
                     // Add Style Filters to the request
-                    Filter styleFilter =
-                            getFeatureFilterFromStyle(layer.getStyle(), ff, scaleDenominator);
+                    Filter styleFilter = getFeatureFilterFromStyle(layer.getStyle(), ff, scaleDenominator);
                     if (styleFilter != null) {
                         Query filterQuery = new Query(schema.getTypeName(), styleFilter);
-                        finalQuery =
-                                new Query(
-                                        DataUtilities.mixQueries(
-                                                finalQuery, filterQuery, "mvtEncoder"));
+                        finalQuery = new Query(DataUtilities.mixQueries(finalQuery, filterQuery, "mvtEncoder"));
                     }
                 }
                 finalQuery.setCoordinateSystemReproject(MVTWriter.TARGET_CRS);
@@ -164,8 +148,7 @@ public class StreamingMVTMap extends WebMap {
                 finalQuery.setSortBy(definitionQuery.getSortBy());
                 finalQuery.setStartIndex(definitionQuery.getStartIndex());
                 // Retrieve feature collection from the layer
-                featureCollectionStyleMap.put(
-                        featureSource.getFeatures(finalQuery), layer.getStyle());
+                featureCollectionStyleMap.put(featureSource.getFeatures(finalQuery), layer.getStyle());
             }
             // Write all features to the output stream
             mvtWriter.writeFeatures(featureCollectionStyleMap, scaleDenominator, out);
@@ -178,11 +161,10 @@ public class StreamingMVTMap extends WebMap {
      * Derives the zoom level used to look up the generalisation factor from the scale denominator.
      *
      * <p>Note that this calculation assumes 96 DPI while the scale denominator handed in by the
-     * {@link org.geoserver.wms.WMSMapContent} is based on the OGC standard pixel size of 0.28 mm
-     * (~90.71 DPI). Zoom level derivation and SLD rule matching are therefore not based on the very
-     * same formula and the resulting zoom level can be off by one close to a zoom boundary. Left
-     * unchanged on purpose, correcting it would silently alter the generalisation of every existing
-     * deployment.
+     * {@link org.geoserver.wms.WMSMapContent} is based on the OGC standard pixel size of 0.28 mm (~90.71 DPI). Zoom
+     * level derivation and SLD rule matching are therefore not based on the very same formula and the resulting zoom
+     * level can be off by one close to a zoom boundary. Left unchanged on purpose, correcting it would silently alter
+     * the generalisation of every existing deployment.
      */
     private int getZoomLevel(double scale) {
         double maxRes = 156543.03;
@@ -192,23 +174,21 @@ public class StreamingMVTMap extends WebMap {
     }
 
     /**
-     * Retrieve Filter information from the Layer Style. TODO maybe there is a better method to do
-     * that e.g. using a {@link org.geotools.styling.StyleVisitor}
+     * Retrieve Filter information from the Layer Style. TODO maybe there is a better method to do that e.g. using a
+     * {@link org.geotools.styling.StyleVisitor}
      *
-     * <p>Only rules that apply at the current scale denominator are taken into account, using the
-     * same scale evaluation as the encoder ({@link MVTStyleScaleSupport}). A feature is rendered as
-     * soon as one of those rules accepts it, hence the filters are combined with OR.
+     * <p>Only rules that apply at the current scale denominator are taken into account, using the same scale evaluation
+     * as the encoder ({@link MVTStyleScaleSupport}). A feature is rendered as soon as one of those rules accepts it,
+     * hence the filters are combined with OR.
      *
      * @param style the style of the layer
      * @param ff the filter factory to create (concat) filters
      * @param currentScaleDenominator the current scale denominator of the reuquested tiles
-     * @return the filter containing all relevant filters for the current scale, null if the style
-     *     does not restrict the features at all, or {@link Filter#EXCLUDE} if no rule of the style
-     *     applies at the current scale
+     * @return the filter containing all relevant filters for the current scale, null if the style does not restrict the
+     *     features at all, or {@link Filter#EXCLUDE} if no rule of the style applies at the current scale
      */
     // package visible for testing
-    Filter getFeatureFilterFromStyle(
-            Style style, FilterFactory ff, double currentScaleDenominator) {
+    Filter getFeatureFilterFromStyle(Style style, FilterFactory ff, double currentScaleDenominator) {
         List<Filter> filter = new ArrayList<>();
         boolean hasRules = false;
         for (FeatureTypeStyle featureTypeStyle : style.featureTypeStyles()) {

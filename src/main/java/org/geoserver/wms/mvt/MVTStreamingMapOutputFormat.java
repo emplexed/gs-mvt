@@ -31,8 +31,7 @@ public class MVTStreamingMapOutputFormat implements GetMapOutputFormat {
     }
 
     /** @see org.geoserver.wms.GetMapOutputFormat#produceMap(org.geoserver.wms.WMSMapContent) */
-    public StreamingMVTMap produceMap(WMSMapContent mapContent)
-            throws ServiceException, IOException {
+    public StreamingMVTMap produceMap(WMSMapContent mapContent) throws ServiceException, IOException {
         StreamingMVTMap mvt = new StreamingMVTMap(mapContent);
         mvt.setMimeType(getMimeType());
         mvt.setContentDispositionHeader(mapContent, ".pbf", false);

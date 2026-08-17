@@ -53,8 +53,8 @@ public class VectorTileEncoder {
     private static final Logger LOGGER = Logging.getLogger(VectorTileEncoder.class);
 
     /**
-     * Creates the VectorTileEncoder for the defined target Bbox. It uses default values for the
-     * extent (4096) and simplification factor (0.1d)
+     * Creates the VectorTileEncoder for the defined target Bbox. It uses default values for the extent (4096) and
+     * simplification factor (0.1d)
      *
      * @param targetBBox the target bbox
      */
@@ -65,19 +65,19 @@ public class VectorTileEncoder {
     /**
      * Create a {@link VectorTileEncoder} with the given extent value.
      *
-     * <p>The extent value control how detailed the coordinates are encoded in the vector tile. 4096
-     * is a good default, 256 can be used to reduce density.
+     * <p>The extent value control how detailed the coordinates are encoded in the vector tile. 4096 is a good default,
+     * 256 can be used to reduce density.
      *
-     * <p>The polygon clip buffer value control how large the clipping area is outside of the tile
-     * for polygons. 0 means that the clipping is done at the tile border. 8 is a good default.
+     * <p>The polygon clip buffer value control how large the clipping area is outside of the tile for polygons. 0 means
+     * that the clipping is done at the tile border. 8 is a good default.
      *
      * @param extent a int with extent value. 4096 is a good value.
      * @param targetBbox the bbox defined for the target tile
-     * @param includeLayersOnEmptyFeatureList include layer message even if no feature messages are
-     *     present for this layer (by adding the layer element which is valid in vector tiles spec)
+     * @param includeLayersOnEmptyFeatureList include layer message even if no feature messages are present for this
+     *     layer (by adding the layer element which is valid in vector tiles spec)
      * @param simplificationFactor the factor for simplification
-     * @param smallGeometryThreshold defines the threshold in length / area when geometries should
-     *     be skipped in output. 0 or negative means all geoms are included
+     * @param smallGeometryThreshold defines the threshold in length / area when geometries should be skipped in output.
+     *     0 or negative means all geoms are included
      */
     public VectorTileEncoder(
             int extent,
@@ -96,29 +96,20 @@ public class VectorTileEncoder {
     /**
      * Create a {@link VectorTileEncoder} with the given extent value.
      *
-     * <p>The extent value control how detailed the coordinates are encoded in the vector tile. 4096
-     * is a good default, 256 can be used to reduce density.
+     * <p>The extent value control how detailed the coordinates are encoded in the vector tile. 4096 is a good default,
+     * 256 can be used to reduce density.
      *
-     * <p>The polygon clip buffer value control how large the clipping area is outside of the tile
-     * for polygons. 0 means that the clipping is done at the tile border. 8 is a good default.
+     * <p>The polygon clip buffer value control how large the clipping area is outside of the tile for polygons. 0 means
+     * that the clipping is done at the tile border. 8 is a good default.
      *
      * @param extent a int with extent value. 4096 is a good value.
-     * @param polygonClipBuffer a int with clip buffer size for polygons and line strings. 8 is a
-     *     good value.
-     * @param smallGeometryThreshold defines the threshold in length / area when geometries should
-     *     be skipped in output. 0 or negative means all geoms are included
+     * @param polygonClipBuffer a int with clip buffer size for polygons and line strings. 8 is a good value.
+     * @param smallGeometryThreshold defines the threshold in length / area when geometries should be skipped in output.
+     *     0 or negative means all geoms are included
      */
     public VectorTileEncoder(
-            int extent,
-            int polygonClipBuffer,
-            double simplificationFactor,
-            double smallGeometryThreshold) {
-        this(
-                extent,
-                createTileEnvelope(polygonClipBuffer, 256),
-                false,
-                simplificationFactor,
-                smallGeometryThreshold);
+            int extent, int polygonClipBuffer, double simplificationFactor, double smallGeometryThreshold) {
+        this(extent, createTileEnvelope(polygonClipBuffer, 256), false, simplificationFactor, smallGeometryThreshold);
     }
 
     /**
@@ -146,18 +137,17 @@ public class VectorTileEncoder {
         return layer;
     }
     /**
-     * Add a feature with layer name (typically feature type name), some attributes and a Geometry.
-     * The Geometry must be in "pixel" space 0,0 lower left and 256,256 upper right.
+     * Add a feature with layer name (typically feature type name), some attributes and a Geometry. The Geometry must be
+     * in "pixel" space 0,0 lower left and 256,256 upper right.
      *
-     * <p>For optimization, geometries will be clipped, geometries will simplified and features with
-     * geometries outside of the tile will be skipped.
+     * <p>For optimization, geometries will be clipped, geometries will simplified and features with geometries outside
+     * of the tile will be skipped.
      *
      * @param layerName name of the layer to be added
      * @param attributes all attributes of the feature
      * @param geometry the target geometry
      */
-    public void addFeature(
-            String layerName, Map<String, ?> attributes, String idString, Geometry geometry) {
+    public void addFeature(String layerName, Map<String, ?> attributes, String idString, Geometry geometry) {
 
         // if enabled always add the layer even if probably no feature will be added (avoid 0 byte
         // protobufs)
@@ -166,8 +156,7 @@ public class VectorTileEncoder {
         }
 
         // split up MultiPolygon and GeometryCollection (without subclasses)
-        if (geometry instanceof MultiPolygon
-                || geometry.getClass().equals(GeometryCollection.class)) {
+        if (geometry instanceof MultiPolygon || geometry.getClass().equals(GeometryCollection.class)) {
             splitAndAddFeatures(layerName, attributes, idString, (GeometryCollection) geometry);
             return;
         }
@@ -182,8 +171,7 @@ public class VectorTileEncoder {
                 //                                + smallGeometryThreshold);
                 return;
             }
-            if (geometry instanceof LineString
-                    && geometry.getLength() < this.smallGeometryThreshold) {
+            if (geometry instanceof LineString && geometry.getLength() < this.smallGeometryThreshold) {
                 //                LOGGER.fine(
                 //                        "skiped geometry, length was: "
                 //                                + geometry.getArea()
@@ -206,16 +194,13 @@ public class VectorTileEncoder {
         }
 
         // if clipping result in MultiPolygon, then split once more
-        if (geometry instanceof MultiPolygon
-                || geometry.getClass().equals(GeometryCollection.class)) {
+        if (geometry instanceof MultiPolygon || geometry.getClass().equals(GeometryCollection.class)) {
             splitAndAddFeatures(layerName, attributes, idString, (GeometryCollection) geometry);
             return;
         }
 
         // no need to add empty geometry
-        if (geometry.isEmpty()
-                || geometry.getCoordinates() == null
-                || geometry.getCoordinates().length == 0) {
+        if (geometry.isEmpty() || geometry.getCoordinates() == null || geometry.getCoordinates().length == 0) {
             return;
         }
 
@@ -223,8 +208,7 @@ public class VectorTileEncoder {
         // geometries
         if (this.simplificationFactor > 0) {
             try {
-                geometry =
-                        TopologyPreservingSimplifier.simplify(geometry, this.simplificationFactor);
+                geometry = TopologyPreservingSimplifier.simplify(geometry, this.simplificationFactor);
             } catch (Exception e) {
                 LOGGER.warning("Geometry cannot be simplified!! " + geometry.toString());
                 if (geometry instanceof LineString) {
@@ -235,9 +219,7 @@ public class VectorTileEncoder {
                         }
                     }
                     GeometryFactory gm = new GeometryFactory();
-                    geometry =
-                            gm.createLineString(
-                                    coordinates.toArray(new Coordinate[coordinates.size()]));
+                    geometry = gm.createLineString(coordinates.toArray(new Coordinate[coordinates.size()]));
                 }
             }
             if (geometry instanceof Polygon) {
@@ -293,9 +275,8 @@ public class VectorTileEncoder {
     }
 
     /**
-     * A short circuit clip to the tile extent (tile boundary + buffer) for points to improve
-     * performance. This method can be overridden to change clipping behavior. See also {@link
-     * #clipGeometry(Geometry)}.
+     * A short circuit clip to the tile extent (tile boundary + buffer) for points to improve performance. This method
+     * can be overridden to change clipping behavior. See also {@link #clipGeometry(Geometry)}.
      *
      * <p>{@see https://github.com/ElectronicChartCentre/java-vector-tile/issues/13}
      */
@@ -308,8 +289,8 @@ public class VectorTileEncoder {
     }
 
     /**
-     * Clip geometry according to buffer given at construct time. This method can be overridden to
-     * change clipping behavior. See also {@link #clipCovers(Geometry)}.
+     * Clip geometry according to buffer given at construct time. This method can be overridden to change clipping
+     * behavior. See also {@link #clipCovers(Geometry)}.
      *
      * @param geometry the geometry to be clipped
      * @return clipped geometry
@@ -321,10 +302,7 @@ public class VectorTileEncoder {
     }
 
     private void splitAndAddFeatures(
-            String layerName,
-            Map<String, ?> attributes,
-            String idString,
-            GeometryCollection geometry) {
+            String layerName, Map<String, ?> attributes, String idString, GeometryCollection geometry) {
         for (int i = 0; i < geometry.getNumGeometries(); i++) {
             Geometry subGeometry = geometry.getGeometryN(i);
             addFeature(layerName, attributes, idString, subGeometry);
@@ -332,8 +310,8 @@ public class VectorTileEncoder {
     }
 
     /**
-     * Method that checks if the exterior and interior rings are intersecting. In this case the
-     * intersecting interior rings are skipped to retrieve a valid geometry again.
+     * Method that checks if the exterior and interior rings are intersecting. In this case the intersecting interior
+     * rings are skipped to retrieve a valid geometry again.
      *
      * @param polygon the invalid polygon to be handeld
      * @return the geometry with intersecting rings removed
@@ -349,8 +327,7 @@ public class VectorTileEncoder {
             if (!exteriorRing.intersects(interiorRing)) {
                 interiorRings.add(interiorRing);
             } else {
-                LOGGER.info(
-                        "Polygon intersecting interior ring with exterior ring after simplifying");
+                LOGGER.info("Polygon intersecting interior ring with exterior ring after simplifying");
             }
         }
         for (int i = 0; i < interiorRings.size(); i++) {
@@ -358,24 +335,21 @@ public class VectorTileEncoder {
             for (int j = i + 1; j < interiorRings.size() - 1; j++) {
                 LineString toCompare = interiorRings.get(j);
                 if (toCompare.intersects(interiorRing)) {
-                    LOGGER.info(
-                            "Polygon intersecting interior ring with interior ring after simplifying");
+                    LOGGER.info("Polygon intersecting interior ring with interior ring after simplifying");
                     intersectingRings.add(interiorRing);
                     break;
                 }
             }
         }
         GeometryFactory gm = new GeometryFactory();
-        LinearRing[] interiorRingArray =
-                new LinearRing[interiorRings.size() - intersectingRings.size()];
+        LinearRing[] interiorRingArray = new LinearRing[interiorRings.size() - intersectingRings.size()];
         int i = 0;
         for (LineString lineString : interiorRings) {
             if (!intersectingRings.contains(lineString)) {
                 interiorRingArray[i++] = gm.createLinearRing(lineString.getCoordinateSequence());
             }
         }
-        return gm.createPolygon(
-                gm.createLinearRing(exteriorRing.getCoordinateSequence()), interiorRingArray);
+        return gm.createPolygon(gm.createLinearRing(exteriorRing.getCoordinateSequence()), interiorRingArray);
     }
 
     /** @return a byte array with the vector tile */
@@ -446,8 +420,7 @@ public class VectorTileEncoder {
 
                 Geometry geometry = feature.geometry;
 
-                VectorTile.Tile.Feature.Builder featureBuilder =
-                        VectorTile.Tile.Feature.newBuilder();
+                VectorTile.Tile.Feature.Builder featureBuilder = VectorTile.Tile.Feature.newBuilder();
 
                 featureBuilder.addAllTags(feature.tags);
                 featureBuilder.setType(toGeomType(geometry));
@@ -532,19 +505,15 @@ public class VectorTileEncoder {
             return commands;
         }
 
-        return commands(
-                geometry.getCoordinates(),
-                shouldClosePath(geometry),
-                geometry instanceof MultiPoint);
+        return commands(geometry.getCoordinates(), shouldClosePath(geometry), geometry instanceof MultiPoint);
     }
 
     /**
-     * // // // Ex.: MoveTo(3, 6), LineTo(8, 12), LineTo(20, 34), ClosePath // Encoded as: [ 9 3 6
-     * 18 5 6 12 22 15 ] // == command type 7 (ClosePath), length 1 // ===== relative LineTo(+12,
-     * +22) == LineTo(20, 34) // === relative LineTo(+5, +6) == LineTo(8, 12) // == [00010 010] =
-     * command type 2 (LineTo), length 2 // === relative MoveTo(+3, +6) // == [00001 001] = command
-     * type 1 (MoveTo), length 1 // Commands are encoded as uint32 varints, vertex parameters are //
-     * encoded as sint32 varints (zigzag). Vertex parameters are // also encoded as deltas to the
+     * // // // Ex.: MoveTo(3, 6), LineTo(8, 12), LineTo(20, 34), ClosePath // Encoded as: [ 9 3 6 18 5 6 12 22 15 ] //
+     * == command type 7 (ClosePath), length 1 // ===== relative LineTo(+12, +22) == LineTo(20, 34) // === relative
+     * LineTo(+5, +6) == LineTo(8, 12) // == [00010 010] = command type 2 (LineTo), length 2 // === relative MoveTo(+3,
+     * +6) // == [00001 001] = command type 1 (MoveTo), length 1 // Commands are encoded as uint32 varints, vertex
+     * parameters are // encoded as sint32 varints (zigzag). Vertex parameters are // also encoded as deltas to the
      * previous position. The original // position is (0,0)
      *
      * @param cs

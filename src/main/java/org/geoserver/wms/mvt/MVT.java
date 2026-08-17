@@ -11,13 +11,10 @@ interface MVT {
     // #String MIME_TYPE = "application/x-protobuf";
     String MIME_TYPE = "application/vnd.mapbox-vector-tile";
 
-    Set<String> OUTPUT_FORMATS =
-            Collections.unmodifiableSet(
-                    new HashSet<>(
-                            Arrays.asList(
-                                    MIME_TYPE,
-                                    "application/pbf",
-                                    "application/mvt",
-                                    "application/x-protobuf;type=mapbox-vector",
-                                    "application/vnd.mapbox-vector-tile")));
+    Set<String> OUTPUT_FORMATS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+            MIME_TYPE,
+            "application/pbf",
+            "application/mvt",
+            "application/x-protobuf;type=mapbox-vector",
+            "application/vnd.mapbox-vector-tile")));
 }

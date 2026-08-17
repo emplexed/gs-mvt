@@ -12,9 +12,7 @@ import org.geoserver.wms.GetMapRequest;
 import org.geoserver.wms.map.AbstractMapResponse;
 import org.geotools.util.logging.Logging;
 
-/**
- * The Streaming Map Response using the StreamingMVTMap for retrieving and encoding the features.
- */
+/** The Streaming Map Response using the StreamingMVTMap for retrieving and encoding the features. */
 public class MVTStreamingMapResponse extends AbstractMapResponse {
 
     private static final Logger LOGGER = Logging.getLogger(MVTStreamingMapResponse.class);
@@ -34,8 +32,7 @@ public class MVTStreamingMapResponse extends AbstractMapResponse {
     }
 
     @Override
-    public void write(Object value, OutputStream output, Operation operation)
-            throws IOException, ServiceException {
+    public void write(Object value, OutputStream output, Operation operation) throws IOException, ServiceException {
         StreamingMVTMap map = (StreamingMVTMap) value;
         // if no generalisation factor / level requested from outside => use default config (factor
         // for level mid)
@@ -54,8 +51,7 @@ public class MVTStreamingMapResponse extends AbstractMapResponse {
             Object reqGenLevel = request.getEnv().get(PARAM_GENERALISATION_LEVEL);
 
             if (reqGenFactor != null && NumberUtils.isNumber((String) reqGenFactor)) {
-                genFactor =
-                        NumberUtils.toDouble((String) reqGenFactor, DEFAULT_GENERALISATION_FACTOR);
+                genFactor = NumberUtils.toDouble((String) reqGenFactor, DEFAULT_GENERALISATION_FACTOR);
             }
             // if no generalisation factor is given but a generalisation level is requested
             // we have to look up the currently suiting generalisation
@@ -65,8 +61,7 @@ public class MVTStreamingMapResponse extends AbstractMapResponse {
             Object reqSkipSmallGeoms = request.getEnv().get(PARAM_SMALL_GEOM_THRESHOLD);
             if (reqSkipSmallGeoms != null) {
                 smallGeometryThreshold =
-                        NumberUtils.toDouble(
-                                (String) reqSkipSmallGeoms, DEFAULT_SMALL_GEOMETRY_THRESHOLD);
+                        NumberUtils.toDouble((String) reqSkipSmallGeoms, DEFAULT_SMALL_GEOMETRY_THRESHOLD);
             }
             // check if env if empty protos (if no features are found should be avoided by adding an
             // empty layer object
@@ -83,11 +78,7 @@ public class MVTStreamingMapResponse extends AbstractMapResponse {
                 map.encode(output, avoidEmptyProto, smallGeometryThreshold, genFactor);
             } else {
                 map.encode(
-                        output,
-                        avoidEmptyProto,
-                        smallGeometryThreshold,
-                        genFactorTable,
-                        DEFAULT_GENERALISATION_FACTOR);
+                        output, avoidEmptyProto, smallGeometryThreshold, genFactorTable, DEFAULT_GENERALISATION_FACTOR);
             }
         } finally {
             map.dispose();
@@ -102,11 +93,10 @@ public class MVTStreamingMapResponse extends AbstractMapResponse {
         GeneralisationLevel genLevel =
                 GeneralisationLevel.valueOf(reqGenLevel.toString().toUpperCase());
         if (genLevel == null) {
-            LOGGER.warning(
-                    "requested generalisation level "
-                            + reqGenLevel
-                            + " is not a valid value (use \"low\", \"mid\", \"high\". "
-                            + "Default generalisation level (mid) will be used");
+            LOGGER.warning("requested generalisation level "
+                    + reqGenLevel
+                    + " is not a valid value (use \"low\", \"mid\", \"high\". "
+                    + "Default generalisation level (mid) will be used");
             genLevel = defaultGenLevel;
         }
         return getGenFactorForGenLevel(genLevel);
@@ -124,8 +114,7 @@ public class MVTStreamingMapResponse extends AbstractMapResponse {
         return generalisationTables;
     }
 
-    public void setGeneralisationTables(
-            Map<GeneralisationLevel, Map<Integer, Double>> generalisationTables) {
+    public void setGeneralisationTables(Map<GeneralisationLevel, Map<Integer, Double>> generalisationTables) {
         this.generalisationTables = generalisationTables;
     }
 }
